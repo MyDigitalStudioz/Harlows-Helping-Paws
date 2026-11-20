@@ -72,6 +72,18 @@
   a.btn{display:inline-block;margin-top:14px;padding:11px 18px;border-radius:10px;border:1px solid rgba(227,179,65,.6);
         color:var(--gold);text-decoration:none;font-weight:700;font-size:14.5px;background:rgba(227,179,65,.08)}
   a.btn:hover{background:rgba(227,179,65,.16)}
+  .cast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  @media(max-width:800px){.cast-grid{grid-template-columns:1fr}}
+  .cast-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .cast-card img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover}
+  .cast-card .cap{padding:16px 20px 18px}
+  .cast-card h3{font-size:17px;font-weight:800;margin-bottom:4px}
+  .cast-card p{font-size:14px;color:var(--muted)}
+  .board{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .board img{width:100%;display:block}
+  .board .cap{padding:14px 20px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+  .board h3{font-size:17px;font-weight:800}
+  .board p{font-size:13.5px;color:var(--muted)}
   footer{margin-top:64px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13.5px;
          display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
   footer a{color:var(--gold);text-decoration:none}
@@ -92,6 +104,7 @@
       <div class="chip"><b>Draft 1 received:</b>&nbsp; November 19, 2026</div>
       <div class="chip"><b>Author:</b>&nbsp; Lois Farrell</div>
       <div class="chip"><b>Series:</b>&nbsp; Harlow, Book 2</div>
+      <div class="chip"><span class="dot"></span><b>Lead cast &amp; boards:</b>&nbsp; Locked November 20, 2026</div>
     </div>
   </header>
 
@@ -130,13 +143,51 @@
   </section>
 
   <section>
+    <div class="mono sec-label">The Lead Cast</div>
+    <h2>Portraits, locked</h2>
+    <p class="lede">Every character in a Lois Farrell book starts as a locked recipe &mdash; an exact description of who they are and how they look &mdash; before a single page is drawn. The three leads of book two are final: same faces, same finish, on every page to come.</p>
+    <div class="cast-grid">
+      <div class="cast-card">
+        <img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall">
+        <div class="cap"><h3>Harlow</h3><p>The star. Seal-point Ragdoll, azure-cerulean eyes, and that very long plume tail.</p></div>
+      </div>
+      <div class="cast-card">
+        <img src="media/cast/lois-portrait.jpg" alt="Lois, smiling, in her deep-plum cardigan">
+        <div class="cap"><h3>Lois</h3><p>The author herself, in story form &mdash; deep-plum cardigan, silver bow brooch, ready to help.</p></div>
+      </div>
+      <div class="cast-card">
+        <img src="media/cast/mira-portrait.jpg" alt="Nurse Mira in pink scrubs and her hearts-and-bows scrub cap">
+        <div class="cap"><h3>Nurse Mira</h3><p>All in pink at the Community Hope Shelter &mdash; scrub cap, stethoscope, and the warmest smile on rounds.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="mono sec-label">Character Boards</div>
+    <h2>The 3D character storyboards</h2>
+    <p class="lede">Each lead gets a full character board &mdash; portraits, expressions, outfits, colors, and key traits on one sheet. These boards are the law of the land for the illustrators: if it isn&rsquo;t on the board, it doesn&rsquo;t go in the book.</p>
+    <div class="board">
+      <img src="media/boards/harlow-board.jpg" alt="Harlow's character board">
+      <div class="cap"><h3>Harlow &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
+    </div>
+    <div class="board">
+      <img src="media/boards/lois-board.jpg" alt="Lois's character board">
+      <div class="cap"><h3>Lois &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
+    </div>
+    <div class="board">
+      <img src="media/boards/mira-board.jpg" alt="Nurse Mira's character board">
+      <div class="cap"><h3>Nurse Mira &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
+    </div>
+  </section>
+
+  <section>
     <div class="mono sec-label">Production Roadmap</div>
     <h2>How this book gets made</h2>
     <p class="lede">The same pipeline that produced <i>Harlow&rsquo;s Accidental Journey</i> &mdash; from Lois&rsquo;s manuscript to a printed book and a digital flipbook.</p>
     <div class="phases">
       <div class="phase active"><div class="n">PHASE 1 · NOW</div><h4>Story</h4><p>Draft 1 received. Lois is tweaking wording and shaping the final manuscript.</p></div>
       <div class="phase"><div class="n">PHASE 2</div><h4>Edit</h4><p>Story lock, page-by-page spread plan, and a clean production text.</p></div>
-      <div class="phase"><div class="n">PHASE 3</div><h4>Cast &amp; Recipes</h4><p>Character recipes and reference portraits for every new face.</p></div>
+      <div class="phase"><div class="n">PHASE 3 · LEADS LOCKED</div><h4>Cast &amp; Recipes</h4><p>Harlow, Lois, and Nurse Mira: recipes, portraits, and character boards are final. Supporting cast is next.</p></div>
       <div class="phase"><div class="n">PHASE 4</div><h4>Illustration</h4><p>Spread art in the book-one hand, reviewed spread by spread.</p></div>
       <div class="phase"><div class="n">PHASE 5</div><h4>Layout &amp; Proof</h4><p>Typeset book, printed proof, and Lois&rsquo;s notes pass.</p></div>
       <div class="phase"><div class="n">PHASE 6</div><h4>Print &amp; Publish</h4><p>Hardcover and paperback on Lulu, plus the digital flipbook.</p></div>
