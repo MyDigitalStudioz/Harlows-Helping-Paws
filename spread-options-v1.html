@@ -51,12 +51,14 @@
   .card h2{font-size:20px; font-weight:700; margin-bottom:12px;}
   .card h2 .pg{color:var(--muted); font-weight:600;}
   .spread{
-    display:flex; gap:0; border-radius:10px; overflow:hidden; cursor:zoom-in;
+    position:relative; display:flex; border-radius:10px; overflow:hidden;
     background:#0d0a07; border:1px solid #000;
   }
-  .spread img{width:100%; height:auto; display:block;}
-  .spread.pair img{width:50%;}
-  .spread.single img{width:min(50%,340px); margin:0 auto;}
+  .card .spread{cursor:zoom-in;}
+  .page{position:relative; flex:none;}
+  .page img{width:100%; height:auto; display:block;}
+  .spread.pair .page{width:50%;}
+  .spread.single .page{width:min(50%,340px); margin:0 auto;}
   .cap{color:var(--muted); font-size:15px; line-height:1.5; margin-top:12px;}
   .cap b{color:var(--ink);}
   .tag{
@@ -66,20 +68,64 @@
   }
   footer{color:var(--muted); font-size:14px; text-align:center; margin-top:34px; line-height:1.6;}
   footer a{color:var(--gold);}
-  /* Lightbox */
+
+  /* ---------- Guides (lightbox) ----------
+     Lulu guide = the flipbook viewer's own print guides (PAGE_SPEC:
+     8.5in trim, 0.125in bleed, 0.5in safety, trim basis) — TRIM at the page
+     edge, SAFE dashed at 0.5/8.5 = 5.88% inset, viewer's colors and tags.
+     Seam guide = Book 1 Final Pass band: 44%–56% of the spread, amber wash,
+     dashed center line, SEAM pill. Independent toggles, either/both/neither. */
+  .lulu{position:absolute; inset:0; pointer-events:none; display:none;}
+  #lbSpread.lulu-on .lulu{display:block;}
+  .lulu .gTrim{position:absolute; inset:0; border:2px solid rgba(255,83,71,.95);}
+  .lulu .gSafe{position:absolute; inset:5.88%; border:2px dashed rgba(176,110,232,.95);}
+  .lulu .gtag{position:absolute; font-size:9px; font-weight:700; letter-spacing:.06em; padding:1px 4px; border-radius:3px; color:#fff; line-height:1.5;}
+  .lulu .gtagT{background:#ff5347; top:2px; left:2px;}
+  .lulu .gtagS{background:#a86ee0; top:calc(5.88% + 2px); left:calc(5.88% + 2px);}
+  .seam{position:absolute; inset:0; pointer-events:none; display:none;}
+  #lbSpread.seam-on .seam{display:block;}
+  .seam .band{position:absolute; top:0; bottom:0; left:44%; width:12%;
+    background:rgba(255,196,0,.13);
+    border-left:1px dashed rgba(122,79,33,.65); border-right:1px dashed rgba(122,79,33,.65);}
+  .seam .line{position:absolute; top:0; bottom:0; left:50%;
+    border-left:2px dashed rgba(255,255,255,.95); filter:drop-shadow(0 0 2px rgba(30,20,10,.85));}
+  .seam .slab{position:absolute; top:6px; left:50%; transform:translateX(-50%);
+    font-size:11px; font-style:italic; letter-spacing:.04em; white-space:nowrap;
+    color:#fff; background:rgba(43,33,24,.65); padding:1px 8px; border-radius:9px;}
+
+  /* ---------- Lightbox ---------- */
   .lb{
-    position:fixed; inset:0; background:rgba(8,6,4,.94); z-index:50;
-    display:none; align-items:center; justify-content:center; padding:18px;
+    position:fixed; inset:0; height:100dvh; background:rgba(8,6,4,.96); z-index:50;
+    display:none; overflow-y:auto; overscroll-behavior:contain; padding:16px;
   }
   .lb.open{display:flex;}
-  .lb .inner{max-width:1000px; width:100%;}
-  .lb .spread{cursor:zoom-out;}
-  .lb .cap{color:var(--ink); text-align:center; font-size:17px;}
+  .lb .inner{margin:auto; width:100%; max-width:1000px;}
+  .lb .spread{cursor:default;}
   .lb .close{
-    position:absolute; top:14px; right:14px; width:48px; height:48px;
+    position:fixed; top:14px; right:14px; width:48px; height:48px; z-index:2;
     border-radius:50%; border:1px solid var(--line); background:var(--card);
     color:var(--ink); font-size:22px; cursor:pointer;
   }
+  .lbnav{
+    display:flex; align-items:center; gap:12px; margin-top:16px;
+  }
+  .lbnav .cap{flex:1; text-align:center; color:var(--ink); font-size:17px; margin-top:0;}
+  .lbnav .count{display:block; color:var(--muted); font-size:14px; margin-top:2px;}
+  .navbtn{
+    flex:none; width:52px; height:52px; border-radius:50%; cursor:pointer;
+    border:1px solid var(--line); background:#f5e9d5; color:#2b2118;
+    font-size:26px; line-height:1; font-weight:700;
+  }
+  .navbtn[disabled]{opacity:.3; cursor:default;}
+  .guides{
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:16px;
+  }
+  .gbtn{
+    font-family:Georgia,'Times New Roman',serif; font-size:15px; cursor:pointer;
+    background:#f5e9d5; color:#2b2118; border:1px solid #7a4f21; border-radius:8px;
+    padding:9px 16px; min-height:42px;
+  }
+  .gbtn[aria-pressed="true"]{background:var(--gold); border-color:var(--gold-dim); font-weight:700;}
 </style>
 </head>
 <body>
@@ -110,7 +156,15 @@
   <button class="close" id="lbClose" aria-label="Close">&times;</button>
   <div class="inner">
     <div class="spread" id="lbSpread"></div>
-    <p class="cap" id="lbCap"></p>
+    <div class="lbnav">
+      <button class="navbtn" id="lbPrev" aria-label="Previous spread">&#8249;</button>
+      <p class="cap"><span id="lbCap"></span><span class="count" id="lbCount"></span></p>
+      <button class="navbtn" id="lbNext" aria-label="Next spread">&#8250;</button>
+    </div>
+    <div class="guides">
+      <button class="gbtn" id="seamBtn" aria-pressed="false">Show seam guide</button>
+      <button class="gbtn" id="luluBtn" aria-pressed="false">Show Lulu guide</button>
+    </div>
   </div>
 </div>
 
@@ -149,20 +203,41 @@ sel.addEventListener("change", function () {
   }
 });
 
+function buildSpread(s, withGuides) {
+  var sp = document.createElement("div");
+  sp.className = "spread " + (s.imgs.length > 1 ? "pair" : "single");
+  s.imgs.forEach(function (src) {
+    var pg = document.createElement("div");
+    pg.className = "page";
+    var im = document.createElement("img");
+    im.src = IMG + src; im.alt = s.title + " — " + s.pages;
+    pg.appendChild(im);
+    if (withGuides) {
+      var lu = document.createElement("div");
+      lu.className = "lulu"; lu.setAttribute("aria-hidden", "true");
+      lu.innerHTML = '<i class="gTrim"></i><i class="gSafe"></i>' +
+        '<span class="gtag gtagT">TRIM</span><span class="gtag gtagS">SAFE</span>';
+      pg.appendChild(lu);
+    }
+    sp.appendChild(pg);
+  });
+  if (withGuides && s.imgs.length > 1) {
+    var sm = document.createElement("div");
+    sm.className = "seam"; sm.setAttribute("aria-hidden", "true");
+    sm.innerHTML = '<i class="band"></i><i class="line"></i><span class="slab">SEAM</span>';
+    sp.appendChild(sm);
+  }
+  return sp;
+}
+
 var main = document.getElementById("cards");
-SPREADS.forEach(function (s) {
+SPREADS.forEach(function (s, i) {
   var card = document.createElement("section");
   card.className = "card";
   var h = document.createElement("h2");
   h.innerHTML = s.title + ' <span class="pg">&middot; ' + s.pages + "</span>";
-  var sp = document.createElement("div");
-  sp.className = "spread " + (s.imgs.length > 1 ? "pair" : "single");
-  s.imgs.forEach(function (src) {
-    var im = document.createElement("img");
-    im.src = IMG + src; im.alt = s.title + " — " + s.pages; im.loading = "lazy";
-    sp.appendChild(im);
-  });
-  sp.addEventListener("click", function () { openLb(s); });
+  var sp = buildSpread(s, false);
+  sp.addEventListener("click", function () { openLb(i); });
   var cap = document.createElement("p");
   cap.className = "cap"; cap.innerHTML = s.cap;
   var tag = document.createElement("span");
@@ -171,23 +246,65 @@ SPREADS.forEach(function (s) {
   main.appendChild(card);
 });
 
-var lb = document.getElementById("lb"), lbSpread = document.getElementById("lbSpread"), lbCap = document.getElementById("lbCap");
-function openLb(s) {
-  lbSpread.innerHTML = "";
-  lbSpread.className = "spread " + (s.imgs.length > 1 ? "pair" : "single");
-  s.imgs.forEach(function (src) {
-    var im = document.createElement("img");
-    im.src = IMG + src; im.alt = s.title + " — " + s.pages;
-    lbSpread.appendChild(im);
-  });
-  lbCap.innerHTML = "<b>" + s.title + " · " + s.pages + "</b> — " + s.cap.replace(/<\/?b>/g, "");
+/* ---------- Lightbox ---------- */
+var lb = document.getElementById("lb"), lbCap = document.getElementById("lbCap"),
+    lbCount = document.getElementById("lbCount"),
+    lbPrev = document.getElementById("lbPrev"), lbNext = document.getElementById("lbNext"),
+    seamBtn = document.getElementById("seamBtn"), luluBtn = document.getElementById("luluBtn"),
+    cur = 0, lbSpreadEl = null;
+
+function openLb(i) {
+  cur = i;
+  renderLb();
   lb.classList.add("open");
   document.body.style.overflow = "hidden";
+  lb.scrollTop = 0;
+}
+function renderLb() {
+  var s = SPREADS[cur];
+  var inner = lb.querySelector(".inner");
+  var fresh = buildSpread(s, true);
+  fresh.id = "lbSpread";
+  if (lbSpreadEl) { /* keep guide toggles across navigation */
+    fresh.classList.toggle("lulu-on", lbSpreadEl.classList.contains("lulu-on"));
+    fresh.classList.toggle("seam-on", lbSpreadEl.classList.contains("seam-on"));
+  }
+  var old = document.getElementById("lbSpread");
+  inner.replaceChild(fresh, old);
+  lbSpreadEl = fresh;
+  lbCap.innerHTML = "<b>" + s.title + " · " + s.pages + "</b> — " + s.cap.replace(/<\/?b>/g, "");
+  lbCount.textContent = "Spread " + (cur + 1) + " of " + SPREADS.length;
+  lbPrev.disabled = cur === 0;
+  lbNext.disabled = cur === SPREADS.length - 1;
+  seamBtn.style.display = s.imgs.length > 1 ? "" : "none";
+}
+function stepLb(d) {
+  var n = cur + d;
+  if (n < 0 || n >= SPREADS.length) return;
+  cur = n; renderLb(); lb.scrollTop = 0;
 }
 function closeLb() { lb.classList.remove("open"); document.body.style.overflow = ""; }
+
+lbPrev.addEventListener("click", function () { stepLb(-1); });
+lbNext.addEventListener("click", function () { stepLb(1); });
 document.getElementById("lbClose").addEventListener("click", closeLb);
-lb.addEventListener("click", function (e) { if (e.target === lb || e.target === lbSpread) closeLb(); });
-document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
+lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+document.addEventListener("keydown", function (e) {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") stepLb(-1);
+  if (e.key === "ArrowRight") stepLb(1);
+});
+function wireToggle(btn, cls, onText, offText) {
+  btn.addEventListener("click", function () {
+    if (!lbSpreadEl) return;
+    var on = lbSpreadEl.classList.toggle(cls);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.textContent = on ? onText : offText;
+  });
+}
+wireToggle(seamBtn, "seam-on", "Hide seam guide", "Show seam guide");
+wireToggle(luluBtn, "lulu-on", "Hide Lulu guide", "Show Lulu guide");
 </script>
 </body>
 </html>
