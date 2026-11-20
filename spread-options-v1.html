@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harlow's Helping Paws — Spread Review V1</title>
+<meta name="description" content="Spread review pages for Harlow's Helping Paws — flip through every spread outside the book, one tap to view it big.">
+<style>
+  :root{
+    --bg:#16120e; --bg2:#1e1811; --card:#262019; --card2:#2e2619;
+    --ink:#f3ead9; --muted:#b9a888; --gold:#e8b34b; --gold-dim:#9a7a33;
+    --line:#3d3222; --radius:18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:linear-gradient(180deg,var(--bg2),var(--bg) 240px);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:0 16px 56px;
+  }
+  .wrap{max-width:860px; margin:0 auto;}
+  header{padding:26px 0 6px;}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-weight:700;}
+  h1{font-size:30px; line-height:1.15; margin:8px 0 4px; font-weight:800;}
+  .sub{color:var(--muted); font-size:16px; line-height:1.45;}
+  .bar{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:18px 0 8px; padding:12px; background:var(--card);
+    border:1px solid var(--line); border-radius:14px;
+  }
+  .bar label{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:700;}
+  select{
+    appearance:none; -webkit-appearance:none;
+    background:var(--card2); color:var(--ink);
+    border:1px solid var(--gold-dim); border-radius:10px;
+    font-size:16px; font-weight:600; padding:10px 38px 10px 14px;
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23e8b34b' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center;
+  }
+  .bar a{
+    margin-left:auto; color:#16120e; background:var(--gold); text-decoration:none;
+    font-weight:700; font-size:15px; padding:10px 16px; border-radius:10px;
+  }
+  .hint{color:var(--muted); font-size:15px; margin:14px 2px 18px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px; margin:0 0 18px;
+  }
+  .card h2{font-size:20px; font-weight:700; margin-bottom:12px;}
+  .card h2 .pg{color:var(--muted); font-weight:600;}
+  .spread{
+    display:flex; gap:0; border-radius:10px; overflow:hidden; cursor:zoom-in;
+    background:#0d0a07; border:1px solid #000;
+  }
+  .spread img{width:100%; height:auto; display:block;}
+  .spread.pair img{width:50%;}
+  .spread.single img{width:min(50%,340px); margin:0 auto;}
+  .cap{color:var(--muted); font-size:15px; line-height:1.5; margin-top:12px;}
+  .cap b{color:var(--ink);}
+  .tag{
+    display:inline-block; font-size:12px; font-weight:700; letter-spacing:.08em;
+    color:#16120e; background:var(--gold); border-radius:6px; padding:3px 9px;
+    margin-top:10px; text-transform:uppercase;
+  }
+  footer{color:var(--muted); font-size:14px; text-align:center; margin-top:34px; line-height:1.6;}
+  footer a{color:var(--gold);}
+  /* Lightbox */
+  .lb{
+    position:fixed; inset:0; background:rgba(8,6,4,.94); z-index:50;
+    display:none; align-items:center; justify-content:center; padding:18px;
+  }
+  .lb.open{display:flex;}
+  .lb .inner{max-width:1000px; width:100%;}
+  .lb .spread{cursor:zoom-out;}
+  .lb .cap{color:var(--ink); text-align:center; font-size:17px;}
+  .lb .close{
+    position:absolute; top:14px; right:14px; width:48px; height:48px;
+    border-radius:50%; border:1px solid var(--line); background:var(--card);
+    color:var(--ink); font-size:22px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Spread Review</div>
+    <h1>Harlow&rsquo;s Helping Paws</h1>
+    <p class="sub">Every spread in the current preview book, on one page &mdash; no bookshelf, no menus. Tap any spread to see it big.</p>
+  </header>
+
+  <div class="bar">
+    <label for="verSel">Version</label>
+    <select id="verSel" aria-label="Choose a spread review version"></select>
+    <a href="flipbook/">Open the flipbook &rarr;</a>
+  </div>
+
+  <p class="hint">Tap a spread to view it big.</p>
+
+  <main id="cards"></main>
+
+  <footer>
+    Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 &middot; A work in progress<br>
+    <a href="index.html">Back to the project page</a>
+  </footer>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Spread, enlarged">
+  <button class="close" id="lbClose" aria-label="Close">&times;</button>
+  <div class="inner">
+    <div class="spread" id="lbSpread"></div>
+    <p class="cap" id="lbCap"></p>
+  </div>
+</div>
+
+<script>
+/* VERSIONS — when a new version page ships, add its entry here AND to the
+   VERSIONS list on every earlier version page, so any link can reach any version. */
+var VERSIONS = [
+  { v: "V1", file: "spread-options-v1.html", label: "V1 — Preview cast · Nov 20, 2026", current: true }
+];
+
+/* SPREADS — one entry per Overview card: covers single, story pages paired. */
+var IMG = "flipbook/images/";
+var SPREADS = [
+  { title: "Front cover", pages: "Page 1", imgs: ["01-front.jpg"],
+    cap: "<b>Front cover</b> — Harlow, from her locked cast portrait." },
+  { title: "Spread 1", pages: "Pages 2–3", imgs: ["02-about.jpg", "03-harlow.jpg"],
+    cap: "<b>About this book</b> · <b>Harlow</b> — lead cast portrait." },
+  { title: "Spread 2", pages: "Pages 4–5", imgs: ["04-lois.jpg", "05-mira.jpg"],
+    cap: "<b>Lois</b> — lead cast portrait · <b>Nurse Mira</b> — lead cast portrait." },
+  { title: "Spread 3", pages: "Pages 6–7", imgs: ["06-lois-full.jpg", "07-mira-full.jpg"],
+    cap: "<b>Lois</b>, full body · <b>Nurse Mira</b>, full body." },
+  { title: "Back cover", pages: "Page 8", imgs: ["08-back.jpg"],
+    cap: "<b>Back cover</b> — the full story is in production." }
+];
+
+var sel = document.getElementById("verSel");
+VERSIONS.forEach(function (it) {
+  var o = document.createElement("option");
+  o.value = it.file; o.textContent = it.label + (it.current ? "  ·  current" : "");
+  if (it.current) o.selected = true;
+  sel.appendChild(o);
+});
+sel.addEventListener("change", function () {
+  if (sel.value && sel.value !== VERSIONS.filter(function (x) { return x.current; })[0].file) {
+    window.location.href = sel.value;
+  }
+});
+
+var main = document.getElementById("cards");
+SPREADS.forEach(function (s) {
+  var card = document.createElement("section");
+  card.className = "card";
+  var h = document.createElement("h2");
+  h.innerHTML = s.title + ' <span class="pg">&middot; ' + s.pages + "</span>";
+  var sp = document.createElement("div");
+  sp.className = "spread " + (s.imgs.length > 1 ? "pair" : "single");
+  s.imgs.forEach(function (src) {
+    var im = document.createElement("img");
+    im.src = IMG + src; im.alt = s.title + " — " + s.pages; im.loading = "lazy";
+    sp.appendChild(im);
+  });
+  sp.addEventListener("click", function () { openLb(s); });
+  var cap = document.createElement("p");
+  cap.className = "cap"; cap.innerHTML = s.cap;
+  var tag = document.createElement("span");
+  tag.className = "tag"; tag.textContent = "Preview — in the flipbook";
+  card.appendChild(h); card.appendChild(sp); card.appendChild(cap); card.appendChild(tag);
+  main.appendChild(card);
+});
+
+var lb = document.getElementById("lb"), lbSpread = document.getElementById("lbSpread"), lbCap = document.getElementById("lbCap");
+function openLb(s) {
+  lbSpread.innerHTML = "";
+  lbSpread.className = "spread " + (s.imgs.length > 1 ? "pair" : "single");
+  s.imgs.forEach(function (src) {
+    var im = document.createElement("img");
+    im.src = IMG + src; im.alt = s.title + " — " + s.pages;
+    lbSpread.appendChild(im);
+  });
+  lbCap.innerHTML = "<b>" + s.title + " · " + s.pages + "</b> — " + s.cap.replace(/<\/?b>/g, "");
+  lb.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeLb() { lb.classList.remove("open"); document.body.style.overflow = ""; }
+document.getElementById("lbClose").addEventListener("click", closeLb);
+lb.addEventListener("click", function (e) { if (e.target === lb || e.target === lbSpread) closeLb(); });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
+</script>
+</body>
+</html>
