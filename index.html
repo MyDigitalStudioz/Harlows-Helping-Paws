@@ -72,6 +72,9 @@
   a.btn{display:inline-block;margin-top:14px;padding:11px 18px;border-radius:10px;border:1px solid rgba(227,179,65,.6);
         color:var(--gold);text-decoration:none;font-weight:700;font-size:14.5px;background:rgba(227,179,65,.08)}
   a.btn:hover{background:rgba(227,179,65,.16)}
+  button.btn{display:inline-block;margin-top:14px;padding:11px 18px;border-radius:10px;border:1px solid rgba(227,179,65,.6);
+        color:var(--gold);font-weight:700;font-size:14.5px;background:rgba(227,179,65,.08);font-family:inherit;cursor:pointer}
+  button.btn:hover{background:rgba(227,179,65,.16)}
   .cast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
   @media(max-width:800px){.cast-grid{grid-template-columns:1fr}}
   .cast-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
@@ -214,6 +217,8 @@
     <div class="mono sec-label">Character Boards</div>
     <h2>The 3D character storyboards</h2>
     <p class="lede">Each lead gets a full character board &mdash; portraits, expressions, outfits, colors, and key traits on one sheet. These boards are the law of the land for the illustrators: if it isn&rsquo;t on the board, it doesn&rsquo;t go in the book.</p>
+    <button type="button" class="btn" id="boardsToggle" aria-expanded="false" aria-controls="boardsWrap">Show character boards</button>
+    <div id="boardsWrap" hidden>
     <div class="board">
       <img src="media/boards/harlow-board.jpg" alt="Harlow's character board">
       <div class="cap"><h3>Harlow &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
@@ -233,6 +238,7 @@
     <div class="board">
       <img src="media/boards/jon-board.jpg" alt="Jon's character board">
       <div class="cap"><h3>Jon &mdash; Character Board</h3><p>Produced November 20, 2026</p></div>
+    </div>
     </div>
   </section>
 
@@ -328,6 +334,13 @@
   }, { passive: true });
   toTop.addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  var boardsToggle = document.getElementById("boardsToggle"), boardsWrap = document.getElementById("boardsWrap");
+  boardsToggle.addEventListener("click", function () {
+    var open = boardsWrap.hidden;
+    boardsWrap.hidden = !open;
+    boardsToggle.setAttribute("aria-expanded", String(open));
+    boardsToggle.textContent = open ? "Hide character boards" : "Show character boards";
   });
 })();
 </script>
