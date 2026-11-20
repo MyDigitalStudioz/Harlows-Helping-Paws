@@ -76,14 +76,15 @@
      Seam guide = Book 1 Final Pass band: 44%–56% of the spread, amber wash,
      dashed center line, SEAM pill. Independent toggles, either/both/neither. */
   .lulu{position:absolute; inset:0; pointer-events:none; display:none;}
-  #lbSpread.lulu-on .lulu{display:block;}
+  body.guides-lulu .lulu{display:block;}
   .lulu .gTrim{position:absolute; inset:0; border:2px solid rgba(255,83,71,.95);}
   .lulu .gSafe{position:absolute; inset:5.88%; border:2px dashed rgba(176,110,232,.95);}
   .lulu .gtag{position:absolute; font-size:9px; font-weight:700; letter-spacing:.06em; padding:1px 4px; border-radius:3px; color:#fff; line-height:1.5;}
   .lulu .gtagT{background:#ff5347; top:2px; left:2px;}
   .lulu .gtagS{background:#a86ee0; top:calc(5.88% + 2px); left:calc(5.88% + 2px);}
   .seam{position:absolute; inset:0; pointer-events:none; display:none;}
-  #lbSpread.seam-on .seam{display:block;}
+  body.guides-seam .seam{display:block;}
+  body.hide-caps .card .cap, body.hide-caps .card .tag{display:none;}
   .seam .band{position:absolute; top:0; bottom:0; left:44%; width:12%;
     background:rgba(255,196,0,.13);
     border-left:1px dashed rgba(122,79,33,.65); border-right:1px dashed rgba(122,79,33,.65);}
@@ -126,6 +127,41 @@
     padding:9px 16px; min-height:42px;
   }
   .gbtn[aria-pressed="true"]{background:var(--gold); border-color:var(--gold-dim); font-weight:700;}
+
+  /* ---------- Settings ---------- */
+  .setbtn{
+    flex:none; width:46px; height:46px; border-radius:50%; cursor:pointer;
+    border:1px solid var(--line); background:var(--card2); color:var(--ink);
+    font-size:21px; line-height:1;
+  }
+  .sheet{
+    position:fixed; inset:0; height:100dvh; background:rgba(8,6,4,.7); z-index:60;
+    display:none; overflow-y:auto; overscroll-behavior:contain; padding:16px;
+  }
+  .sheet.open{display:flex;}
+  .sheet .panel{
+    margin:auto; width:100%; max-width:520px; background:var(--card);
+    border:1px solid var(--line); border-radius:var(--radius); padding:20px;
+  }
+  .sheet h2{font-size:22px; margin-bottom:4px;}
+  .sheet .sub2{color:var(--muted); font-size:14px; margin-bottom:16px; line-height:1.45;}
+  .setrow{
+    display:flex; align-items:center; gap:12px; padding:13px 0;
+    border-top:1px solid var(--line);
+  }
+  .setrow .lab{flex:1;}
+  .setrow .lab b{display:block; font-size:16px;}
+  .setrow .lab span{color:var(--muted); font-size:13px; line-height:1.4; display:block; margin-top:2px;}
+  .seg{display:flex; flex:none; border:1px solid var(--gold-dim); border-radius:10px; overflow:hidden;}
+  .seg button{
+    appearance:none; border:0; background:var(--card2); color:var(--muted);
+    font-size:15px; font-weight:600; padding:9px 16px; cursor:pointer; min-height:42px;
+  }
+  .seg button[aria-pressed="true"]{background:var(--gold); color:#16120e;}
+  .sheet .done{
+    width:100%; margin-top:18px; background:var(--gold); color:#16120e; border:0;
+    font-size:16px; font-weight:700; padding:13px; border-radius:10px; cursor:pointer; min-height:48px;
+  }
 </style>
 </head>
 <body>
@@ -139,6 +175,7 @@
   <div class="bar">
     <label for="verSel">Version</label>
     <select id="verSel" aria-label="Choose a spread review version"></select>
+    <button class="setbtn" id="setBtn" aria-label="Page settings" title="Page settings">&#9881;</button>
     <a href="flipbook/">Open the flipbook &rarr;</a>
   </div>
 
@@ -150,6 +187,35 @@
     Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 &middot; A work in progress<br>
     <a href="index.html">Back to the project page</a>
   </footer>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Page settings">
+  <div class="panel">
+    <h2>Page settings</h2>
+    <p class="sub2">These apply to the spreads right on this page &mdash; and in the big view too.</p>
+    <div class="setrow">
+      <div class="lab"><b>Lulu guides</b><span>TRIM (red) and SAFE (purple dashed) frames on every page &mdash; the flipbook&rsquo;s print guides.</span></div>
+      <div class="seg" role="group" aria-label="Lulu guides">
+        <button data-set="lulu" data-val="off" aria-pressed="true">Off</button>
+        <button data-set="lulu" data-val="on" aria-pressed="false">On</button>
+      </div>
+    </div>
+    <div class="setrow">
+      <div class="lab"><b>Seam guide</b><span>The amber band down the middle of each spread &mdash; the fold, where the pages meet.</span></div>
+      <div class="seg" role="group" aria-label="Seam guide">
+        <button data-set="seam" data-val="off" aria-pressed="true">Off</button>
+        <button data-set="seam" data-val="on" aria-pressed="false">On</button>
+      </div>
+    </div>
+    <div class="setrow">
+      <div class="lab"><b>Captions</b><span>The description under each spread card.</span></div>
+      <div class="seg" role="group" aria-label="Captions">
+        <button data-set="caps" data-val="off" aria-pressed="false">Off</button>
+        <button data-set="caps" data-val="on" aria-pressed="true">On</button>
+      </div>
+    </div>
+    <button class="done" id="sheetDone">Done</button>
+  </div>
 </div>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Spread, enlarged">
@@ -236,7 +302,7 @@ SPREADS.forEach(function (s, i) {
   card.className = "card";
   var h = document.createElement("h2");
   h.innerHTML = s.title + ' <span class="pg">&middot; ' + s.pages + "</span>";
-  var sp = buildSpread(s, false);
+  var sp = buildSpread(s, true);
   sp.addEventListener("click", function () { openLb(i); });
   var cap = document.createElement("p");
   cap.className = "cap"; cap.innerHTML = s.cap;
@@ -251,7 +317,7 @@ var lb = document.getElementById("lb"), lbCap = document.getElementById("lbCap")
     lbCount = document.getElementById("lbCount"),
     lbPrev = document.getElementById("lbPrev"), lbNext = document.getElementById("lbNext"),
     seamBtn = document.getElementById("seamBtn"), luluBtn = document.getElementById("luluBtn"),
-    cur = 0, lbSpreadEl = null;
+    cur = 0;
 
 function openLb(i) {
   cur = i;
@@ -265,13 +331,8 @@ function renderLb() {
   var inner = lb.querySelector(".inner");
   var fresh = buildSpread(s, true);
   fresh.id = "lbSpread";
-  if (lbSpreadEl) { /* keep guide toggles across navigation */
-    fresh.classList.toggle("lulu-on", lbSpreadEl.classList.contains("lulu-on"));
-    fresh.classList.toggle("seam-on", lbSpreadEl.classList.contains("seam-on"));
-  }
   var old = document.getElementById("lbSpread");
   inner.replaceChild(fresh, old);
-  lbSpreadEl = fresh;
   lbCap.innerHTML = "<b>" + s.title + " · " + s.pages + "</b> — " + s.cap.replace(/<\/?b>/g, "");
   lbCount.textContent = "Spread " + (cur + 1) + " of " + SPREADS.length;
   lbPrev.disabled = cur === 0;
@@ -290,21 +351,58 @@ lbNext.addEventListener("click", function () { stepLb(1); });
 document.getElementById("lbClose").addEventListener("click", closeLb);
 lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
 document.addEventListener("keydown", function (e) {
+  if (sheet.classList.contains("open")) {
+    if (e.key === "Escape") closeSheet();
+    return;
+  }
   if (!lb.classList.contains("open")) return;
   if (e.key === "Escape") closeLb();
   if (e.key === "ArrowLeft") stepLb(-1);
   if (e.key === "ArrowRight") stepLb(1);
 });
-function wireToggle(btn, cls, onText, offText) {
-  btn.addEventListener("click", function () {
-    if (!lbSpreadEl) return;
-    var on = lbSpreadEl.classList.toggle(cls);
-    btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.textContent = on ? onText : offText;
+
+/* ---------- Settings — one state for the page, the sheet, and the lightbox ---------- */
+var SET_KEY = "hhp-spreads-v1-settings";
+var settings = { lulu: false, seam: false, caps: true };
+try {
+  var saved = JSON.parse(localStorage.getItem(SET_KEY) || "null");
+  if (saved) { settings.lulu = !!saved.lulu; settings.seam = !!saved.seam; settings.caps = saved.caps !== false; }
+} catch (e) { /* fresh visitor — defaults stand */ }
+
+var sheet = document.getElementById("sheet");
+function applySettings() {
+  document.body.classList.toggle("guides-lulu", settings.lulu);
+  document.body.classList.toggle("guides-seam", settings.seam);
+  document.body.classList.toggle("hide-caps", !settings.caps);
+  Array.prototype.forEach.call(sheet.querySelectorAll(".seg button"), function (b) {
+    var on = (b.getAttribute("data-val") === "on") === !!settings[b.getAttribute("data-set")];
+    b.setAttribute("aria-pressed", on ? "true" : "false");
   });
+  luluBtn.setAttribute("aria-pressed", settings.lulu ? "true" : "false");
+  luluBtn.textContent = settings.lulu ? "Hide Lulu guide" : "Show Lulu guide";
+  seamBtn.setAttribute("aria-pressed", settings.seam ? "true" : "false");
+  seamBtn.textContent = settings.seam ? "Hide seam guide" : "Show seam guide";
+  try { localStorage.setItem(SET_KEY, JSON.stringify(settings)); } catch (e) {}
 }
-wireToggle(seamBtn, "seam-on", "Hide seam guide", "Show seam guide");
-wireToggle(luluBtn, "lulu-on", "Hide Lulu guide", "Show Lulu guide");
+function setSetting(key, on) { settings[key] = !!on; applySettings(); }
+
+Array.prototype.forEach.call(sheet.querySelectorAll(".seg button"), function (b) {
+  b.addEventListener("click", function () {
+    setSetting(b.getAttribute("data-set"), b.getAttribute("data-val") === "on");
+  });
+});
+luluBtn.addEventListener("click", function () { setSetting("lulu", !settings.lulu); });
+seamBtn.addEventListener("click", function () { setSetting("seam", !settings.seam); });
+
+function openSheet() { sheet.classList.add("open"); document.body.style.overflow = "hidden"; sheet.scrollTop = 0; }
+function closeSheet() {
+  sheet.classList.remove("open");
+  if (!lb.classList.contains("open")) document.body.style.overflow = "";
+}
+document.getElementById("setBtn").addEventListener("click", openSheet);
+document.getElementById("sheetDone").addEventListener("click", closeSheet);
+sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
+applySettings();
 </script>
 </body>
 </html>
