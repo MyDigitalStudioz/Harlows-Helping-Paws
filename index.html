@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harlow's Helping Paws — Lois Farrell · Book Two</title>
+<meta name="description" content="Harlow's Helping Paws (working title) — Lois Farrell's second picture book. Harlow the cat returns, this time volunteering at an animal shelter and a community shelter. Now in production.">
+<meta property="og:title" content="Harlow's Helping Paws — a new picture book by Lois Farrell">
+<meta property="og:description" content="Book two in the Harlow series. Draft 1 received November 19, 2026 — now in production.">
+<meta property="og:image" content="https://mydigitalstudioz.github.io/Harlows-Helping-Paws/media/hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#101112; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.07);
+    --line:rgba(243,239,230,.14); --ivory:#F3EFE6; --muted:rgba(243,239,230,.62);
+    --gold:#E3B341; --red:#E0685C; --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ivory);font-family:'Manrope',system-ui,sans-serif;line-height:1.55;overflow-x:hidden}
+  .aurora{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(620px 340px at 12% -60px, rgba(227,179,65,.20), transparent 65%),
+      radial-gradient(560px 320px at 88% -40px, rgba(224,104,92,.14), transparent 65%);}
+  .wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 22px 72px}
+  .mono{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.14em;font-size:11px}
+  header{padding:64px 0 10px;text-align:left}
+  .eyebrow{color:var(--gold)}
+  .paw{display:inline-block;vertical-align:-6px;margin-right:10px}
+  h1{font-size:clamp(42px,7vw,76px);font-weight:800;line-height:1.04;margin:16px 0 6px;
+     background:linear-gradient(92deg,var(--ivory) 10%,var(--gold) 55%,var(--red) 100%);
+     -webkit-background-clip:text;background-clip:text;color:transparent}
+  .working{color:var(--muted);font-style:italic;font-size:17px}
+  .tagline{font-size:clamp(18px,2.6vw,22px);max-width:640px;margin-top:18px;color:var(--ivory)}
+  .rule{height:3px;border-radius:2px;margin:30px 0 0;background:linear-gradient(90deg,var(--gold),var(--red),transparent)}
+  .status{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .chip{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 14px;font-size:13.5px}
+  .chip b{color:var(--gold);font-weight:700}
+  .chip .dot{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--gold);margin-right:8px;vertical-align:1px}
+  section{margin-top:52px}
+  .sec-label{color:var(--gold);margin-bottom:14px}
+  h2{font-size:28px;font-weight:800;margin-bottom:10px}
+  p.lede{color:var(--muted);max-width:720px;font-size:16.5px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:580px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red))}
+  .card h3{font-size:17px;font-weight:800;margin-bottom:6px}
+  .card p{font-size:14.5px;color:var(--muted)}
+  .days{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  @media(max-width:700px){.days{grid-template-columns:1fr}}
+  .day{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+  .day .mono{color:var(--red)}
+  .day h3{font-size:20px;font-weight:800;margin:8px 0}
+  .day p{color:var(--muted);font-size:15.5px}
+  .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+  @media(max-width:800px){.phases{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.phases{grid-template-columns:1fr}}
+  .phase{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel)}
+  .phase .n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.12em}
+  .phase h4{font-size:16px;font-weight:800;margin:6px 0 4px}
+  .phase p{font-size:13.5px;color:var(--muted)}
+  .phase.active{border-color:rgba(227,179,65,.55);background:rgba(227,179,65,.07)}
+  .phase.active .n{color:var(--gold)}
+  .book1{display:flex;flex-wrap:wrap;gap:18px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-top:20px}
+  .book1 .txt{flex:1;min-width:260px}
+  .book1 h3{font-size:20px;font-weight:800;margin-bottom:6px}
+  .book1 p{color:var(--muted);font-size:15px}
+  a.btn{display:inline-block;margin-top:14px;padding:11px 18px;border-radius:10px;border:1px solid rgba(227,179,65,.6);
+        color:var(--gold);text-decoration:none;font-weight:700;font-size:14.5px;background:rgba(227,179,65,.08)}
+  a.btn:hover{background:rgba(227,179,65,.16)}
+  footer{margin-top:64px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13.5px;
+         display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+  footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="wrap">
+
+  <header>
+    <div class="mono eyebrow"><svg class="paw" width="20" height="20" viewBox="0 0 24 24" fill="#E3B341"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><circle cx="4.6" cy="10.5" r="1.9"/><circle cx="8.6" cy="7.2" r="2.1"/><circle cx="13.4" cy="6.6" r="2.1"/><circle cx="17.6" cy="8.6" r="1.9"/><circle cx="20" cy="12.4" r="1.6"/></svg>Lois Farrell · Book Two · A Harlow Story</div>
+    <h1>Harlow&rsquo;s Helping Paws</h1>
+    <div class="working">Working title &mdash; story and wording still being polished by the author</div>
+    <p class="tagline">Harlow the cat is back. This time she and Lois roll up their sleeves &mdash; one day helping animals at The Snuggle Inn shelter, the next helping people at The Community Hope Shelter.</p>
+    <div class="rule"></div>
+    <div class="status">
+      <div class="chip"><span class="dot"></span><b>Status:</b>&nbsp; In production</div>
+      <div class="chip"><b>Draft 1 received:</b>&nbsp; November 19, 2026</div>
+      <div class="chip"><b>Author:</b>&nbsp; Lois Farrell</div>
+      <div class="chip"><b>Series:</b>&nbsp; Harlow, Book 2</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="mono sec-label">The Story</div>
+    <h2>Two days of helping paws</h2>
+    <p class="lede">After the adventure in book one, Lois has retired &mdash; and retirement doesn&rsquo;t suit her for long. With plenty of pep still in her step, she sets out to help her community. Animals, humans, or maybe both? Harlow tags along to find out.</p>
+    <div class="days">
+      <div class="day">
+        <div class="mono">Day One</div>
+        <h3>The Snuggle Inn</h3>
+        <p>A cage-free animal shelter where Lois volunteers and Harlow makes the rounds: bunnies Cocoa &amp; Shadow, a mama cat and her five &ldquo;spice girl&rdquo; kittens, Howard the retired mountain-rescue Saint Bernard, three ponies, two gentle retired circus tigers &mdash; and two beagle puppies who find their forever home.</p>
+      </div>
+      <div class="day">
+        <div class="mono">Day Two</div>
+        <h3>The Community Hope Shelter</h3>
+        <p>Harlow and Lois hop into the cool old &rsquo;65 Mustang and head across town, where a warm meal is served free to anyone who&rsquo;s hungry. Harlow explores game rooms and clothing racks, earns the best chin scratches ever from Grandpa, assists Nurse Mira on her rounds &mdash; and politely declines one very large blue knitted hat.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="mono sec-label">Meet the Cast</div>
+    <h2>New friends, familiar faces</h2>
+    <div class="grid">
+      <div class="card"><h3>Harlow</h3><p>Our narrator &mdash; a curious, kind-hearted cat with a happy purr and a nose for a good story.</p></div>
+      <div class="card"><h3>Lois</h3><p>Newly retired after 50 years of work, and already looking for her next way to help.</p></div>
+      <div class="card"><h3>Cocoa &amp; Shadow</h3><p>Two bunnies from a closed-down farm, now living the cozy life at The Snuggle Inn.</p></div>
+      <div class="card"><h3>Ginger &amp; the Spice Girls</h3><p>A proud mama cat and her five kittens: Pepper, Saffron, Sugar, Hania, and Sesame.</p></div>
+      <div class="card"><h3>Howard</h3><p>A sleepy-eyed Saint Bernard who once rescued lost hikers from deep mountain snow.</p></div>
+      <div class="card"><h3>Yuki &amp; Raja</h3><p>A white tiger and an orange tiger, retired from the circus and loving every sunny nap.</p></div>
+      <div class="card"><h3>Pixie &amp; Spike</h3><p>Two floppy-eared beagle puppies hoping the Newman family picks them. (Spoiler: they do.)</p></div>
+      <div class="card"><h3>Nurse Mira</h3><p>Dressed all in pink, checking on everyone at the Hope Shelter to keep them happy and healthy.</p></div>
+      <div class="card"><h3>The &rsquo;65 Mustang</h3><p>The cool old convertible that carries Harlow and Lois from one good deed to the next.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="mono sec-label">Production Roadmap</div>
+    <h2>How this book gets made</h2>
+    <p class="lede">The same pipeline that produced <i>Harlow&rsquo;s Accidental Journey</i> &mdash; from Lois&rsquo;s manuscript to a printed book and a digital flipbook.</p>
+    <div class="phases">
+      <div class="phase active"><div class="n">PHASE 1 · NOW</div><h4>Story</h4><p>Draft 1 received. Lois is tweaking wording and shaping the final manuscript.</p></div>
+      <div class="phase"><div class="n">PHASE 2</div><h4>Edit</h4><p>Story lock, page-by-page spread plan, and a clean production text.</p></div>
+      <div class="phase"><div class="n">PHASE 3</div><h4>Cast &amp; Recipes</h4><p>Character recipes and reference portraits for every new face.</p></div>
+      <div class="phase"><div class="n">PHASE 4</div><h4>Illustration</h4><p>Spread art in the book-one hand, reviewed spread by spread.</p></div>
+      <div class="phase"><div class="n">PHASE 5</div><h4>Layout &amp; Proof</h4><p>Typeset book, printed proof, and Lois&rsquo;s notes pass.</p></div>
+      <div class="phase"><div class="n">PHASE 6</div><h4>Print &amp; Publish</h4><p>Hardcover and paperback on Lulu, plus the digital flipbook.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="mono sec-label">Start with Book One</div>
+    <div class="book1">
+      <div class="txt">
+        <h3>Harlow&rsquo;s Accidental Journey</h3>
+        <p>The first adventure &mdash; published November 2026 in hardcover and paperback, with a free digital flipbook. New here? Start with the day Harlow&rsquo;s trip to the vet turned into something much bigger.</p>
+        <a class="btn" href="https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/">Visit the book one site</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 · A work in progress</div>
+    <div>Produced by Jon Farrell · <a href="https://github.com/MyDigitalStudioz/Harlows-Helping-Paws">Project on GitHub</a></div>
+  </footer>
+
+</div>
+</body>
+</html>
