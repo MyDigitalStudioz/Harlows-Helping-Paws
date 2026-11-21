@@ -86,6 +86,20 @@
     color:#16120e; background:var(--gold); border-radius:6px; padding:3px 9px;
     margin-top:10px; text-transform:uppercase;
   }
+  /* Take switcher — a quiet row under a place plate; buttons never change
+     fill on hover (a stuck hover wash reads as a state on touch). */
+  .takeswitch{display:flex; align-items:center; gap:12px; margin-top:12px;}
+  .tsbtn{
+    flex:none; width:44px; height:44px; border-radius:50%; cursor:pointer;
+    border:1px solid var(--gold-dim); background:var(--card2); color:var(--gold);
+    font-size:26px; line-height:1; display:flex; align-items:center; justify-content:center;
+    padding:0 0 4px; font-family:inherit; -webkit-tap-highlight-color:transparent;
+  }
+  .tsbtn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+  .tscount{
+    font-size:13px; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--muted);
+  }
 
   /* ---------- Places groups ----------
      The stages sit in two family panels — environments (E) first, then
@@ -524,33 +538,33 @@ var IMG = "review-assets/v2/";
 
 /* PLACES — the twelve stage plates, story order, with their reference codes. */
 var PLACES = [
-  { code: "E01", kind: "Environment", img: "e01.jpg", name: "The Snuggle Inn",
+  { code: "E01", kind: "Environment", takes: ["e01.jpg", "e01-alt.jpg"], name: "The Snuggle Inn",
     cap: "<b>The Snuggle Inn, from outside</b> — Day One&rsquo;s home base, the cage-free animal shelter where Lois volunteers." },
-  { code: "E02", kind: "Environment", img: "e02.jpg", name: "Puppy Play Area",
+  { code: "E02", kind: "Environment", takes: ["e02.jpg", "e02-alt.jpg"], name: "Puppy Play Area",
     cap: "<b>Puppy Play Area</b> — the sunny yard where Pixie and Spike romp, and where the Newman family comes to play." },
-  { code: "E03", kind: "Environment", img: "e03.jpg", name: "Tiger Habitat",
+  { code: "E03", kind: "Environment", takes: ["e03.jpg", "e03-alt.jpg"], name: "Tiger Habitat",
     cap: "<b>Tiger Habitat</b> — a sanctuary garden, never a cage: pool and waterfall, sun-warmed rocks, shade trees." },
-  { code: "E04", kind: "Environment", img: "e04.jpg", name: "Pony Field + Barn",
+  { code: "E04", kind: "Environment", takes: ["e04.jpg", "e04-alt.jpg"], name: "Pony Field + Barn",
     cap: "<b>Pony Field + Barn</b> — the sunny field where Ginger, Penny and Freckles kick up their heels." },
-  { code: "E05", kind: "Environment", img: "e05.jpg", name: "The Community Hope Shelter",
+  { code: "E05", kind: "Environment", takes: ["e05.jpg", "e05-alt.jpg"], name: "The Community Hope Shelter",
     cap: "<b>The Hope Shelter, from outside</b> — Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang." },
-  { code: "R01", kind: "Room", img: "r01.jpg", name: "Snuggle Inn — Fireside Lobby",
+  { code: "R01", kind: "Room", takes: ["r01.jpg", "r01-alt.jpg"], name: "Snuggle Inn — Fireside Lobby",
     cap: "<b>Fireside Lobby</b> — the warm heart of the Inn: a crackling stone fireplace, a deep red sofa, a braided rug." },
-  { code: "R02", kind: "Room", img: "r02.jpg", name: "Snuggle Inn — Welcome Lobby",
+  { code: "R02", kind: "Room", takes: ["r02.jpg", "r02-alt.jpg"], name: "Snuggle Inn — Welcome Lobby",
     cap: "<b>Welcome Lobby</b> — the first hello: sunny windows, cozy pens made up with soft beds and blankets." },
-  { code: "R03", kind: "Room", img: "r03.jpg", name: "Hope Shelter — Common Room",
+  { code: "R03", kind: "Room", takes: ["r03.jpg", "r03-alt.jpg"], name: "Hope Shelter — Common Room",
     cap: "<b>Common Room</b> — where Grandpa settles into his cozy chair and gives Harlow the best chin scratches ever." },
-  { code: "R04", kind: "Room", img: "r04.jpg", name: "Clothing Exchange",
+  { code: "R04", kind: "Room", takes: ["r04.jpg", "r04-alt.jpg"], name: "Clothing Exchange",
     cap: "<b>Clothing Exchange</b> — racks of just-right clothes, free for the choosing; Mia helps here." },
-  { code: "R05", kind: "Room", img: "r05.jpg", name: "Hope Shelter — Kitchen &amp; Dining",
+  { code: "R05", kind: "Room", takes: ["r05.jpg", "r05-alt.jpg"], name: "Hope Shelter — Kitchen &amp; Dining",
     cap: "<b>Kitchen &amp; Dining</b> — where Lois, Maria and Joe dish up the yummy feast, served free to anyone who&rsquo;s hungry." },
-  { code: "R06", kind: "Room", img: "r06.jpg", name: "Bunk Room",
+  { code: "R06", kind: "Room", takes: ["r06.jpg", "r06-alt.jpg"], name: "Bunk Room",
     cap: "<b>Bunk Room</b> — where Tony shows off his brand-new fuzzy pajamas, and Harlow curls up beside him for the night." },
-  { code: "R07", kind: "Room", img: "r07.jpg", name: "Lois &amp; Harlow&rsquo;s Home",
+  { code: "R07", kind: "Room", takes: ["r07.jpg", "r07-alt.jpg"], name: "Lois &amp; Harlow&rsquo;s Home",
     cap: "<b>Lois &amp; Harlow&rsquo;s Home</b> — home again after two days of helping: the cozy couch, a warm lamp, Harlow&rsquo;s own cat bed." }
 ];
 
-var BG = { code: "", kind: "Extras sheet", img: "background-cast.jpg", name: "Background Cast",
+var BG = { code: "", kind: "Extras sheet", takes: ["background-cast.jpg"], name: "Background Cast",
   cap: "<b>The extras sheet</b> — unnamed background figures for crowd scenes, cited by ID in scene briefs: people <b>P1–P8</b>, animals <b>A1–A4</b>. Background only — never promoted to named cast." };
 /* DRAFT — Lois's fifteen Draft 1 illustrations, in manuscript (story)
    order: her original placeholder art, the same images the mockup books
@@ -662,18 +676,51 @@ function seamOverlay() {
   sm.innerHTML = '<i class="band"></i><i class="line"></i><span class="slab">SEAM</span>';
   return sm;
 }
+/* A place entry carries an ordered takes list (takes[0] is the adopted
+   plate); p.take is the take currently picked on its card. Adding a take
+   later is a data-only change: one image file + one list entry. */
+function takeFile(p) { var t = p.takes || [p.img]; return t[p.take || 0]; }
 function buildPlate(p, withGuides, inLb) {
   var sp = document.createElement("div");
   sp.className = "spread wide";
   var pg = document.createElement("div");
   pg.className = "page";
   var im = document.createElement("img");
-  im.src = IMG + p.img; im.alt = (p.code ? p.code + " — " : "") + p.name.replace(/&amp;/g, "&").replace(/&rsquo;/g, "’");
+  im.src = IMG + takeFile(p); im.alt = (p.code ? p.code + " — " : "") + p.name.replace(/&amp;/g, "&").replace(/&rsquo;/g, "’");
   pg.appendChild(im);
   if (withGuides) pg.appendChild(luluOverlay());
   sp.appendChild(pg);
   if (withGuides && inLb) sp.appendChild(seamOverlay());
   return sp;
+}
+
+/* ---------- Take switcher — cycles a place card through its takes in
+   place. Per-card state lives on the entry (p.take), so the lightbox
+   opens on the take picked on the card; the counter always reads from
+   the takes list length, never a fixed number. ---------- */
+function takeSwitcher(p, imgEl) {
+  var row = document.createElement("div");
+  row.className = "takeswitch";
+  var prev = document.createElement("button");
+  prev.type = "button"; prev.className = "tsbtn"; prev.innerHTML = "&lsaquo;";
+  prev.setAttribute("aria-label", "Previous take of " + p.code);
+  var lab = document.createElement("span");
+  lab.className = "tscount"; lab.setAttribute("aria-live", "polite");
+  var next = document.createElement("button");
+  next.type = "button"; next.className = "tsbtn"; next.innerHTML = "&rsaquo;";
+  next.setAttribute("aria-label", "Next take of " + p.code);
+  function paint() { lab.textContent = "Take " + ((p.take || 0) + 1) + " of " + p.takes.length; }
+  function step(d) {
+    var n = p.takes.length;
+    p.take = (((p.take || 0) + d) % n + n) % n;
+    imgEl.src = IMG + p.takes[p.take];
+    paint();
+  }
+  prev.addEventListener("click", function () { step(-1); });
+  next.addEventListener("click", function () { step(1); });
+  row.appendChild(prev); row.appendChild(lab); row.appendChild(next);
+  paint();
+  return row;
 }
 
 /* ---------- Places + Background cards ---------- */
@@ -703,7 +750,9 @@ FLAT.forEach(function (p, i) {
   cap.className = "cap"; cap.innerHTML = p.cap;
   var tag = document.createElement("span");
   tag.className = "tag"; tag.textContent = p.code ? (p.kind + " plate — " + p.code) : p.kind;
-  card.appendChild(h); card.appendChild(sp); card.appendChild(cap); card.appendChild(tag);
+  card.appendChild(h); card.appendChild(sp);
+  if (p.takes && p.takes.length > 1) card.appendChild(takeSwitcher(p, sp.querySelector("img")));
+  card.appendChild(cap); card.appendChild(tag);
   (i < PLACES.length ? (p.kind === "Room" ? roomGroup : envGroup) : bgWrap).appendChild(card);
 });
 
@@ -845,7 +894,8 @@ function renderLb() {
   fresh.id = "lbSpread";
   var old = document.getElementById("lbSpread");
   inner.replaceChild(fresh, old);
-  lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "");
+  lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "") +
+    (p.takes && p.takes.length > 1 ? " · Take " + ((p.take || 0) + 1) + " of " + p.takes.length : "");
   lbCount.textContent = lbNoun + " " + (cur + 1) + " of " + lbList.length;
   lbPrev.disabled = cur === 0;
   lbNext.disabled = cur === lbList.length - 1;
