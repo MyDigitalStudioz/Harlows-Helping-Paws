@@ -131,6 +131,39 @@
     font-size:22px;font-weight:700;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.5);
     opacity:0;pointer-events:none;transition:opacity .25s ease}
   #toTop.show{opacity:1;pointer-events:auto}
+  /* Cast deck — 3-D flip-through browser (Jon's call, 2026-11-20) */
+  .deck{--dw:min(320px,72vw);margin-top:22px;outline:none;border-radius:var(--radius)}
+  .deck:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+  .deck-stage{position:relative;height:calc(var(--dw) + 84px);perspective:1200px;overflow:hidden;touch-action:pan-y}
+  .deck-slide{position:absolute;left:50%;top:50%;width:var(--dw);margin:0;background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;pointer-events:none;
+    transform:translate(-50%,-50%);opacity:0;visibility:hidden;z-index:1;
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s linear .45s}
+  .deck-slide img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;-webkit-user-drag:none;user-select:none}
+  .deck-slide figcaption{padding:11px 16px 13px;font-size:16.5px;font-weight:800}
+  .deck-slide.is-center{opacity:1;visibility:visible;pointer-events:auto;z-index:3;filter:none;
+    transform:translate(-50%,-50%) rotateY(0deg) scale(1);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .deck-slide.is-prev{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% - 62%),-50%) rotateY(38deg) scale(.82);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .deck-slide.is-next{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% + 62%),-50%) rotateY(-38deg) scale(.82);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .deck-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:48px;height:48px;
+    border-radius:50%;border:1px solid rgba(227,179,65,.6);background:rgba(18,19,20,.85);
+    color:var(--gold);font-size:30px;line-height:1;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;padding:0 0 5px}
+  .deck-arrow:hover{background:rgba(227,179,65,.2)}
+  .deck-prev{left:8px}
+  .deck-next{right:8px}
+  .deck-bar{display:flex;align-items:center;justify-content:center;margin-top:8px}
+  .deck-count{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.14em;color:var(--muted)}
+  @media (prefers-reduced-motion: reduce){
+    .deck-slide{transition:opacity .25s ease,visibility 0s linear .25s}
+    .deck-slide.is-center{transition:opacity .25s ease,visibility 0s}
+    .deck-slide.is-prev,.deck-slide.is-next{opacity:0;visibility:hidden;transform:translate(-50%,-50%)}
+  }
 </style>
 </head>
 <body>
@@ -355,6 +388,45 @@
   </section>
 
   <section>
+    <div class="mono sec-label">Cast Browser</div>
+    <h2>Flip through the cast</h2>
+    <p class="lede">The whole gang on one deck &mdash; tap the arrows, swipe, or use your arrow keys to flip through every friend of the Inn. The full cards are all still above; this is just the fun way to browse them.</p>
+    <div class="deck" id="castDeck" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Flip through the cast">
+      <div class="deck-stage" id="deckStage">
+        <figure class="deck-slide"><img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall" draggable="false"><figcaption>Harlow</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/lois-portrait.jpg" alt="Lois, smiling, in her deep-plum cardigan" draggable="false"><figcaption>Lois</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/mira-portrait.jpg" alt="Nurse Mira in pink scrubs and her hearts-and-bows scrub cap" draggable="false"><figcaption>Nurse Mira</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/maria-portrait.jpg" alt="Maria, grinning, long black hair, in her cream cardigan and floral blouse" draggable="false"><figcaption>Maria</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/mia-portrait.jpg" alt="Mia, big grin, very long dark-brown wavy hair, in her navy henley top with her silver teardrop necklace" draggable="false"><figcaption>Mia</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/jon-portrait.jpg" alt="Jon, salt-and-pepper hair and white chin beard, in his black zip jacket" draggable="false"><figcaption>Jon</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/howard-portrait.jpg" alt="Howard, a giant Saint Bernard with a warm brown-and-white coat and a brass-tag collar" draggable="false"><figcaption>Howard</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/yuki-portrait.jpg" alt="Yuki, a snowy white tiger with fine charcoal stripes and ice-blue eyes" draggable="false"><figcaption>Yuki</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/raja-portrait.jpg" alt="Raja, a bright orange tiger with bold black stripes and amber eyes" draggable="false"><figcaption>Raja</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/cocoa-portrait.jpg" alt="Cocoa, a warm caramel bunny with tall upright ears and amber-brown eyes" draggable="false"><figcaption>Cocoa</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/shadow-portrait.jpg" alt="Shadow, a charcoal-black bunny with one flopped ear wearing a tan plaid scarf" draggable="false"><figcaption>Shadow</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/ginger-portrait.jpg" alt="Ginger, a warm orange tabby cat with amber-gold eyes, wearing a soft blue collar with one small gold bell" draggable="false"><figcaption>Ginger</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/spice-girls-portrait.jpg" alt="The Spice Girls — five kitten sisters close together: Pepper the black kitten, Saffron the orange tabby, Sugar the white kitten, Sesame the gray tabby, and Hania the calico" draggable="false"><figcaption>The Spice Girls</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/ginger-pony-portrait.jpg" alt="Ginger the pony, a chestnut Shetland-type pony with a flaxen mane and a cream-tan muzzle" draggable="false"><figcaption>Ginger the Pony</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/penny-portrait.jpg" alt="Penny, a solid black pony with a thick black mane, in near-profile" draggable="false"><figcaption>Penny</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/freckles-portrait.jpg" alt="Freckles, a white pony with chestnut leopard spots, a chestnut head and a white blaze" draggable="false"><figcaption>Freckles</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/grandpa-portrait.jpg" alt="Grandpa, smiling big — gray-white hair, reddish-brown brows, thin metal glasses, a gray mustache and white chin beard, in a charcoal hoodie over a gray tee" draggable="false"><figcaption>Grandpa</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/joe-portrait.jpg" alt="Joe, a smiling Hope Shelter kitchen volunteer — short dark wavy hair, clean-shaven, in a navy sweater under a sage-green apron with a plain blank name tag" draggable="false"><figcaption>Joe</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/tony-portrait.jpg" alt="Tony, a boy of about eight with short smooth dark-brown hair and rosy cheeks, wearing a gray pom-pom beanie and deep-blue fuzzy pajamas patterned with white stars and moons" draggable="false"><figcaption>Tony</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/newman-family-portrait.jpg" alt="The Newman family — mom with curly brown hair and round tortoiseshell glasses, in a mustard sweater under denim overalls; dad with tousled brown hair, a short beard, and black glasses, in a denim shirt; and their little girl with pigtails and purple bows, in a purple sunflower sweatshirt — all three laughing together" draggable="false"><figcaption>The Newman Family</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/pixie-portrait.jpg" alt="Pixie, a tricolor beagle puppy with a wide white blaze and long floppy tan ears" draggable="false"><figcaption>Pixie</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/spike-headshot-v4.jpg" alt="Spike, a tricolor beagle puppy with a dark bandit mask over both eyes, near-black ears and a thin white stripe that tapers and fades out into the dark fur on his forehead" draggable="false"><figcaption>Spike</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/mustang-portrait.jpg" alt="The ’65 Mustang — a pale silvery-blue 1965 Ford Mustang convertible, top down" draggable="false"><figcaption>The &rsquo;65 Mustang</figcaption></figure>
+        <figure class="deck-slide"><img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows" draggable="false"><figcaption>Snuggle Inn &mdash; Fireside Lobby</figcaption></figure>
+        <figure class="deck-slide"><img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows" draggable="false"><figcaption>Snuggle Inn &mdash; Welcome Lobby</figcaption></figure>
+        <figure class="deck-slide"><img src="media/cast/background-cast.jpg" alt="The background cast — eight everyday people and four animals in one loose group: a dad in a burgundy sweater, a young mom in sage green, a heavyset man in a navy fleece, a woman with a long braid and a teal cardigan, a young volunteer in a plain tan vest, an older woman in a rust cardigan, a boy in an olive hoodie and a little girl in coral, with a scruffy mutt, a gray tabby, a small white fluffy dog and a black cat at their feet" draggable="false"><figcaption>Background Cast</figcaption></figure>
+        <button type="button" class="deck-arrow deck-prev" id="deckPrev" aria-label="Previous card">&lsaquo;</button>
+        <button type="button" class="deck-arrow deck-next" id="deckNext" aria-label="Next card">&rsaquo;</button>
+      </div>
+      <div class="deck-bar"><span class="deck-count" id="deckCount" aria-live="polite">1 / 26</span></div>
+    </div>
+  </section>
+
+  <section>
     <div class="mono sec-label">Production Roadmap</div>
     <h2>How this book gets made</h2>
     <p class="lede">The same pipeline that produced <i>Harlow&rsquo;s Accidental Journey</i> &mdash; from Lois&rsquo;s manuscript to a printed book and a digital flipbook.</p>
@@ -447,6 +519,43 @@
       btn.textContent = open ? "Hide full body" : "Show full body";
     });
   });
+})();
+</script>
+<script>
+(function () {
+  var deck = document.getElementById("castDeck");
+  if (!deck) return;
+  var slides = Array.prototype.slice.call(deck.querySelectorAll(".deck-slide"));
+  var count = document.getElementById("deckCount");
+  var n = slides.length, cur = 0;
+  function render() {
+    slides.forEach(function (s, i) {
+      var off = ((i - cur) % n + n) % n;
+      if (off > n / 2) off -= n;
+      s.classList.toggle("is-center", off === 0);
+      s.classList.toggle("is-prev", off === -1);
+      s.classList.toggle("is-next", off === 1);
+      s.setAttribute("aria-hidden", off === 0 ? "false" : "true");
+    });
+    count.textContent = (cur + 1) + " / " + n;
+  }
+  function go(d) { cur = ((cur + d) % n + n) % n; render(); }
+  document.getElementById("deckNext").addEventListener("click", function () { go(1); });
+  document.getElementById("deckPrev").addEventListener("click", function () { go(-1); });
+  deck.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+  });
+  var stage = document.getElementById("deckStage"), dragX = null;
+  stage.addEventListener("pointerdown", function (e) { dragX = e.clientX; });
+  stage.addEventListener("pointerup", function (e) {
+    if (dragX === null) return;
+    var dx = e.clientX - dragX; dragX = null;
+    if (dx <= -40) go(1);
+    else if (dx >= 40) go(-1);
+  });
+  stage.addEventListener("pointercancel", function () { dragX = null; });
+  render();
 })();
 </script>
 </body>
