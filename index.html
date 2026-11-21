@@ -69,6 +69,8 @@
   .book1 .txt{flex:1;min-width:260px}
   .book1 h3{font-size:20px;font-weight:800;margin-bottom:6px}
   .book1 p{color:var(--muted);font-size:15px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+  .btnrow .btn{margin-top:0}
   a.btn{display:inline-block;margin-top:14px;padding:11px 18px;min-height:44px;border-radius:10px;border:1px solid rgba(227,179,65,.6);
         color:var(--gold);text-decoration:none;font-weight:700;font-size:14.5px;background:rgba(227,179,65,.08)}
   a.btn:hover{background:rgba(227,179,65,.16)}
@@ -103,8 +105,10 @@
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
   .bslide img{width:100%;display:block;aspect-ratio:3/2;-webkit-user-drag:none;user-select:none}
   .bcap-status{color:var(--muted);font-weight:600}
-  footer{margin-top:64px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13.5px;
-         display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+  footer{margin-top:64px;border-top:1px solid var(--line);padding:28px 0 30px;color:var(--muted);font-size:13.5px;
+         display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+  footer>div{min-width:0}
+  @media(max-width:640px){footer{flex-direction:column;gap:6px}}
   footer a{color:var(--gold);text-decoration:none}
   /* Shared HHP top menu — same component as the spread review pages, this page's palette */
   .topnav{display:flex;align-items:center;gap:10px;position:sticky;top:8px;z-index:40;
@@ -615,16 +619,16 @@
       <div class="txt">
         <h3>Five books on the shelf</h3>
         <p>Our 3D BookVizion bookshelf holds five books &mdash; <i>Harlow&rsquo;s Accidental Journey</i>, the complete first adventure, plus four Helping Paws volumes: the story mockup, flipping with Lois&rsquo;s draft art so you can feel the pages turn; the Spread Mockup, the draft art laid out as full spreads; <i>Story &amp; Text</i>, the story book with Lois&rsquo;s own words facing every picture; and <i>Meet the Cast</i>, the character gallery. Book Two&rsquo;s real spreads join the shelf as they&rsquo;re illustrated.</p>
-        <a class="btn" href="flipbook/">Go to the bookshelf</a>
-        <a class="btn" href="spread-options-v2.html">View all spreads</a>
+        <div class="btnrow">
+          <a class="btn" href="flipbook/">Go to the bookshelf</a>
+          <a class="btn" href="spread-options-v2.html">View all spreads</a>
+          <a class="btn" href="https://drive.google.com/file/d/1QjNXZOpIgHJtbiV65UFBT8aoInqiZIj-/view" target="_blank" rel="noopener">Read the current manuscript — Draft 1</a>
+        </div>
       </div>
     </div>
   </section>
 
   <footer>
-    <div style="flex:1 1 100%;text-align:center;padding-bottom:16px">
-      <a class="btn" href="https://drive.google.com/file/d/1QjNXZOpIgHJtbiV65UFBT8aoInqiZIj-/view" target="_blank" rel="noopener">Read the current manuscript — Draft 1</a>
-    </div>
     <div>Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 · A work in progress</div>
     <div>Produced by Jon Farrell · <a href="https://github.com/MyDigitalStudioz/Harlows-Helping-Paws" target="_blank" rel="noopener">Project on GitHub</a></div>
   </footer>
