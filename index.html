@@ -92,11 +92,17 @@
   .tail-card p{font-size:13.5px;color:var(--muted)}
   .fb-wrap{border-top:1px solid var(--line)}
   .fb-wrap img{aspect-ratio:auto}
-  .board{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .board img{width:100%;display:block}
-  .board .cap{padding:14px 20px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
-  .board h3{font-size:17px;font-weight:800}
-  .board p{font-size:13.5px;color:var(--muted)}
+  /* Character Boards — ONE horizontal scroll-snap strip instead of a vertical stack
+     (Jon's ask, 2026-11-21): one board per stop in the Covers filmstrip family;
+     the nav arrows reuse the decks' locked .deck-arrow style as-is. */
+  .bstrip-wrap{position:relative;margin-top:16px}
+  .bstrip{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+    scrollbar-width:none;padding:3px;transform:translateZ(0)}
+  .bstrip::-webkit-scrollbar{display:none}
+  .bslide{flex:none;width:min(560px,92vw);margin:0;scroll-snap-align:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .bslide img{width:100%;display:block;aspect-ratio:3/2;-webkit-user-drag:none;user-select:none}
+  .bcap-status{color:var(--muted);font-weight:600}
   footer{margin-top:64px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13.5px;
          display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
   footer a{color:var(--gold);text-decoration:none}
@@ -361,30 +367,20 @@
     <p class="lede">Each lead gets a full character board &mdash; portraits, expressions, outfits, colors, and key traits on one sheet. These boards are the law of the land for the illustrators: if it isn&rsquo;t on the board, it doesn&rsquo;t go in the book.</p>
     <button type="button" class="btn" id="boardsToggle" aria-expanded="false" aria-controls="boardsWrap">Show character boards</button>
     <div id="boardsWrap" hidden>
-    <div class="board">
-      <img src="media/boards/harlow-board.jpg" alt="Harlow's character board">
-      <div class="cap"><h3>Harlow &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
+    <div class="bstrip-wrap">
+      <div class="bstrip" id="boardsStrip" role="group" aria-label="Character boards &mdash; swipe sideways to browse the boards">
+        <figure class="bslide" data-name="Harlow &mdash; Character Board" data-status="Locked November 20, 2026"><img src="media/boards/harlow-board.jpg" alt="Harlow's character board" draggable="false"></figure>
+        <figure class="bslide" data-name="Lois &mdash; Character Board" data-status="Locked November 20, 2026"><img src="media/boards/lois-board.jpg" alt="Lois's character board" draggable="false"></figure>
+        <figure class="bslide" data-name="Nurse Mira &mdash; Character Board" data-status="Locked November 20, 2026"><img src="media/boards/mira-board.jpg" alt="Nurse Mira's character board" draggable="false"></figure>
+        <figure class="bslide" data-name="Maria &mdash; Character Board" data-status="Produced November 20, 2026"><img src="media/boards/maria-board.jpg" alt="Maria's character board" draggable="false"></figure>
+        <figure class="bslide" data-name="Jon &mdash; Character Board" data-status="Produced November 20, 2026"><img src="media/boards/jon-board.jpg" alt="Jon's character board" draggable="false"></figure>
+        <figure class="bslide" data-name="Mia &mdash; Character Board" data-status="Produced November 20, 2026"><img src="media/boards/mia-board.jpg" alt="Mia's character board" draggable="false"></figure>
+      </div>
+      <button type="button" class="deck-arrow deck-prev" id="boardsPrev" aria-label="Previous board">&lsaquo;</button>
+      <button type="button" class="deck-arrow deck-next" id="boardsNext" aria-label="Next board">&rsaquo;</button>
     </div>
-    <div class="board">
-      <img src="media/boards/lois-board.jpg" alt="Lois's character board">
-      <div class="cap"><h3>Lois &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
-    </div>
-    <div class="board">
-      <img src="media/boards/mira-board.jpg" alt="Nurse Mira's character board">
-      <div class="cap"><h3>Nurse Mira &mdash; Character Board</h3><p>Locked November 20, 2026</p></div>
-    </div>
-    <div class="board">
-      <img src="media/boards/maria-board.jpg" alt="Maria's character board">
-      <div class="cap"><h3>Maria &mdash; Character Board</h3><p>Produced November 20, 2026</p></div>
-    </div>
-    <div class="board">
-      <img src="media/boards/jon-board.jpg" alt="Jon's character board">
-      <div class="cap"><h3>Jon &mdash; Character Board</h3><p>Produced November 20, 2026</p></div>
-    </div>
-    <div class="board">
-      <img src="media/boards/mia-board.jpg" alt="Mia's character board">
-      <div class="cap"><h3>Mia &mdash; Character Board</h3><p>Produced November 20, 2026</p></div>
-    </div>
+    <p class="covcap" id="boardsCap" aria-live="polite">Harlow &mdash; Character Board</p>
+    <div class="deck-bar"><span class="deck-count" id="boardsCount" aria-live="polite">1 / 6</span></div>
     </div>
   </section>
 
@@ -847,6 +843,45 @@
     c.addEventListener("click", function () { select(parseInt(c.getAttribute("data-pair"), 10)); });
   });
   caption();
+})();
+</script>
+<script>
+(function () {
+  var strip = document.getElementById("boardsStrip");
+  if (!strip) return;
+  var slides = Array.prototype.slice.call(strip.querySelectorAll(".bslide"));
+  var cap = document.getElementById("boardsCap");
+  var count = document.getElementById("boardsCount");
+  var n = slides.length, cur = -1;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function current() {
+    var mid = strip.scrollLeft + strip.clientWidth / 2, best = 0, bd = Infinity;
+    slides.forEach(function (s, i) {
+      var d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - mid);
+      if (d < bd) { bd = d; best = i; }
+    });
+    return best;
+  }
+  function render() {
+    var i = current();
+    if (i === cur) return;
+    cur = i;
+    cap.innerHTML = slides[i].getAttribute("data-name") + ' <span class="bcap-status">&middot; ' + slides[i].getAttribute("data-status") + "</span>";
+    count.textContent = (i + 1) + " / " + n;
+  }
+  var raf = 0;
+  strip.addEventListener("scroll", function () {
+    if (raf) return;
+    raf = requestAnimationFrame(function () { raf = 0; render(); });
+  }, { passive: true });
+  function goTo(i) {
+    i = Math.max(0, Math.min(n - 1, i));
+    var target = slides[i].offsetLeft + slides[i].offsetWidth / 2 - strip.clientWidth / 2;
+    strip.scrollTo({ left: Math.max(0, target), behavior: reduced ? "auto" : "smooth" });
+  }
+  document.getElementById("boardsNext").addEventListener("click", function () { goTo(current() + 1); });
+  document.getElementById("boardsPrev").addEventListener("click", function () { goTo(current() - 1); });
+  render();
 })();
 </script>
 </body>
