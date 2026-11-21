@@ -6767,8 +6767,15 @@
        holds picture data before anything is stored, and bumping
        this version makes every store (the fb-cover-thumbs records
        and the thumbV field on import records) discard thumbs
-       written by the old generator and regenerate them once. */
-    var COVER_THUMB_V = 2;
+       written by the old generator and regenerate them once.
+       Bumped 2 -> 3 on 2026-11-21: a stored thumb is validated by
+       the cover's src PATH alone, so an in-place cover-art swap at
+       the same path (the Every Paw and Harlow's Rounds shelf swaps)
+       left pre-swap thumbnails valid forever on devices that had
+       already generated them — the reader showed the new cover
+       while the shelf tile kept the old art. RULE: any in-place
+       cover-art swap bumps COVER_THUMB_V in the same change. */
+    var COVER_THUMB_V = 3;
     var coverThumbMem = {};       // book id -> {src, thumb}
     var coverThumbInflight = {};  // book id -> {src, cbs:[fn]}
     var coverThumbDb = null, coverThumbDbFailed = false;
