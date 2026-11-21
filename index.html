@@ -158,6 +158,7 @@
     font-size:22px;font-weight:700;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.5);
     opacity:0;pointer-events:none;transition:opacity .25s ease}
   #toTop.show{opacity:1;pointer-events:auto}
+  #toTop.covers{opacity:0;pointer-events:none}
   /* Cast deck — 3-D flip-through browser (Jon's call, 2026-11-20) */
   .deck{--dw:min(320px,72vw);margin-top:22px;outline:none;border-radius:var(--radius)}
   .deck:focus-visible{box-shadow:0 0 0 2px var(--gold)}
@@ -774,6 +775,14 @@
   toTop.addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "auto" });
   });
+  var coversSec = document.getElementById("covers");
+  if (coversSec && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        toTop.classList.toggle("covers", en.isIntersecting);
+      });
+    }).observe(coversSec);
+  }
   var boardsToggle = document.getElementById("boardsToggle"), boardsWrap = document.getElementById("boardsWrap");
   boardsToggle.addEventListener("click", function () {
     var open = boardsWrap.hidden;
