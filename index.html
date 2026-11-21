@@ -231,16 +231,30 @@
   .covbadge{position:absolute;right:10px;bottom:10px;z-index:2}
   .covcap{text-align:center;margin-top:16px;font-size:16px;font-weight:800}
   .covcap .covface-name{color:var(--gold)}
-  .covgroups{margin-top:20px;display:flex;flex-direction:column;gap:16px;align-items:center}
-  .covgroup{text-align:center}
-  .covglabel{color:var(--muted);margin-bottom:9px}
-  .covchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-  .cchip{border:1px solid var(--line);background:var(--panel);color:var(--ivory);border-radius:999px;
-    padding:8px 15px;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer}
-  .cchip:hover{border-color:rgba(227,179,65,.55)}
-  .cchip.is-sel{border-color:var(--gold);color:var(--gold);background:rgba(227,179,65,.1)}
-  .cchip .cshelf{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--gold);margin-left:7px;vertical-align:2px;white-space:nowrap}
+  .covstrip{position:relative;display:flex;gap:20px;margin-top:20px;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:3px 3px 5px}
+  .covstrip::-webkit-scrollbar{display:none}
+  .covseg{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
+  .covseglabel{color:var(--muted);font-size:10.5px;text-align:left}
+  .covthumbs{display:flex;gap:10px}
+  .cthumb{flex:0 0 auto;width:82px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
+    scroll-snap-align:start;text-align:center;-webkit-tap-highlight-color:transparent}
+  .cthumb-img{position:relative;display:block;width:82px;height:82px;border-radius:10px;overflow:hidden;
+    border:1px solid var(--line);background:var(--panel)}
+  .cthumb-img img{width:100%;height:100%;display:block;object-fit:cover;-webkit-user-drag:none;user-select:none}
+  .cthumb:hover .cthumb-img{border-color:rgba(227,179,65,.55)}
+  .cthumb.is-sel .cthumb-img{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+  .cthumb:focus-visible{outline:none}
+  .cthumb:focus-visible .cthumb-img{box-shadow:0 0 0 2px var(--gold)}
+  .cthumb-code{position:absolute;left:5px;bottom:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    font-weight:600;color:var(--gold);background:rgba(10,10,12,.8);border-radius:5px;padding:2px 6px;line-height:1.3}
+  .cthumb-dot{position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 0 2px rgba(10,10,12,.45)}
+  .cthumb-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    margin-top:7px;font-size:10.5px;font-weight:700;line-height:1.3;color:var(--ivory)}
+  .cthumb.is-sel .cthumb-name{color:var(--gold)}
+  .cthumb-shelf{display:block;margin-top:2px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:600;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
   @media (prefers-reduced-motion: reduce){
     .covflip,.covflip.flipped{transform:none;transition:none}
     .covface{backface-visibility:visible;-webkit-backface-visibility:visible;transition:opacity .25s ease}
@@ -544,20 +558,37 @@
       </div>
       <p class="covcap" id="coverCap" aria-live="polite">F1 &mdash; Every Paw <span class="covface-name">&middot; Front cover</span></p>
       <p class="deck-taphint">Tap the cover to see the back</p>
-      <div class="covgroups">
-        <div class="covgroup">
-          <div class="mono covglabel">Story Book</div>
-          <div class="covchips" role="group" aria-label="Story book cover sets">
-            <button type="button" class="cchip is-sel" data-pair="0">F1 &middot; Every Paw<span class="cshelf">on the shelf</span></button>
-            <button type="button" class="cchip" data-pair="1">F2 &middot; Harlow&rsquo;s Rounds</button>
-            <button type="button" class="cchip" data-pair="2">F3 &middot; Welcome to the Snuggle Inn</button>
+      <div class="covstrip" id="coverStrip" role="group" aria-label="Cover sets &mdash; swipe sideways and tap a cover to view it">
+        <div class="covseg">
+          <div class="mono covseglabel">Story Book</div>
+          <div class="covthumbs">
+            <button type="button" class="cthumb is-sel" data-pair="0" aria-pressed="true" aria-label="F1 &mdash; Every Paw (on the shelf)">
+              <span class="cthumb-img"><img src="media/covers/every-paw-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F1</span><span class="cthumb-dot" aria-hidden="true"></span></span>
+              <span class="cthumb-name">Every Paw</span>
+              <span class="cthumb-shelf">On the shelf</span>
+            </button>
+            <button type="button" class="cthumb" data-pair="1" aria-pressed="false" aria-label="F2 &mdash; Harlow&rsquo;s Rounds">
+              <span class="cthumb-img"><img src="media/covers/harlows-rounds-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F2</span></span>
+              <span class="cthumb-name">Harlow&rsquo;s Rounds</span>
+            </button>
+            <button type="button" class="cthumb" data-pair="2" aria-pressed="false" aria-label="F3 &mdash; Welcome to the Snuggle Inn">
+              <span class="cthumb-img"><img src="media/covers/snuggle-inn-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F3</span></span>
+              <span class="cthumb-name">Snuggle Inn</span>
+            </button>
           </div>
         </div>
-        <div class="covgroup">
-          <div class="mono covglabel">Meet the Cast</div>
-          <div class="covchips" role="group" aria-label="Meet the Cast cover sets">
-            <button type="button" class="cchip" data-pair="3">F4 &middot; Garden Portrait<span class="cshelf">on the shelf</span></button>
-            <button type="button" class="cchip" data-pair="4">F5 &middot; Portrait Gallery</button>
+        <div class="covseg">
+          <div class="mono covseglabel">Meet the Cast</div>
+          <div class="covthumbs">
+            <button type="button" class="cthumb" data-pair="3" aria-pressed="false" aria-label="F4 &mdash; Garden Portrait (on the shelf)">
+              <span class="cthumb-img"><img src="media/covers/mtc-garden-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F4</span><span class="cthumb-dot" aria-hidden="true"></span></span>
+              <span class="cthumb-name">Garden Portrait</span>
+              <span class="cthumb-shelf">On the shelf</span>
+            </button>
+            <button type="button" class="cthumb" data-pair="4" aria-pressed="false" aria-label="F5 &mdash; Portrait Gallery">
+              <span class="cthumb-img"><img src="media/covers/mtc-gallery-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F5</span></span>
+              <span class="cthumb-name">Portrait Gallery</span>
+            </button>
           </div>
         </div>
       </div>
@@ -773,7 +804,8 @@
   var fImg = document.getElementById("coverFrontImg");
   var bImg = document.getElementById("coverBackImg");
   var cap = document.getElementById("coverCap");
-  var chips = Array.prototype.slice.call(document.querySelectorAll(".cchip"));
+  var thumbs = Array.prototype.slice.call(document.querySelectorAll(".cthumb"));
+  var strip = document.getElementById("coverStrip");
   var cur = 0, flipped = false;
   PAIRS.forEach(function (p) { var a = new Image(); a.src = p.front; var b = new Image(); b.src = p.back; });
   function caption() {
@@ -786,7 +818,16 @@
     flip.classList.remove("flipped");
     fImg.src = PAIRS[cur].front; fImg.alt = PAIRS[cur].altF;
     bImg.src = PAIRS[cur].back; bImg.alt = PAIRS[cur].altB;
-    chips.forEach(function (c) { c.classList.toggle("is-sel", parseInt(c.getAttribute("data-pair"), 10) === cur); });
+    thumbs.forEach(function (c) {
+      var on = parseInt(c.getAttribute("data-pair"), 10) === cur;
+      c.classList.toggle("is-sel", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+      if (on && strip) {
+        var target = c.offsetLeft - (strip.clientWidth - c.offsetWidth) / 2;
+        var smooth = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        strip.scrollTo({ left: Math.max(0, target), behavior: smooth ? "smooth" : "auto" });
+      }
+    });
     void flip.offsetWidth;
     flip.classList.remove("covnoanim");
     caption();
@@ -800,7 +841,7 @@
   flip.addEventListener("keydown", function (e) {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
   });
-  chips.forEach(function (c) {
+  thumbs.forEach(function (c) {
     c.addEventListener("click", function () { select(parseInt(c.getAttribute("data-pair"), 10)); });
   });
   caption();
