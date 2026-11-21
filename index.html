@@ -209,7 +209,7 @@
   /* Places deck \u2014 sideways flip-through for the rooms, same family as the cast deck (Jon's call, 2026-11-20) */
   .pdeck{--pw:min(600px,88vw);margin-top:22px;outline:none;border-radius:var(--radius)}
   .pdeck:focus-visible{box-shadow:0 0 0 2px var(--gold)}
-  .pdeck-stage{position:relative;height:calc(var(--pw) * 2 / 3 + 128px);perspective:1200px;overflow:hidden;touch-action:pan-y}
+  .pdeck-stage{position:relative;height:calc(var(--pw) * 2 / 3 + 186px);perspective:1200px;overflow:hidden;touch-action:pan-y}
   .pdeck-slide{position:absolute;left:50%;top:50%;width:var(--pw);margin:0;background:var(--panel);
     border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;pointer-events:none;
     transform:translate(-50%,-50%);opacity:0;visibility:hidden;z-index:1;
@@ -228,6 +228,15 @@
   .pdeck-slide .pcode{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--gold)}
   .pdeck-slide .pcode::after{content:" \00B7";color:var(--muted);font-weight:400;margin:0 9px 0 7px}
   .pdeck-slide .pblurb{display:block;font-size:13.5px;line-height:1.45;color:var(--muted)}
+  /* Take switcher — cycles the slide's plate through its takes in place;
+     buttons keep the decks' locked frosted fill in every state. */
+  .pdeck-slide .takeswitch{display:flex;align-items:center;gap:12px;margin-top:11px}
+  .pdeck-slide .tsbtn{flex:none;width:44px;height:44px;border-radius:50%;cursor:pointer;
+    border:1px solid rgba(227,179,65,.6);background:rgba(18,19,20,.6);color:var(--gold);
+    font-size:25px;line-height:1;display:flex;align-items:center;justify-content:center;
+    padding:0 0 4px;font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .pdeck-slide .tsbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .pdeck-slide .tscount{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.14em;color:var(--muted)}
   .pdeck-slide.is-center{opacity:1;visibility:visible;pointer-events:auto;z-index:3;filter:none;
     transform:translate(-50%,-50%) rotateY(0deg) scale(1);
     transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
@@ -927,6 +936,69 @@
   document.getElementById("boardsNext").addEventListener("click", function () { goTo(current() + 1); });
   document.getElementById("boardsPrev").addEventListener("click", function () { goTo(current() - 1); });
   render();
+})();
+</script>
+<script>
+/* Places take switcher — every Places slide can carry several takes of its
+   plate (Take 1 = the adopted plate, Take 2 = the color alternate). The
+   PLACE_TAKES lists are the whole mechanism: adding a take later is a
+   data-only change (one image file + one list entry). State is per slide
+   and independent; the counter always reads from the list length. */
+(function () {
+  var PLACE_TAKES = {
+    "E01": ["media/scenes/snuggle-inn-exterior.jpg", "media/scenes/snuggle-inn-exterior-alt.jpg"],
+    "R01": ["media/scenes/snuggle-inn-fireside-lobby.jpg", "media/scenes/snuggle-inn-fireside-lobby-alt.jpg"],
+    "R02": ["media/scenes/snuggle-inn-welcome-lobby.jpg", "media/scenes/snuggle-inn-welcome-lobby-alt.jpg"],
+    "E02": ["media/scenes/puppy-play-area.jpg", "media/scenes/puppy-play-area-alt.jpg"],
+    "E03": ["media/scenes/tiger-habitat.jpg", "media/scenes/tiger-habitat-alt.jpg"],
+    "E04": ["media/scenes/pony-field-barn.jpg", "media/scenes/pony-field-barn-alt.jpg"],
+    "E05": ["media/scenes/hope-shelter-exterior.jpg", "media/scenes/hope-shelter-exterior-alt.jpg"],
+    "R03": ["media/scenes/hope-shelter-common-room.jpg", "media/scenes/hope-shelter-common-room-alt.jpg"],
+    "R04": ["media/scenes/clothing-exchange.jpg", "media/scenes/clothing-exchange-alt.jpg"],
+    "R05": ["media/scenes/hope-shelter-kitchen-dining.jpg", "media/scenes/hope-shelter-kitchen-dining-alt.jpg"],
+    "R06": ["media/scenes/bunk-room.jpg", "media/scenes/bunk-room-alt.jpg"],
+    "R07": ["media/scenes/lois-harlow-home.jpg", "media/scenes/lois-harlow-home-alt.jpg"]
+  };
+  var slides = Array.prototype.slice.call(document.querySelectorAll("#placesDeck .pdeck-slide"));
+  slides.forEach(function (slide) {
+    var codeEl = slide.querySelector(".pcode");
+    if (!codeEl) return;
+    var takes = PLACE_TAKES[codeEl.textContent.trim()];
+    if (!takes || takes.length < 2) return;
+    var img = slide.querySelector("img");
+    var cap = slide.querySelector("figcaption");
+    if (!img || !cap) return;
+    var idx = 0;
+    var row = document.createElement("div");
+    row.className = "takeswitch";
+    var prev = document.createElement("button");
+    prev.type = "button"; prev.className = "tsbtn"; prev.innerHTML = "&lsaquo;";
+    prev.setAttribute("aria-label", "Previous take");
+    var lab = document.createElement("span");
+    lab.className = "tscount"; lab.setAttribute("aria-live", "polite");
+    var next = document.createElement("button");
+    next.type = "button"; next.className = "tsbtn"; next.innerHTML = "&rsaquo;";
+    next.setAttribute("aria-label", "Next take");
+    function paint() { lab.textContent = "Take " + (idx + 1) + " of " + takes.length; }
+    function step(d) {
+      idx = (((idx + d) % takes.length) + takes.length) % takes.length;
+      img.src = takes[idx];
+      paint();
+    }
+    prev.addEventListener("click", function () { step(-1); });
+    next.addEventListener("click", function () { step(1); });
+    row.appendChild(prev); row.appendChild(lab); row.appendChild(next);
+    cap.appendChild(row);
+    paint();
+    /* Only the centered slide's buttons stay in the tab order. */
+    function syncTab() {
+      var on = slide.classList.contains("is-center");
+      prev.tabIndex = on ? 0 : -1;
+      next.tabIndex = on ? 0 : -1;
+    }
+    new MutationObserver(syncTab).observe(slide, { attributes: true, attributeFilter: ["class"] });
+    syncTab();
+  });
 })();
 </script>
 </body>
