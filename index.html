@@ -205,6 +205,39 @@
     .deck-slide.is-prev,.deck-slide.is-next{opacity:0;visibility:hidden;transform:translate(-50%,-50%)}
     .deck-flip{transition:none}
   }
+
+  /* The Covers \u2014 tap-to-flip test-cover viewer (Jon's go, 2026-11-20) */
+  .covbook{--cw:min(430px,84vw);margin-top:22px;perspective:1200px}
+  .covflip{position:relative;width:var(--cw);margin:0 auto;cursor:pointer;border-radius:var(--radius);
+    transform-style:preserve-3d;transition:transform .45s ease}
+  .covflip:focus-visible{box-shadow:0 0 0 2px var(--gold);outline:none}
+  .covflip.flipped{transform:rotateY(180deg)}
+  .covflip.covnoanim{transition:none}
+  .covface{backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+  .covface-front{position:relative}
+  .covface-back{position:absolute;inset:0;transform:rotateY(180deg)}
+  .covface img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;-webkit-user-drag:none;user-select:none}
+  .covbadge{position:absolute;right:10px;bottom:10px;z-index:2}
+  .covcap{text-align:center;margin-top:16px;font-size:16px;font-weight:800}
+  .covcap .covface-name{color:var(--gold)}
+  .covgroups{margin-top:20px;display:flex;flex-direction:column;gap:16px;align-items:center}
+  .covgroup{text-align:center}
+  .covglabel{color:var(--muted);margin-bottom:9px}
+  .covchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .cchip{border:1px solid var(--line);background:var(--panel);color:var(--ivory);border-radius:999px;
+    padding:8px 15px;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer}
+  .cchip:hover{border-color:rgba(227,179,65,.55)}
+  .cchip.is-sel{border-color:var(--gold);color:var(--gold);background:rgba(227,179,65,.1)}
+  .cchip .cshelf{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--gold);margin-left:7px;vertical-align:2px;white-space:nowrap}
+  @media (prefers-reduced-motion: reduce){
+    .covflip,.covflip.flipped{transform:none;transition:none}
+    .covface{backface-visibility:visible;-webkit-backface-visibility:visible;transition:opacity .25s ease}
+    .covface-back{transform:none;opacity:0}
+    .covflip.flipped .covface-front{opacity:0}
+    .covflip.flipped .covface-back{opacity:1}
+  }
 </style>
 </head>
 <body>
@@ -484,6 +517,43 @@
     </div>
   </section>
 
+  <section id="covers">
+    <div class="mono sec-label">The Covers</div>
+    <h2>Dressing the books</h2>
+    <p class="lede">Jon&rsquo;s test covers for the two books on the shelf &mdash; tap a cover to turn the book over and see its back. These are try-outs while the book comes together; the final print covers are still to come.</p>
+    <div class="covbook">
+      <div class="covflip" id="coverFlip" tabindex="0" role="button" aria-label="Every Paw front cover &mdash; tap to see the back cover">
+        <div class="covface covface-front">
+          <img id="coverFrontImg" src="media/covers/every-paw-front.jpg" alt="Every Paw test cover, front &mdash; Harlow and the puppies gathered on the Snuggle Inn doorstep under the title Harlow&rsquo;s Helping Paws" draggable="false">
+          <span class="deck-backicon covbadge" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+        </div>
+        <div class="covface covface-back">
+          <img id="coverBackImg" src="media/covers/every-paw-back.jpg" alt="Every Paw test cover, back &mdash; &lsquo;Every paw deserves a home&rsquo; over a sunset field with the tigers and the ponies" draggable="false" loading="lazy">
+          <span class="deck-backicon covbadge" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+        </div>
+      </div>
+      <p class="covcap" id="coverCap" aria-live="polite">F1 &mdash; Every Paw <span class="covface-name">&middot; Front cover</span></p>
+      <p class="deck-taphint">Tap the cover to see the back</p>
+      <div class="covgroups">
+        <div class="covgroup">
+          <div class="mono covglabel">Story Book</div>
+          <div class="covchips" role="group" aria-label="Story book cover sets">
+            <button type="button" class="cchip is-sel" data-pair="0">F1 &middot; Every Paw<span class="cshelf">on the shelf</span></button>
+            <button type="button" class="cchip" data-pair="1">F2 &middot; Harlow&rsquo;s Rounds</button>
+            <button type="button" class="cchip" data-pair="2">F3 &middot; Welcome to the Snuggle Inn</button>
+          </div>
+        </div>
+        <div class="covgroup">
+          <div class="mono covglabel">Meet the Cast</div>
+          <div class="covchips" role="group" aria-label="Meet the Cast cover sets">
+            <button type="button" class="cchip" data-pair="3">F4 &middot; Garden Portrait<span class="cshelf">on the shelf</span></button>
+            <button type="button" class="cchip" data-pair="4">F5 &middot; Portrait Gallery</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="mono sec-label">Production Roadmap</div>
     <h2>How this book gets made</h2>
@@ -666,6 +736,64 @@
   });
   stage.addEventListener("pointercancel", function () { dragX = null; });
   render();
+})();
+</script>
+
+<script>
+(function () {
+  var flip = document.getElementById("coverFlip");
+  if (!flip) return;
+  var PAIRS = [
+    { name: "Every Paw", front: "media/covers/every-paw-front.jpg", back: "media/covers/every-paw-back.jpg",
+      altF: "Every Paw test cover, front \u2014 Harlow and the puppies gathered on the Snuggle Inn doorstep under the title Harlow\u2019s Helping Paws",
+      altB: "Every Paw test cover, back \u2014 \u2018Every paw deserves a home\u2019 over a sunset field with the tigers and the ponies" },
+    { name: "Harlow\u2019s Rounds", front: "media/covers/harlows-rounds-front.jpg", back: "media/covers/harlows-rounds-back.jpg",
+      altF: "Harlow\u2019s Rounds test cover, front \u2014 Harlow mid-stride on his rounds with Howard and a basket of kittens, under a navy title",
+      altB: "Harlow\u2019s Rounds test cover, back \u2014 \u2018Come along on Harlow\u2019s rounds\u2019: the mama cat and her kittens tumbling on a braided rug in a sunny room" },
+    { name: "Welcome to the Snuggle Inn", front: "media/covers/snuggle-inn-front.jpg", back: "media/covers/snuggle-inn-back.jpg",
+      altF: "Welcome to the Snuggle Inn test cover, front \u2014 the green cottage with its hanging Snuggle Inn sign",
+      altB: "Welcome to the Snuggle Inn test cover, back \u2014 Cocoa and Shadow among the daisies" },
+    { name: "Garden Portrait", front: "media/covers/mtc-garden-front.jpg", back: "media/covers/mtc-garden-back.jpg",
+      altF: "Meet the Cast test cover, Garden Portrait front \u2014 Lois with the whole cast grouped around her in front of The Snuggle Inn",
+      altB: "Meet the Cast test cover, Garden Portrait back \u2014 \u2018The Snuggle Inn Cast\u2019: the ponies, the tigers, the mama cat and her kittens in the garden" },
+    { name: "Portrait Gallery", front: "media/covers/mtc-gallery-front.jpg", back: "media/covers/mtc-gallery-back.jpg",
+      altF: "Meet the Cast test cover, Portrait Gallery front \u2014 gold-framed portraits of Lois, Harlow, Howard, the puppies and the bunnies on a deep teal ground",
+      altB: "Meet the Cast test cover, Portrait Gallery back \u2014 \u2018Friends at The Snuggle Inn\u2019: framed rows of the cats and kittens, the ponies, and the two tigers" }
+  ];
+  var fImg = document.getElementById("coverFrontImg");
+  var bImg = document.getElementById("coverBackImg");
+  var cap = document.getElementById("coverCap");
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".cchip"));
+  var cur = 0, flipped = false;
+  PAIRS.forEach(function (p) { var a = new Image(); a.src = p.front; var b = new Image(); b.src = p.back; });
+  function caption() {
+    cap.innerHTML = (flipped ? "B" : "F") + (cur + 1) + " — " + PAIRS[cur].name + ' <span class="covface-name">&middot; ' + (flipped ? "Back" : "Front") + " cover</span>";
+    flip.setAttribute("aria-label", PAIRS[cur].name + " " + (flipped ? "back" : "front") + " cover \u2014 tap to see the " + (flipped ? "front" : "back") + " cover");
+  }
+  function select(i) {
+    cur = i; flipped = false;
+    flip.classList.add("covnoanim");
+    flip.classList.remove("flipped");
+    fImg.src = PAIRS[cur].front; fImg.alt = PAIRS[cur].altF;
+    bImg.src = PAIRS[cur].back; bImg.alt = PAIRS[cur].altB;
+    chips.forEach(function (c) { c.classList.toggle("is-sel", parseInt(c.getAttribute("data-pair"), 10) === cur); });
+    void flip.offsetWidth;
+    flip.classList.remove("covnoanim");
+    caption();
+  }
+  function toggle() {
+    flipped = !flipped;
+    flip.classList.toggle("flipped", flipped);
+    caption();
+  }
+  flip.addEventListener("click", toggle);
+  flip.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+  });
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () { select(parseInt(c.getAttribute("data-pair"), 10)); });
+  });
+  caption();
 })();
 </script>
 </body>
