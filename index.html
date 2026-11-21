@@ -173,6 +173,32 @@
   .deck-backicon{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.35)}
   .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
   .deck-taphint{text-align:center;color:var(--muted);font-size:13.5px;margin:8px 0 0}
+  /* Places deck \u2014 sideways flip-through for the rooms, same family as the cast deck (Jon's call, 2026-11-20) */
+  .pdeck{--pw:min(600px,88vw);margin-top:22px;outline:none;border-radius:var(--radius)}
+  .pdeck:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+  .pdeck-stage{position:relative;height:calc(var(--pw) * 2 / 3 + 128px);perspective:1200px;overflow:hidden;touch-action:pan-y}
+  .pdeck-slide{position:absolute;left:50%;top:50%;width:var(--pw);margin:0;background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;pointer-events:none;
+    transform:translate(-50%,-50%);opacity:0;visibility:hidden;z-index:1;
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s linear .45s}
+  .pdeck-slide img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover;-webkit-user-drag:none;user-select:none}
+  .pdeck-slide figcaption{padding:12px 18px 15px}
+  .pdeck-slide .pname{display:block;font-size:17px;font-weight:800;margin-bottom:3px}
+  .pdeck-slide .pblurb{display:block;font-size:13.5px;line-height:1.45;color:var(--muted)}
+  .pdeck-slide.is-center{opacity:1;visibility:visible;pointer-events:auto;z-index:3;filter:none;
+    transform:translate(-50%,-50%) rotateY(0deg) scale(1);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .pdeck-slide.is-prev{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% - 60%),-50%) rotateY(30deg) scale(.84);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .pdeck-slide.is-next{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% + 60%),-50%) rotateY(-30deg) scale(.84);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  @media (prefers-reduced-motion: reduce){
+    .pdeck-slide{transition:opacity .25s ease,visibility 0s linear .25s}
+    .pdeck-slide.is-center{transition:opacity .25s ease,visibility 0s}
+    .pdeck-slide.is-prev,.pdeck-slide.is-next{opacity:0;visibility:hidden;transform:translate(-50%,-50%)}
+  }
   @media (prefers-reduced-motion: reduce){
     .deck-slide{transition:opacity .25s ease,visibility 0s linear .25s}
     .deck-slide.is-center{transition:opacity .25s ease,visibility 0s}
@@ -196,7 +222,7 @@
     <div class="mono eyebrow"><svg class="paw" width="20" height="20" viewBox="0 0 24 24" fill="#E3B341"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><circle cx="4.6" cy="10.5" r="1.9"/><circle cx="8.6" cy="7.2" r="2.1"/><circle cx="13.4" cy="6.6" r="2.1"/><circle cx="17.6" cy="8.6" r="1.9"/><circle cx="20" cy="12.4" r="1.6"/></svg>Lois Farrell · Book Two · A Harlow Story</div>
     <h1>Harlow&rsquo;s Helping Paws</h1>
     <div class="working">Working title &mdash; story and wording still being polished by the author</div>
-    <p class="tagline">Harlow the cat is back. This time she and Lois roll up their sleeves &mdash; one day helping animals at The Snuggle Inn shelter, the next helping people at The Community Hope Shelter.</p>
+    <p class="tagline">Harlow the cat is back. This time he and Lois roll up their sleeves &mdash; one day helping animals at The Snuggle Inn shelter, the next helping people at The Community Hope Shelter.</p>
     <div class="rule"></div>
     <div class="status">
       <div class="chip"><span class="dot"></span><b>Status:</b>&nbsp; In production</div>
@@ -234,7 +260,7 @@
       <div class="cast-card">
         <img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall">
         <div class="cap"><h3>Harlow</h3><p class="blurb">Our narrator &mdash; a curious, kind-hearted cat with a happy purr and a nose for a good story.</p><p>The star. Seal-point Ragdoll, azure-cerulean eyes, and that very long plume tail.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-harlow">Show full body</button></div>
-        <div class="fb-wrap" id="fb-harlow" hidden><img src="media/cast/harlow-fullbody.jpg" alt="Harlow, full body — seal-point Ragdoll sitting, long plume tail curled around her"></div>
+        <div class="fb-wrap" id="fb-harlow" hidden><img src="media/cast/harlow-fullbody.jpg" alt="Harlow, full body — seal-point Ragdoll sitting, long plume tail curled around him"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/lois-portrait.jpg" alt="Lois, smiling, in her deep-plum cardigan">
@@ -400,7 +426,7 @@
     <p class="lede">The whole gang on one deck &mdash; tap the arrows, swipe, or use your arrow keys to flip through every friend of the Inn. The full cards are all still above; this is just the fun way to browse them.</p>
     <div class="deck" id="castDeck" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Flip through the cast">
       <div class="deck-stage" id="deckStage">
-        <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall" draggable="false"><figcaption>Harlow</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/harlow-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/harlow-fullbody.jpg" alt="Harlow, full body — seal-point Ragdoll sitting, long plume tail curled around her" draggable="false" loading="lazy"></div><figcaption>Harlow<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
+        <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall" draggable="false"><figcaption>Harlow</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/harlow-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/harlow-fullbody.jpg" alt="Harlow, full body — seal-point Ragdoll sitting, long plume tail curled around him" draggable="false" loading="lazy"></div><figcaption>Harlow<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/lois-portrait.jpg" alt="Lois, smiling, in her deep-plum cardigan" draggable="false"><figcaption>Lois</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/lois-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/lois-fullbody.jpg" alt="Lois, full body — deep-plum cardigan, black pants and brown knee boots" draggable="false" loading="lazy"></div><figcaption>Lois<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/mira-portrait.jpg" alt="Nurse Mira in pink scrubs and her hearts-and-bows scrub cap" draggable="false"><figcaption>Nurse Mira</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/mira-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/mira-fullbody.jpg" alt="Nurse Mira, full body, in pink scrubs and her scrub cap" draggable="false" loading="lazy"></div><figcaption>Nurse Mira<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/maria-portrait.jpg" alt="Maria, grinning, long black hair, in her cream cardigan and floral blouse" draggable="false"><figcaption>Maria</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/maria-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/maria-fullbody.jpg" alt="Maria, full body — cream cardigan, floral blouse, jeans and dark-brown flats" draggable="false" loading="lazy"></div><figcaption>Maria<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
@@ -436,55 +462,25 @@
     <div class="mono sec-label">The Places</div>
     <h2>Where the helping happens</h2>
     <p class="lede">The story&rsquo;s stages, painted empty and waiting &mdash; every room and yard the cast will step into. Day One at The Snuggle Inn, Day Two across town at The Community Hope Shelter, and home again at Lois and Harlow&rsquo;s.</p>
-    <div class="cast-grid">
-      <div class="cast-card place-card">
-        <img src="media/scenes/snuggle-inn-exterior.jpg" alt="The Snuggle Inn from outside — a storybook cottage with a stone chimney and outdoor fireplace, flower boxes, a pergola play yard to the side, and a blank wooden sign by the stone garden path">
-        <div class="cap"><h3>The Snuggle Inn</h3><p class="blurb">Day One&rsquo;s home base &mdash; the cage-free animal shelter where Lois volunteers and every adoption day begins.</p></div>
+    <div class="pdeck" id="placesDeck" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Flip through the places">
+      <div class="pdeck-stage" id="placesStage">
+        <figure class="pdeck-slide"><img src="media/scenes/snuggle-inn-exterior.jpg" alt="The Snuggle Inn from outside — a storybook cottage with a stone chimney and outdoor fireplace, flower boxes, a pergola play yard to the side, and a blank wooden sign by the stone garden path" draggable="false"><figcaption><span class="pname">The Snuggle Inn</span><span class="pblurb">Day One&rsquo;s home base &mdash; the cage-free animal shelter where Lois volunteers and every adoption day begins.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows" draggable="false"><figcaption><span class="pname">Snuggle Inn &mdash; Fireside Lobby</span><span class="pblurb">The warm heart of the Inn &mdash; a crackling stone fireplace, a deep red sofa, and a braided rug with room for everyone.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows" draggable="false" loading="lazy"><figcaption><span class="pname">Snuggle Inn &mdash; Welcome Lobby</span><span class="pblurb">The first hello &mdash; sunny windows, cozy pens made up with soft beds and blankets, and a paw-print sign over the door.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/puppy-play-area.jpg" alt="The Puppy Play Area at The Snuggle Inn — a pergola shaded by flowering vines, a play tunnel, balls and a rope toy on the grass, dog beds in the shade, and water bowls by the open gate" draggable="false" loading="lazy"><figcaption><span class="pname">Puppy Play Area</span><span class="pblurb">The sunny yard where Pixie and Spike romp &mdash; and where the Newman family comes to play, and stays to choose.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/tiger-habitat.jpg" alt="The Tiger Habitat at The Snuggle Inn — a sanctuary garden with a pool and small waterfall, sun-warmed rocks, a rock shelter nook, and shade trees behind a low wooden viewing fence" draggable="false" loading="lazy"><figcaption><span class="pname">Tiger Habitat</span><span class="pblurb">A sanctuary garden, never a cage &mdash; where Yuki and Raja take their sunny naps.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/pony-field-barn.jpg" alt="The pony field at The Snuggle Inn — a split-rail fence with open gates, a honey-timber barn with hay bales inside, an apple tree with red apples, and a stone water trough" draggable="false" loading="lazy"><figcaption><span class="pname">Pony Field + Barn</span><span class="pblurb">The sunny field where Ginger, Penny, and Freckles kick up their heels &mdash; apples on the tree, hay in the barn.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/hope-shelter-exterior.jpg" alt="The Community Hope Shelter from outside — cream stucco and brick, a timber porch with open double doors, benches, flower boxes, and a crate of folded blankets by the door" draggable="false" loading="lazy"><figcaption><span class="pname">The Community Hope Shelter</span><span class="pblurb">Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang &mdash; a warm meal and a welcome for anyone who comes in.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/hope-shelter-common-room.jpg" alt="The Hope Shelter common room — a rust-red sofa and armchairs around a big braided rug, two game tables with unmarked boards, a bookshelf, and a cork board with blank colored notes" draggable="false" loading="lazy"><figcaption><span class="pname">Hope Shelter &mdash; Common Room</span><span class="pblurb">Where Grandpa settles into his cozy chair &mdash; and gives Harlow the best chin scratches ever.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/clothing-exchange.jpg" alt="The Clothing Exchange at the Hope Shelter — racks of sweaters, jackets, and pajamas, folded clothes on a long table, woven bins, a hat-and-scarf basket, and a standing mirror" draggable="false" loading="lazy"><figcaption><span class="pname">Clothing Exchange</span><span class="pblurb">Racks of just-right clothes, free for the choosing &mdash; where Mia helps, and Harlow politely declines one very large blue knitted hat.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/hope-shelter-kitchen-dining.jpg" alt="The Hope Shelter kitchen and dining room — a serving counter with copper pans, covered dishes, and stacks of plates, and two long wooden tables with benches set for the feast" draggable="false" loading="lazy"><figcaption><span class="pname">Hope Shelter &mdash; Kitchen &amp; Dining</span><span class="pblurb">Where Lois, Maria, and Joe dish up the yummy feast, served free to anyone who&rsquo;s hungry.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/bunk-room.jpg" alt="The Hope Shelter bunk room at dusk — two wooden bunk beds and a single bed with plain cream, rust, and gold bedding, a lantern glowing on the nightstand by the door, and the moon in the window" draggable="false" loading="lazy"><figcaption><span class="pname">Bunk Room</span><span class="pblurb">Where Tony shows off his brand-new fuzzy pajamas &mdash; and Harlow curls up beside him for the night.</span></figcaption></figure>
+        <figure class="pdeck-slide"><img src="media/scenes/lois-harlow-home.jpg" alt="Lois and Harlow's living room in the evening — a red sofa and cream armchair, a coffee table with a teacup and a stack of books, a glowing lamp, and Harlow's empty round cat bed on the braided rug" draggable="false"><figcaption><span class="pname">Lois &amp; Harlow&rsquo;s Home</span><span class="pblurb">Home again after two days of helping &mdash; the cozy couch, a warm lamp, and Harlow&rsquo;s own cat bed waiting.</span></figcaption></figure>
+        <button type="button" class="deck-arrow deck-prev" id="placesPrev" aria-label="Previous place">&lsaquo;</button>
+        <button type="button" class="deck-arrow deck-next" id="placesNext" aria-label="Next place">&rsaquo;</button>
       </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows">
-        <div class="cap"><h3>Snuggle Inn &mdash; Fireside Lobby</h3><p class="blurb">The warm heart of the Inn &mdash; a crackling stone fireplace, a deep red sofa, and a braided rug with room for everyone.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows">
-        <div class="cap"><h3>Snuggle Inn &mdash; Welcome Lobby</h3><p class="blurb">The first hello &mdash; sunny windows, cozy pens made up with soft beds and blankets, and a paw-print sign over the door.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/puppy-play-area.jpg" alt="The Puppy Play Area at The Snuggle Inn — a pergola shaded by flowering vines, a play tunnel, balls and a rope toy on the grass, dog beds in the shade, and water bowls by the open gate">
-        <div class="cap"><h3>Puppy Play Area</h3><p class="blurb">The sunny yard where Pixie and Spike romp &mdash; and where the Newman family comes to play, and stays to choose.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/tiger-habitat.jpg" alt="The Tiger Habitat at The Snuggle Inn — a sanctuary garden with a pool and small waterfall, sun-warmed rocks, a rock shelter nook, and shade trees behind a low wooden viewing fence">
-        <div class="cap"><h3>Tiger Habitat</h3><p class="blurb">A sanctuary garden, never a cage &mdash; where Yuki and Raja take their sunny naps.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/pony-field-barn.jpg" alt="The pony field at The Snuggle Inn — a split-rail fence with open gates, a honey-timber barn with hay bales inside, an apple tree with red apples, and a stone water trough">
-        <div class="cap"><h3>Pony Field + Barn</h3><p class="blurb">The sunny field where Ginger, Penny, and Freckles kick up their heels &mdash; apples on the tree, hay in the barn.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/hope-shelter-exterior.jpg" alt="The Community Hope Shelter from outside — cream stucco and brick, a timber porch with open double doors, benches, flower boxes, and a crate of folded blankets by the door">
-        <div class="cap"><h3>The Community Hope Shelter</h3><p class="blurb">Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang &mdash; a warm meal and a welcome for anyone who comes in.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/hope-shelter-common-room.jpg" alt="The Hope Shelter common room — a rust-red sofa and armchairs around a big braided rug, two game tables with unmarked boards, a bookshelf, and a cork board with blank colored notes">
-        <div class="cap"><h3>Hope Shelter &mdash; Common Room</h3><p class="blurb">Where Grandpa settles into his cozy chair &mdash; and gives Harlow the best chin scratches ever.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/clothing-exchange.jpg" alt="The Clothing Exchange at the Hope Shelter — racks of sweaters, jackets, and pajamas, folded clothes on a long table, woven bins, a hat-and-scarf basket, and a standing mirror">
-        <div class="cap"><h3>Clothing Exchange</h3><p class="blurb">Racks of just-right clothes, free for the choosing &mdash; where Mia helps, and Harlow politely declines one very large blue knitted hat.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/hope-shelter-kitchen-dining.jpg" alt="The Hope Shelter kitchen and dining room — a serving counter with copper pans, covered dishes, and stacks of plates, and two long wooden tables with benches set for the feast">
-        <div class="cap"><h3>Hope Shelter &mdash; Kitchen &amp; Dining</h3><p class="blurb">Where Lois, Maria, and Joe dish up the yummy feast, served free to anyone who&rsquo;s hungry.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/bunk-room.jpg" alt="The Hope Shelter bunk room at dusk — two wooden bunk beds and a single bed with plain cream, rust, and gold bedding, a lantern glowing on the nightstand by the door, and the moon in the window">
-        <div class="cap"><h3>Bunk Room</h3><p class="blurb">Where Tony shows off his brand-new fuzzy pajamas &mdash; and Harlow curls up beside him for the night.</p></div>
-      </div>
-      <div class="cast-card place-card">
-        <img src="media/scenes/lois-harlow-home.jpg" alt="Lois and Harlow's living room in the evening — a red sofa and cream armchair, a coffee table with a teacup and a stack of books, a glowing lamp, and Harlow's empty round cat bed on the braided rug">
-        <div class="cap"><h3>Lois &amp; Harlow&rsquo;s Home</h3><p class="blurb">Home again after two days of helping &mdash; the cozy couch, a warm lamp, and Harlow&rsquo;s own cat bed waiting.</p></div>
-      </div>
+      <div class="deck-bar"><span class="deck-count" id="placesCount" aria-live="polite">1 / 12</span></div>
+      <p class="deck-taphint">Swipe or tap the arrows to wander</p>
     </div>
   </section>
 
@@ -631,6 +627,44 @@
     }
   });
   stage.addEventListener("pointercancel", function () { dragX = null; dragY = null; });
+  render();
+})();
+</script>
+<script>
+(function () {
+  var deck = document.getElementById("placesDeck");
+  if (!deck) return;
+  var slides = Array.prototype.slice.call(deck.querySelectorAll(".pdeck-slide"));
+  var count = document.getElementById("placesCount");
+  var n = slides.length, cur = 0;
+  function render() {
+    slides.forEach(function (s, i) {
+      var off = ((i - cur) % n + n) % n;
+      if (off > n / 2) off -= n;
+      s.classList.toggle("is-center", off === 0);
+      s.classList.toggle("is-prev", off === -1);
+      s.classList.toggle("is-next", off === 1);
+      s.setAttribute("aria-hidden", off === 0 ? "false" : "true");
+    });
+    count.textContent = (cur + 1) + " / " + n;
+  }
+  function go(d) { cur = ((cur + d) % n + n) % n; render(); }
+  document.getElementById("placesNext").addEventListener("click", function () { go(1); });
+  document.getElementById("placesPrev").addEventListener("click", function () { go(-1); });
+  deck.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+  });
+  var stage = document.getElementById("placesStage"), dragX = null;
+  stage.addEventListener("pointerdown", function (e) { dragX = e.clientX; });
+  stage.addEventListener("pointerup", function (e) {
+    if (dragX === null) return;
+    var dx = e.clientX - dragX;
+    dragX = null;
+    if (dx <= -40) go(1);
+    else if (dx >= 40) go(-1);
+  });
+  stage.addEventListener("pointercancel", function () { dragX = null; });
   render();
 })();
 </script>
