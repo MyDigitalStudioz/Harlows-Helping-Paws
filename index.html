@@ -235,7 +235,11 @@
   .covface-front{position:relative}
   .covface-back{position:absolute;inset:0;transform:rotateY(180deg)}
   .covface img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;-webkit-user-drag:none;user-select:none}
-  .covbadge{position:absolute;right:10px;bottom:10px;z-index:2}
+  .covbadge{position:absolute;right:10px;bottom:10px;z-index:2;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  @media (prefers-reduced-motion: no-preference){
+    .covface-front{transition:visibility 0s 0s}
+    .covflip.flipped .covface-front{visibility:hidden;transition:visibility 0s .45s}
+  }
   .covcap{text-align:center;margin-top:16px;font-size:16px;font-weight:800}
   .covcap .covface-name{color:var(--gold)}
   .covstrip{position:relative;display:flex;gap:10px;margin-top:20px;overflow-x:auto;overflow-y:hidden;
@@ -557,11 +561,10 @@
         </div>
         <div class="covface covface-back">
           <img id="coverBackImg" src="media/covers/every-paw-back.jpg" alt="Every Paw test cover, back &mdash; &lsquo;Every paw deserves a home&rsquo; over a sunset field with the tigers and the ponies" draggable="false" loading="lazy">
-          <span class="deck-backicon covbadge" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
         </div>
       </div>
       <p class="covcap" id="coverCap" aria-live="polite">F1 &mdash; Every Paw <span class="covface-name">&middot; Front cover</span></p>
-      <p class="deck-taphint">Tap the cover to see the back</p>
+      <p class="deck-taphint" id="coverHint">Tap the cover to see the back</p>
       <div class="covstrip" id="coverStrip" role="group" aria-label="Cover sets &mdash; swipe sideways and tap a cover to view it">
         <button type="button" class="cthumb is-sel" data-pair="0" aria-pressed="true" aria-label="F1 &mdash; Every Paw (on the shelf)">
           <span class="cthumb-img"><img width="82" height="82" src="media/covers/every-paw-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F1</span><span class="cthumb-dot" aria-hidden="true"></span></span>
@@ -798,12 +801,14 @@
   var fImg = document.getElementById("coverFrontImg");
   var bImg = document.getElementById("coverBackImg");
   var cap = document.getElementById("coverCap");
+  var hint = document.getElementById("coverHint");
   var thumbs = Array.prototype.slice.call(document.querySelectorAll(".cthumb"));
   var strip = document.getElementById("coverStrip");
   var cur = 0, flipped = false;
   PAIRS.forEach(function (p) { var a = new Image(); a.src = p.front; var b = new Image(); b.src = p.back; });
   function caption() {
     cap.innerHTML = (flipped ? "B" : "F") + (cur + 1) + " — " + PAIRS[cur].name + ' <span class="covface-name">&middot; ' + (flipped ? "Back" : "Front") + " cover</span>";
+    if (hint) hint.textContent = flipped ? "Tap the cover to see the front" : "Tap the cover to see the back";
     flip.setAttribute("aria-label", PAIRS[cur].name + " " + (flipped ? "back" : "front") + " cover \u2014 tap to see the " + (flipped ? "front" : "back") + " cover");
   }
   function select(i) {
