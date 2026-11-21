@@ -7,6 +7,8 @@ var BOOK = {
  "pages": [
   "images/01-front.jpg",
   "images/flyleaf.jpg",
+  "images/title-page.jpg",
+  "images/copyright-page.jpg",
   "images/02-draft-01.jpg",
   "images/03-draft-02.jpg",
   "images/04-draft-03.jpg",
@@ -29,6 +31,8 @@ var BOOK = {
  "roles": [
   "front cover / title page",
   "flyleaf",
+  "title page",
+  "copyright page",
   "Lois's draft illustration 1",
   "Lois's draft illustration 2",
   "Lois's draft illustration 3",
