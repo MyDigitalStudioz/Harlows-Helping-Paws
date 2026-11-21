@@ -83,6 +83,7 @@
   .cast-card h3{font-size:17px;font-weight:800;margin-bottom:4px}
   .cast-card p{font-size:14px;color:var(--muted)}
   .cast-card p.blurb{color:rgba(243,239,230,.88);margin-bottom:6px}
+  .place-card img{aspect-ratio:3/2}
   .tail-label{margin-top:26px}
   .cast-tail{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
   @media(max-width:800px){.cast-tail{grid-template-columns:1fr}}
@@ -387,14 +388,6 @@
         <div class="fb-wrap" id="fb-mustang" hidden><img src="media/cast/mustang-fullbody.jpg" alt="The ’65 Mustang, full body — side profile, top down, pale blue-gray interior"></div>
       </div>
       <div class="cast-card">
-        <img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows">
-        <div class="cap"><h3>Snuggle Inn &mdash; Fireside Lobby</h3><p class="blurb">The warm heart of The Snuggle Inn &mdash; a crackling stone fireplace, a deep red sofa, and a braided rug with room for everyone.</p><p>Timber beams, tall sunny windows, and a fire that is always lit &mdash; the gathering place where every friend of the Inn settles in.</p></div>
-      </div>
-      <div class="cast-card">
-        <img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows">
-        <div class="cap"><h3>Snuggle Inn &mdash; Welcome Lobby</h3><p class="blurb">The first hello at The Snuggle Inn &mdash; sunny windows, cozy pens, and a paw-print sign over the door.</p><p>Playpens made up with soft beds and blankets, cat trees in the sun &mdash; the room where every guest arrives, and every adoption day begins.</p></div>
-      </div>
-      <div class="cast-card">
         <img src="media/cast/background-cast.jpg" alt="The background cast &mdash; eight everyday people and four animals in one loose group: a dad in a burgundy sweater, a young mom in sage green, a heavyset man in a navy fleece, a woman with a long braid and a teal cardigan, a young volunteer in a plain tan vest, an older woman in a rust cardigan, a boy in an olive hoodie and a little girl in coral, with a scruffy mutt, a gray tabby, a small white fluffy dog and a black cat at their feet">
         <div class="cap"><h3>Background Cast</h3><p class="blurb">The everyday faces of The Snuggle Inn and the Hope Shelter &mdash; the friends in the background of Harlow&rsquo;s days.</p><p>Eight regulars and four animals, drawn once and for good &mdash; so the crowd in every scene is the same warm crowd, page after page.</p></div>
       </div>
@@ -430,14 +423,68 @@
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/pixie-portrait.jpg" alt="Pixie, a tricolor beagle puppy with a wide white blaze and long floppy tan ears" draggable="false"><figcaption>Pixie</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/pixie-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/pixie-fullbody.jpg" alt="Pixie, full body — standing with one paw lifted, white-tipped tail high" draggable="false" loading="lazy"></div><figcaption>Pixie<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/spike-headshot-v4.jpg" alt="Spike, a tricolor beagle puppy with a dark bandit mask over both eyes, near-black ears and a thin white stripe that tapers and fades out into the dark fur on his forehead" draggable="false"><figcaption>Spike</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/spike-fullbody-v4.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/spike-fullbody-v4.jpg" alt="Spike, full body — sitting up straight and proud, mostly-black tail curled round with a white tip" draggable="false" loading="lazy"></div><figcaption>Spike<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
         <figure class="deck-slide can-flip"><div class="deck-flip"><div class="deck-face deck-front"><img src="media/cast/mustang-portrait.jpg" alt="The ’65 Mustang — a pale silvery-blue 1965 Ford Mustang convertible, top down" draggable="false"><figcaption>The &rsquo;65 Mustang</figcaption></div><div class="deck-face deck-back"><div class="deck-backmedia"><span class="deck-backbg" style="background-image:url('media/cast/mustang-fullbody.jpg')" aria-hidden="true"></span><img class="deck-backimg" src="media/cast/mustang-fullbody.jpg" alt="The ’65 Mustang, full body — side profile, top down, pale blue-gray interior" draggable="false" loading="lazy"></div><figcaption>The &rsquo;65 Mustang<span class="deck-backicon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><span class="vh">Tap to flip back</span></figcaption></div></div></figure>
-        <figure class="deck-slide"><img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows" draggable="false"><figcaption>Snuggle Inn &mdash; Fireside Lobby</figcaption></figure>
-        <figure class="deck-slide"><img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows" draggable="false"><figcaption>Snuggle Inn &mdash; Welcome Lobby</figcaption></figure>
         <figure class="deck-slide"><img src="media/cast/background-cast.jpg" alt="The background cast — eight everyday people and four animals in one loose group: a dad in a burgundy sweater, a young mom in sage green, a heavyset man in a navy fleece, a woman with a long braid and a teal cardigan, a young volunteer in a plain tan vest, an older woman in a rust cardigan, a boy in an olive hoodie and a little girl in coral, with a scruffy mutt, a gray tabby, a small white fluffy dog and a black cat at their feet" draggable="false"><figcaption>Background Cast</figcaption></figure>
         <button type="button" class="deck-arrow deck-prev" id="deckPrev" aria-label="Previous card">&lsaquo;</button>
         <button type="button" class="deck-arrow deck-next" id="deckNext" aria-label="Next card">&rsaquo;</button>
       </div>
-      <div class="deck-bar"><span class="deck-count" id="deckCount" aria-live="polite">1 / 26</span></div>
+      <div class="deck-bar"><span class="deck-count" id="deckCount" aria-live="polite">1 / 24</span></div>
       <p class="deck-taphint">Tap a card to see the full body</p>
+    </div>
+  </section>
+
+  <section id="places">
+    <div class="mono sec-label">The Places</div>
+    <h2>Where the helping happens</h2>
+    <p class="lede">The story&rsquo;s stages, painted empty and waiting &mdash; every room and yard the cast will step into. Day One at The Snuggle Inn, Day Two across town at The Community Hope Shelter, and home again at Lois and Harlow&rsquo;s.</p>
+    <div class="cast-grid">
+      <div class="cast-card place-card">
+        <img src="media/scenes/snuggle-inn-exterior.jpg" alt="The Snuggle Inn from outside — a storybook cottage with a stone chimney and outdoor fireplace, flower boxes, a pergola play yard to the side, and a blank wooden sign by the stone garden path">
+        <div class="cap"><h3>The Snuggle Inn</h3><p class="blurb">Day One&rsquo;s home base &mdash; the cage-free animal shelter where Lois volunteers and every adoption day begins.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/snuggle-inn-fireside-lobby.jpg" alt="The Snuggle Inn fireside lobby — a stone fireplace with a crackling fire, a red sofa and cream armchairs around a big braided rug, in a warm timber-beamed room with tall sunny windows">
+        <div class="cap"><h3>Snuggle Inn &mdash; Fireside Lobby</h3><p class="blurb">The warm heart of the Inn &mdash; a crackling stone fireplace, a deep red sofa, and a braided rug with room for everyone.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/snuggle-inn-welcome-lobby.jpg" alt="The Snuggle Inn welcome lobby — a paw-print sign over the doorway, wooden playpens with soft beds and folded blankets, cat trees by tall sunny windows">
+        <div class="cap"><h3>Snuggle Inn &mdash; Welcome Lobby</h3><p class="blurb">The first hello &mdash; sunny windows, cozy pens made up with soft beds and blankets, and a paw-print sign over the door.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/puppy-play-area.jpg" alt="The Puppy Play Area at The Snuggle Inn — a pergola shaded by flowering vines, a play tunnel, balls and a rope toy on the grass, dog beds in the shade, and water bowls by the open gate">
+        <div class="cap"><h3>Puppy Play Area</h3><p class="blurb">The sunny yard where Pixie and Spike romp &mdash; and where the Newman family comes to play, and stays to choose.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/tiger-habitat.jpg" alt="The Tiger Habitat at The Snuggle Inn — a sanctuary garden with a pool and small waterfall, sun-warmed rocks, a rock shelter nook, and shade trees behind a low wooden viewing fence">
+        <div class="cap"><h3>Tiger Habitat</h3><p class="blurb">A sanctuary garden, never a cage &mdash; where Yuki and Raja take their sunny naps.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/pony-field-barn.jpg" alt="The pony field at The Snuggle Inn — a split-rail fence with open gates, a honey-timber barn with hay bales inside, an apple tree with red apples, and a stone water trough">
+        <div class="cap"><h3>Pony Field + Barn</h3><p class="blurb">The sunny field where Ginger, Penny, and Freckles kick up their heels &mdash; apples on the tree, hay in the barn.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/hope-shelter-exterior.jpg" alt="The Community Hope Shelter from outside — cream stucco and brick, a timber porch with open double doors, benches, flower boxes, and a crate of folded blankets by the door">
+        <div class="cap"><h3>The Community Hope Shelter</h3><p class="blurb">Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang &mdash; a warm meal and a welcome for anyone who comes in.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/hope-shelter-common-room.jpg" alt="The Hope Shelter common room — a rust-red sofa and armchairs around a big braided rug, two game tables with unmarked boards, a bookshelf, and a cork board with blank colored notes">
+        <div class="cap"><h3>Hope Shelter &mdash; Common Room</h3><p class="blurb">Where Grandpa settles into his cozy chair &mdash; and gives Harlow the best chin scratches ever.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/clothing-exchange.jpg" alt="The Clothing Exchange at the Hope Shelter — racks of sweaters, jackets, and pajamas, folded clothes on a long table, woven bins, a hat-and-scarf basket, and a standing mirror">
+        <div class="cap"><h3>Clothing Exchange</h3><p class="blurb">Racks of just-right clothes, free for the choosing &mdash; where Mia helps, and Harlow politely declines one very large blue knitted hat.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/hope-shelter-kitchen-dining.jpg" alt="The Hope Shelter kitchen and dining room — a serving counter with copper pans, covered dishes, and stacks of plates, and two long wooden tables with benches set for the feast">
+        <div class="cap"><h3>Hope Shelter &mdash; Kitchen &amp; Dining</h3><p class="blurb">Where Lois, Maria, and Joe dish up the yummy feast, served free to anyone who&rsquo;s hungry.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/bunk-room.jpg" alt="The Hope Shelter bunk room at dusk — two wooden bunk beds and a single bed with plain cream, rust, and gold bedding, a lantern glowing on the nightstand by the door, and the moon in the window">
+        <div class="cap"><h3>Bunk Room</h3><p class="blurb">Where Tony shows off his brand-new fuzzy pajamas &mdash; and Harlow curls up beside him for the night.</p></div>
+      </div>
+      <div class="cast-card place-card">
+        <img src="media/scenes/lois-harlow-home.jpg" alt="Lois and Harlow's living room in the evening — a red sofa and cream armchair, a coffee table with a teacup and a stack of books, a glowing lamp, and Harlow's empty round cat bed on the braided rug">
+        <div class="cap"><h3>Lois &amp; Harlow&rsquo;s Home</h3><p class="blurb">Home again after two days of helping &mdash; the cozy couch, a warm lamp, and Harlow&rsquo;s own cat bed waiting.</p></div>
+      </div>
     </div>
   </section>
 
