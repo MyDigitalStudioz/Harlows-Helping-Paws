@@ -82,6 +82,13 @@
   .cast-card .cap{padding:16px 20px 18px}
   .cast-card h3{font-size:17px;font-weight:800;margin-bottom:4px}
   .cast-card p{font-size:14px;color:var(--muted)}
+  .cast-card p.blurb{color:rgba(243,239,230,.88);margin-bottom:6px}
+  .tail-label{margin-top:26px}
+  .cast-tail{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  @media(max-width:800px){.cast-tail{grid-template-columns:1fr}}
+  .tail-card{border:1px dashed var(--line);border-radius:var(--radius);padding:16px 20px;background:rgba(255,255,255,.02)}
+  .tail-card h3{font-size:15.5px;font-weight:800;margin-bottom:4px;color:rgba(243,239,230,.85)}
+  .tail-card p{font-size:13.5px;color:var(--muted)}
   .fb-wrap{border-top:1px solid var(--line)}
   .fb-wrap img{aspect-ratio:auto}
   .board{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
@@ -171,21 +178,6 @@
     </div>
   </section>
 
-  <section>
-    <div class="mono sec-label">Meet the Cast</div>
-    <h2>New friends, familiar faces</h2>
-    <div class="grid">
-      <div class="card"><h3>Harlow</h3><p>Our narrator &mdash; a curious, kind-hearted cat with a happy purr and a nose for a good story.</p></div>
-      <div class="card"><h3>Lois</h3><p>Newly retired after 50 years of work, and already looking for her next way to help.</p></div>
-      <div class="card"><h3>Cocoa &amp; Shadow</h3><p>Two bunnies from a closed-down farm, now living the cozy life at The Snuggle Inn.</p></div>
-      <div class="card"><h3>Ginger &amp; the Spice Girls</h3><p>A proud mama cat and her five kittens: Pepper, Saffron, Sugar, Hania, and Sesame.</p></div>
-      <div class="card"><h3>Howard</h3><p>A sleepy-eyed Saint Bernard who once rescued lost hikers from deep mountain snow.</p></div>
-      <div class="card"><h3>Yuki &amp; Raja</h3><p>A white tiger and an orange tiger, retired from the circus and loving every sunny nap.</p></div>
-      <div class="card"><h3>Pixie &amp; Spike</h3><p>Two floppy-eared beagle puppies hoping the Newman family picks them. (Spoiler: they do.)</p></div>
-      <div class="card"><h3>Nurse Mira</h3><p>Dressed all in pink, checking on everyone at the Hope Shelter to keep them happy and healthy.</p></div>
-      <div class="card"><h3>The &rsquo;65 Mustang</h3><p>The cool old convertible that carries Harlow and Lois from one good deed to the next.</p></div>
-    </div>
-  </section>
 
   <section>
     <div class="mono sec-label">The Lead Cast</div>
@@ -194,17 +186,17 @@
     <div class="cast-grid">
       <div class="cast-card">
         <img src="media/cast/harlow-portrait.jpg" alt="Harlow, a seal-point Ragdoll cat, sitting tall">
-        <div class="cap"><h3>Harlow</h3><p>The star. Seal-point Ragdoll, azure-cerulean eyes, and that very long plume tail.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-harlow">Show full body</button></div>
+        <div class="cap"><h3>Harlow</h3><p class="blurb">Our narrator &mdash; a curious, kind-hearted cat with a happy purr and a nose for a good story.</p><p>The star. Seal-point Ragdoll, azure-cerulean eyes, and that very long plume tail.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-harlow">Show full body</button></div>
         <div class="fb-wrap" id="fb-harlow" hidden><img src="media/cast/harlow-fullbody.jpg" alt="Harlow, full body — seal-point Ragdoll sitting, long plume tail curled around her"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/lois-portrait.jpg" alt="Lois, smiling, in her deep-plum cardigan">
-        <div class="cap"><h3>Lois</h3><p>The author herself, in story form &mdash; deep-plum cardigan, silver bow brooch, ready to help.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-lois">Show full body</button></div>
+        <div class="cap"><h3>Lois</h3><p class="blurb">Newly retired after 50 years of work, and already looking for her next way to help.</p><p>The author herself, in story form &mdash; deep-plum cardigan, silver bow brooch, ready to help.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-lois">Show full body</button></div>
         <div class="fb-wrap" id="fb-lois" hidden><img src="media/cast/lois-fullbody.jpg" alt="Lois, full body — deep-plum cardigan, black pants and brown knee boots"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/mira-portrait.jpg" alt="Nurse Mira in pink scrubs and her hearts-and-bows scrub cap">
-        <div class="cap"><h3>Nurse Mira</h3><p>All in pink at the Community Hope Shelter &mdash; scrub cap, stethoscope, and the warmest smile on rounds.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-mira">Show full body</button></div>
+        <div class="cap"><h3>Nurse Mira</h3><p class="blurb">Dressed all in pink, checking on everyone at the Hope Shelter to keep them happy and healthy.</p><p>All in pink at the Community Hope Shelter &mdash; scrub cap, stethoscope, and the warmest smile on rounds.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-mira">Show full body</button></div>
         <div class="fb-wrap" id="fb-mira" hidden><img src="media/cast/mira-fullbody.jpg" alt="Nurse Mira, full body, in pink scrubs and her scrub cap"></div>
       </div>
       <div class="cast-card">
@@ -256,29 +248,35 @@
     <div class="cast-grid">
       <div class="cast-card">
         <img src="media/cast/howard-portrait.jpg" alt="Howard, a giant Saint Bernard with a warm brown-and-white coat and a brass-tag collar">
-        <div class="cap"><h3>Howard</h3><p>The retired mountain-rescue Saint Bernard of The Snuggle Inn &mdash; a gentle old hero, warm and proud, exactly where he wants to be.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-howard">Show full body</button></div>
+        <div class="cap"><h3>Howard</h3><p class="blurb">A gentle Saint Bernard who once rescued lost hikers from deep mountain snow.</p><p>The retired mountain-rescue Saint Bernard of The Snuggle Inn &mdash; a gentle old hero, warm and proud, exactly where he wants to be.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-howard">Show full body</button></div>
         <div class="fb-wrap" id="fb-howard" hidden><img src="media/cast/howard-fullbody.jpg" alt="Howard the Saint Bernard, full body"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/yuki-portrait.jpg" alt="Yuki, a snowy white tiger with fine charcoal stripes and ice-blue eyes">
-        <div class="cap"><h3>Yuki</h3><p>The snowy white tiger &mdash; a retired circus sweetheart who purrs loudest in a patch of warm sun.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-yuki">Show full body</button></div>
+        <div class="cap"><h3>Yuki</h3><p class="blurb">A white tiger retired from the circus, loving every sunny nap.</p><p>The snowy white tiger &mdash; a retired circus sweetheart who purrs loudest in a patch of warm sun.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-yuki">Show full body</button></div>
         <div class="fb-wrap" id="fb-yuki" hidden><img src="media/cast/yuki-fullbody.jpg" alt="Yuki, full body — reclining in the sun, front paws crossed"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/raja-portrait.jpg" alt="Raja, a bright orange tiger with bold black stripes and amber eyes">
-        <div class="cap"><h3>Raja</h3><p>The bright orange tiger &mdash; a gentle retired circus storyteller who greets his friends with a soft, friendly chuff.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-raja">Show full body</button></div>
+        <div class="cap"><h3>Raja</h3><p class="blurb">An orange tiger retired from the circus, loving every sunny nap.</p><p>The bright orange tiger &mdash; a gentle retired circus storyteller who greets his friends with a soft, friendly chuff.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-raja">Show full body</button></div>
         <div class="fb-wrap" id="fb-raja" hidden><img src="media/cast/raja-fullbody.jpg" alt="Raja, full body — sitting tall"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/cocoa-portrait.jpg" alt="Cocoa, a warm caramel bunny with tall upright ears and amber-brown eyes">
-        <div class="cap"><h3>Cocoa</h3><p>The caramel bunny &mdash; half of The Snuggle Inn&rsquo;s welcoming committee, a former farm bunny who greets every newcomer with a twitching nose.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-cocoa">Show full body</button></div>
+        <div class="cap"><h3>Cocoa</h3><p class="blurb">One of two bunnies from a closed-down farm, now living the cozy life at The Snuggle Inn.</p><p>The caramel bunny &mdash; half of The Snuggle Inn&rsquo;s welcoming committee, a former farm bunny who greets every newcomer with a twitching nose.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-cocoa">Show full body</button></div>
         <div class="fb-wrap" id="fb-cocoa" hidden><img src="media/cast/cocoa-fullbody.jpg" alt="Cocoa, full body — sitting upright"></div>
       </div>
       <div class="cast-card">
         <img src="media/cast/shadow-portrait.jpg" alt="Shadow, a charcoal-black bunny with one flopped ear wearing a tan plaid scarf">
-        <div class="cap"><h3>Shadow</h3><p>The charcoal bunny &mdash; the other half of the welcoming committee, all happy hops, with one flopped ear and a plaid scarf for every occasion.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-shadow">Show full body</button></div>
+        <div class="cap"><h3>Shadow</h3><p class="blurb">One of two bunnies from a closed-down farm, now living the cozy life at The Snuggle Inn.</p><p>The charcoal bunny &mdash; the other half of the welcoming committee, all happy hops, with one flopped ear and a plaid scarf for every occasion.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-shadow">Show full body</button></div>
         <div class="fb-wrap" id="fb-shadow" hidden><img src="media/cast/shadow-fullbody.jpg" alt="Shadow, full body — crouched ready to hop, plaid scarf on"></div>
       </div>
+    </div>
+    <div class="mono sec-label tail-label">Also in the story</div>
+    <div class="cast-tail">
+      <div class="tail-card"><h3>Ginger &amp; the Spice Girls</h3><p>A proud mama cat and her five kittens: Pepper, Saffron, Sugar, Hania, and Sesame.</p></div>
+      <div class="tail-card"><h3>Pixie &amp; Spike</h3><p>Two floppy-eared beagle puppies hoping the Newman family picks them. (Spoiler: they do.)</p></div>
+      <div class="tail-card"><h3>The &rsquo;65 Mustang</h3><p>The cool old convertible that carries Harlow and Lois from one good deed to the next.</p></div>
     </div>
   </section>
 
