@@ -122,26 +122,44 @@
   }
   .lb.open{display:flex;}
   .lb .inner{margin:auto; width:100%; max-width:1000px;}
+  .lbrail{display:contents;}
   .lb .spread{cursor:default;}
   .lb .close{
     position:fixed; top:14px; right:14px; width:48px; height:48px; z-index:2;
     border-radius:50%; border:1px solid var(--line); background:var(--card);
     color:var(--ink); font-size:22px; cursor:pointer;
   }
-  /* Landscape / short viewport: fit the WHOLE lightbox in frame. The plate is
-     height-capped (dvh as a cap only — if a browser under-measures it, the
-     plate just renders a touch smaller and still fits), so the caption,
-     counter, guide toggles and prev/next never fall out of frame. */
+  /* Landscape / short viewport: the lightbox goes SIDE BY SIDE — the plate is
+     the main thing. The plate column takes the dominant share of the frame
+     (dvh used as a height CAP only, per the backdrop rule); a side rail holds
+     the caption, counter, prev/next and guide toggles, and scrolls internally
+     if its text overflows. Nothing clips, nothing leaves the frame. The rail
+     is narrower here than on V2: this book's spreads are wide pairs that need
+     the room. */
   @media (orientation: landscape) and (max-height: 560px){
-    .lb{padding:10px 14px;}
-    .lb .spread{width:fit-content; max-width:100%; margin:0 auto;}
+    .lb{padding:10px;}
+    .lb .inner{
+      display:grid; grid-template-columns:minmax(0,1fr) 150px;
+      grid-template-rows:minmax(0,1fr);
+      column-gap:10px; width:100%; max-width:none; height:100%; margin:0;
+    }
+    .lb .spread{
+      grid-column:1; align-self:center; justify-self:center;
+      width:fit-content; max-width:100%; margin:0;
+    }
     .lb .spread .page{flex:0 1 auto; width:auto; min-width:0;}
     .lb .page img{
       width:auto; height:auto; max-width:100%;
-      max-height:calc(100vh - 196px); max-height:calc(100dvh - 196px);
+      max-height:calc(100vh - 20px); max-height:calc(100dvh - 20px);
     }
-    .lbnav{margin-top:10px;}
-    .guides{margin-top:10px;}
+    .lbrail{
+      grid-column:2; display:flex; flex-direction:column; min-height:0;
+      overflow-y:auto; overscroll-behavior:contain; padding-top:2px;
+    }
+    .lb .close{top:10px; right:170px;}
+    .lb .lbnav{margin-top:0; flex-wrap:wrap; justify-content:space-between;}
+    .lb .lbnav .cap{order:-1; flex:1 1 100%; text-align:left;}
+    .lb .guides{margin-top:14px; flex-direction:column; align-items:stretch; justify-content:flex-start;}
   }
   .lbnav{
     display:flex; align-items:center; gap:12px; margin-top:16px;
@@ -281,6 +299,7 @@
   <button class="close" id="lbClose" aria-label="Close">&times;</button>
   <div class="inner">
     <div class="spread" id="lbSpread"></div>
+    <div class="lbrail">
     <div class="lbnav">
       <button class="navbtn" id="lbPrev" aria-label="Previous spread">&#8249;</button>
       <p class="cap"><span id="lbCap"></span><span class="count" id="lbCount"></span></p>
@@ -289,6 +308,7 @@
     <div class="guides">
       <button class="gbtn" id="seamBtn" aria-pressed="false">Show seam guide</button>
       <button class="gbtn" id="luluBtn" aria-pressed="false">Show Lulu guide</button>
+    </div>
     </div>
   </div>
 </div>
