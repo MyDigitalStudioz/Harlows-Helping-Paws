@@ -242,7 +242,7 @@
   }
   .covcap{text-align:center;margin-top:16px;font-size:16px;font-weight:800}
   .covcap .covface-name{color:var(--gold)}
-  .covstrip{position:relative;display:flex;gap:10px;margin-top:20px;overflow-x:auto;overflow-y:hidden;
+  .covstrip{position:relative;display:flex;align-items:flex-start;gap:10px;margin-top:20px;overflow-x:auto;overflow-y:hidden;
     scrollbar-width:none;padding:3px 3px 5px;transform:translateZ(0)}
   .covstrip::-webkit-scrollbar{display:none}
   .cthumb{flex:none;width:82px;min-width:82px;max-width:82px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
@@ -259,9 +259,9 @@
   .cthumb-dot{position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--gold);
     box-shadow:0 0 0 2px rgba(10,10,12,.45)}
   .cthumb-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-    margin-top:7px;font-size:11px;font-weight:700;line-height:1.3;color:var(--ivory)}
+    margin-top:7px;font-size:11px;font-weight:700;line-height:1.3;height:calc(11px * 1.3 * 2);color:var(--ivory)}
   .cthumb.is-sel .cthumb-name{color:var(--gold)}
-  .cthumb-shelf{display:block;margin-top:2px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;
+  .cthumb-shelf{display:block;margin-top:2px;height:calc(9.5px * 1.4);line-height:1.4;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;
     letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
   @media (prefers-reduced-motion: reduce){
     .covflip,.covflip.flipped{transform:none;transition:none}
@@ -574,10 +574,12 @@
         <button type="button" class="cthumb" data-pair="1" aria-pressed="false" aria-label="F2 &mdash; Harlow&rsquo;s Rounds">
           <span class="cthumb-img"><img width="82" height="82" src="media/covers/harlows-rounds-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F2</span></span>
           <span class="cthumb-name">Harlow&rsquo;s Rounds</span>
+          <span class="cthumb-shelf" aria-hidden="true"></span>
         </button>
         <button type="button" class="cthumb" data-pair="2" aria-pressed="false" aria-label="F3 &mdash; Welcome to the Snuggle Inn">
           <span class="cthumb-img"><img width="82" height="82" src="media/covers/snuggle-inn-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F3</span></span>
           <span class="cthumb-name">Snuggle Inn</span>
+          <span class="cthumb-shelf" aria-hidden="true"></span>
         </button>
         <button type="button" class="cthumb" data-pair="3" aria-pressed="false" aria-label="F4 &mdash; Garden Portrait (on the shelf)">
           <span class="cthumb-img"><img width="82" height="82" src="media/covers/mtc-garden-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F4</span><span class="cthumb-dot" aria-hidden="true"></span></span>
@@ -587,6 +589,7 @@
         <button type="button" class="cthumb" data-pair="4" aria-pressed="false" aria-label="F5 &mdash; Portrait Gallery">
           <span class="cthumb-img"><img width="82" height="82" src="media/covers/mtc-gallery-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F5</span></span>
           <span class="cthumb-name">Portrait Gallery</span>
+          <span class="cthumb-shelf" aria-hidden="true"></span>
         </button>
       </div>
     </div>
