@@ -17,7 +17,7 @@
     color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     -webkit-font-smoothing:antialiased;
-    padding:0 16px 56px;
+    padding:0 16px 0;
   }
   .wrap{max-width:860px; margin:0 auto;}
   header{padding:26px 0 6px;}
@@ -216,8 +216,24 @@
     .pdeck-stage{transition:none}
   }
 
-  footer{color:var(--muted); font-size:14px; text-align:center; margin-top:34px; line-height:1.6;}
-  footer a{color:var(--gold);}
+  /* Master footer — one band across the whole HHP site, modeled on the
+     bookshelf's BOOKVIZION bar: near-black band, hairline top border,
+     gold wordmark left, muted meta right. Same component as the showcase. */
+  .masterfoot{margin:44px -16px 0;background:#100D0A;border-top:1px solid var(--line);
+    color:var(--muted);font-size:13.5px;line-height:1.5;text-align:left}
+  .mf-in{max-width:892px;margin:0 auto;padding:20px 16px 24px;display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:space-between;gap:10px 28px}
+  .mf-left{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 16px;min-width:0}
+  .mf-brand{color:#e8b34b;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:12px;white-space:nowrap}
+  .mf-right{display:flex;flex-direction:column;gap:4px;align-items:flex-end;min-width:0}
+  .masterfoot a{color:var(--gold);text-decoration:none}
+  .masterfoot a:hover{text-decoration:underline}
+  @media(max-width:640px){
+    .mf-in{flex-direction:column;align-items:flex-start;gap:8px}
+    .mf-left{flex-direction:column;align-items:flex-start;gap:2px}
+    .mf-right{align-items:flex-start}
+  }
 
   /* ---------- Guides (lightbox) ----------
      Lulu guide = the flipbook viewer's own print guides (PAGE_SPEC:
@@ -412,11 +428,20 @@
     <p class="deck-taphint">Swipe or tap the arrows to flip &middot; tap a picture to see it big</p>
   </div>
 
-  <footer>
-    Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 &middot; A work in progress<br>
-    <a href="index.html">Back to the project page</a>
-  </footer>
 </div>
+
+<footer class="masterfoot">
+  <div class="mf-in">
+    <div class="mf-left">
+      <span class="mf-brand">Harlow&rsquo;s Helping Paws</span>
+      <span>&copy; Lois Farrell 2026 &middot; A work in progress</span>
+    </div>
+    <div class="mf-right">
+      <a href="index.html">Back to the project page</a>
+      <div>Produced by Jon Farrell &middot; <a href="https://github.com/MyDigitalStudioz/Harlows-Helping-Paws" target="_blank" rel="noopener">Project on GitHub</a></div>
+    </div>
+  </div>
+</footer>
 
 <button id="toTop" aria-label="Back to top" title="Back to top">&uarr;</button>
 
