@@ -13619,6 +13619,7 @@
           about: "Harlow's Helping Paws (working title) \u2014 Lois Farrell's second picture book. After the adventure in book one, Lois has retired, and retirement doesn't suit her for long: with Harlow at her side she volunteers at The Snuggle Inn animal shelter and The Community Hope Shelter. Story draft 1 received November 19, 2026. This shelf copy is a MOCKUP: its pages are Lois's own draft illustrations, placed as placeholders so the story can be flipped through while the finished spreads are painted. The produced cast portraits live in the companion gallery, Meet the Cast." } },
       { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "images/01-front.jpg", source: "built-in", aspect: 1, flatPairs: true,
         pages: [
+          "shelf/book2-spread/00-cover.jpg",
           "shelf/book2-spread/01-spread-01-L.jpg",
           "shelf/book2-spread/02-spread-01-R.jpg",
           "shelf/book2-spread/03-spread-02-L.jpg",
@@ -13651,6 +13652,7 @@
           "shelf/book2-spread/30-spread-15-R.jpg"
         ],
         text: [
+          null,
           "Harlow's Helping Paws \u2014 SPREAD MOCKUP. An experiment: Lois's own Draft 1 illustrations presented as full two-page spreads, so the spread format can be judged before the finished art is painted. Placeholder draft art.",
           null,
           null,
@@ -16069,19 +16071,21 @@
         var ownText = entry.seedText || entry.text;
         pageTexts = ownText ? ownText.slice() : ((typeof BOOK !== "undefined" && BOOK.text) ? BOOK.text.slice() : PAGES.map(function () { return null; }));
         // A flatPairs book (the Spread Mockup) carries its artwork as
-        // single pages that pair (1,2), (3,4) ... — it has no cover
-        // page of its own. The leaf engine pairs from a cover offset
-        // (page 1 alone, then (2,3), (4,5)), so the book is padded at
-        // runtime with the viewer's own blank page at both ends: the
-        // blanks take the cover / back-cover slots and the artwork
-        // pairs exactly, halves of one spread side by side. The open
-        // path below then steps past the front blank, so the reader
-        // lands on the first artwork pair, never on the blank.
+        // single pages that pair (1,2), (3,4) ... behind a real cover
+        // page of its own (the catalog's first page). The leaf engine
+        // pairs from a cover offset (page 1 alone, then (2,3), (4,5)),
+        // so the cover takes the cover slot and the artwork pairs
+        // exactly, halves of one spread side by side; the book is
+        // padded at runtime with the viewer's own blank page at the
+        // back only, as its endpaper. The book opens on its cover
+        // like any other — an earlier design padded the front with a
+        // blank and stepped past it, which left a blank "cover" for
+        // any reader who paged back to page 1.
         if (entry.flatPairs) {
-          PAGES = [BLANK].concat(PAGES, [BLANK]);
-          pageIns = [false].concat(pageIns, [false]);
-          pageNames = [null].concat(pageNames, [null]);
-          pageTexts = [null].concat(pageTexts, [null]);
+          PAGES = PAGES.concat([BLANK]);
+          pageIns = pageIns.concat([false]);
+          pageNames = pageNames.concat([null]);
+          pageTexts = pageTexts.concat([null]);
         }
         pdfName = "";
         customTitle = entry.id === "builtin" ? "" : entry.title;
@@ -16151,10 +16155,8 @@
       placeHold = true;
       closeShelf();
       restorePlace();
-      // A flatPairs book opens past its runtime front blank (see the
-      // seeding branch above): its first resting place is the first
-      // artwork pair, in portrait focus as much as in landscape.
-      if (entry.flatPairs && flipped === 0) { flipped = 1; focus = 0; }
+      // A flatPairs book opens on its real cover page, like any
+      // other book (see the seeding branch above) — no step-past.
       fit();
       // Reveal the stage only once the incoming book's opening
       // spread is loaded AND decoded (see waitSpreadReady) — until
