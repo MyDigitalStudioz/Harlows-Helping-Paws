@@ -162,6 +162,60 @@
     .flipinner.flipped .face-back{opacity:1; pointer-events:auto}
   }
 
+
+  /* ---------- Draft artwork deck ----------
+     The showcase Places deck, ported: sideways flip-through, center flat,
+     neighbors angled and dimmed, the locked deck arrows, frosted glass on
+     the active caption, neighbor captions ghost-proofed. One difference
+     from the showcase: Lois's illustrations keep their own shapes (no
+     fixed 3/2 crop \u2014 reference art stays whole), so each slide sizes
+     from its image and the stage height follows the active slide. */
+  .pdeck{--pw:min(600px,88vw);margin-top:6px;outline:none;border-radius:var(--radius)}
+  .pdeck:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+  .pdeck-stage{position:relative;perspective:1200px;overflow:hidden;touch-action:pan-y;transition:height .45s ease}
+  .pdeck-slide{position:absolute;left:50%;top:50%;width:var(--pw);margin:0;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;pointer-events:none;
+    transform:translate(-50%,-50%);opacity:0;visibility:hidden;z-index:1;
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s linear .45s}
+  .pdeck-slide img{width:100%;height:auto;display:block;-webkit-user-drag:none;user-select:none}
+  .pdeck-slide figcaption{padding:12px 18px 15px;transition:opacity .45s ease,filter .45s ease}
+  .pdeck-slide.is-center figcaption{background:linear-gradient(180deg,rgba(24,19,13,.88),rgba(16,12,8,.96));
+    -webkit-backdrop-filter:blur(18px) saturate(1.35);backdrop-filter:blur(18px) saturate(1.35);
+    border-top:1px solid rgba(243,239,230,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  .pdeck-slide.is-prev figcaption,.pdeck-slide.is-next figcaption{opacity:.08;filter:blur(2px)}
+  .pdeck-slide .pname{display:block;font-size:17px;font-weight:800;margin-bottom:3px}
+  .pdeck-slide .pcode{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--gold)}
+  .pdeck-slide .pcode::after{content:" \00B7";color:var(--muted);font-weight:400;margin:0 9px 0 7px}
+  .pdeck-slide .pblurb{display:block;font-size:13.5px;line-height:1.45;color:var(--muted)}
+  .pdeck-slide.is-center{opacity:1;visibility:visible;pointer-events:auto;z-index:3;filter:none;cursor:zoom-in;
+    transform:translate(-50%,-50%) rotateY(0deg) scale(1);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .pdeck-slide.is-prev{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% - 60%),-50%) rotateY(30deg) scale(.84);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .pdeck-slide.is-next{opacity:.78;visibility:visible;z-index:2;filter:brightness(.62);
+    transform:translate(calc(-50% + 60%),-50%) rotateY(-30deg) scale(.84);
+    transition:transform .45s ease,opacity .45s ease,filter .45s ease,visibility 0s}
+  .deck-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:48px;height:48px;
+    border-radius:50%;border:1px solid rgba(227,179,65,.6);background:rgba(18,19,20,.6);
+    -webkit-backdrop-filter:blur(6px) saturate(1.2);backdrop-filter:blur(6px) saturate(1.2);
+    color:var(--gold);font-size:30px;line-height:1;cursor:pointer;font-family:inherit;opacity:1;
+    display:flex;align-items:center;justify-content:center;padding:0 0 5px;
+    -webkit-tap-highlight-color:transparent;transition:none}
+  .deck-arrow:hover,.deck-arrow:active{background:rgba(18,19,20,.6)}
+  .deck-arrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .deck-prev{left:8px}
+  .deck-next{right:8px}
+  .deck-bar{display:flex;align-items:center;justify-content:center;margin-top:8px}
+  .deck-count{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12.5px;letter-spacing:.14em;color:var(--muted)}
+  .deck-taphint{text-align:center;color:var(--muted);font-size:13.5px;margin:8px 0 0}
+  @media (prefers-reduced-motion: reduce){
+    .pdeck-slide{transition:opacity .25s ease,visibility 0s linear .25s}
+    .pdeck-slide.is-center{transition:opacity .25s ease,visibility 0s}
+    .pdeck-slide.is-prev,.pdeck-slide.is-next{opacity:0;visibility:hidden;transform:translate(-50%,-50%)}
+    .pdeck-stage{transition:none}
+  }
+
   footer{color:var(--muted); font-size:14px; text-align:center; margin-top:34px; line-height:1.6;}
   footer a{color:var(--gold);}
 
@@ -287,7 +341,7 @@
   }
   .dlink.dnav{padding:10px 14px; font-size:15px; font-weight:500;
     background:rgba(255,255,255,.02); border-color:rgba(255,255,255,.08); color:rgba(243,239,230,.88);}
-  #placesHead, #pgroup-env, #pgroup-rooms, #castHead, #bgHead{scroll-margin-top:84px;}
+  #placesHead, #pgroup-env, #pgroup-rooms, #castHead, #bgHead, #draftHead{scroll-margin-top:84px;}
   .drawer select{flex:none; width:100%;}
   .dnote{color:var(--muted); font-size:13px; line-height:1.5; margin-top:14px;}
   .setrow{
@@ -344,6 +398,20 @@
   </div>
   <div id="bgWrap"></div>
 
+  <div class="sechead" id="draftHead">
+    <div class="kicker">Reference</div>
+    <h2>Lois&rsquo;s Draft Artwork</h2>
+    <p class="sub">Lois&rsquo;s original illustrations from her Draft 1 manuscript &mdash; the placeholder art the mockup books are built with, gathered here for quick reference while the real spreads come together. Flip through them, or tap one to see it big.</p>
+  </div>
+  <div class="pdeck" id="draftDeck" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Flip through Lois&rsquo;s draft artwork">
+    <div class="pdeck-stage" id="draftStage">
+      <button type="button" class="deck-arrow deck-prev" id="draftPrev" aria-label="Previous illustration">&lsaquo;</button>
+      <button type="button" class="deck-arrow deck-next" id="draftNext" aria-label="Next illustration">&rsaquo;</button>
+    </div>
+    <div class="deck-bar"><span class="deck-count" id="draftCount" aria-live="polite">1 / 15</span></div>
+    <p class="deck-taphint">Swipe or tap the arrows to flip &middot; tap a picture to see it big</p>
+  </div>
+
   <footer>
     Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 &middot; A work in progress<br>
     <a href="index.html">Back to the project page</a>
@@ -370,6 +438,7 @@
     <a class="dlink dnav" href="#pgroup-rooms">Rooms</a>
     <a class="dlink dnav" href="#castHead">The Cast</a>
     <a class="dlink dnav" href="#bgHead">Background Cast</a>
+    <a class="dlink dnav" href="#draftHead">Lois&rsquo;s Draft Artwork</a>
   </nav>
   <div class="dsec">Version</div>
   <select id="verSel" aria-label="Choose a spread review version"></select>
@@ -458,6 +527,59 @@ var PLACES = [
 
 var BG = { code: "", kind: "Extras sheet", img: "background-cast.jpg", name: "Background Cast",
   cap: "<b>The extras sheet</b> — unnamed background figures for crowd scenes, cited by ID in scene briefs: people <b>P1–P8</b>, animals <b>A1–A4</b>. Background only — never promoted to named cast." };
+/* DRAFT — Lois's fifteen Draft 1 illustrations, in manuscript (story)
+   order: her original placeholder art, the same images the mockup books
+   are built with, kept here as a quick reference. Scene names and notes
+   follow the Draft 1 illustration inventory. plain:true — reference art
+   takes no print-guide overlays in the big view. */
+var DRAFT = [
+  { code: "1", img: "draft-01.jpg", plain: true, ar: "908/793", name: "Lois &amp; Harlow at home",
+    alt: "Lois at a laptop with Harlow asleep on the desk, at home",
+    cap: "Lois at her laptop, Harlow asleep on the desk &mdash; the story&rsquo;s opening scene." },
+  { code: "2", img: "draft-02.jpg", plain: true, ar: "1017/798", name: "Inside The Snuggle Inn",
+    alt: "Inside The Snuggle Inn — Lois holding a small scruffy dog, with cats, bunnies and dogs around",
+    cap: "Lois holds a small scruffy dog while the volunteers show her around the Inn." },
+  { code: "3", img: "draft-03.jpg", plain: true, ar: "1100/711", name: "Cocoa &amp; Shadow",
+    alt: "Cocoa and Shadow the bunnies in their pen, with Harlow",
+    cap: "The two bunnies in their pen, with Harlow visiting." },
+  { code: "4", img: "draft-04.jpg", plain: true, ar: "1100/720", name: "Ginger &amp; the Spice Girls",
+    alt: "Ginger the mama cat with her five kittens and Harlow",
+    cap: "Ginger the mama cat with her five kittens &mdash; Pepper, Saffron, Sugar, Hania and Sesame." },
+  { code: "5", img: "draft-05.jpg", plain: true, ar: "1100/768", name: "Howard",
+    alt: "Howard the Saint Bernard in a kennel, with Harlow",
+    cap: "Howard, the retired rescue Saint Bernard, in his kennel with Harlow." },
+  { code: "6", img: "draft-06.jpg", plain: true, ar: "1100/633", name: "The ponies",
+    alt: "The three ponies — chestnut, black and appaloosa — with Harlow at the barn and in the field",
+    cap: "The three ponies &mdash; Ginger, Penny and Freckles &mdash; at the barn and out in the field." },
+  { code: "7", img: "draft-07.jpg", plain: true, ar: "1100/737", name: "Yuki &amp; Raja",
+    alt: "Yuki the white tiger and Raja the orange tiger in their outdoor enclosure, with Harlow",
+    cap: "The two tigers in their outdoor enclosure, Harlow looking on." },
+  { code: "8", img: "draft-08.jpg", plain: true, ar: "1100/712", name: "The Newmans meet Pixie &amp; Spike",
+    alt: "The Newman family meeting Pixie and Spike in the puppy play yard",
+    cap: "The Newman family comes to the puppy play yard &mdash; and stays to choose Pixie and Spike." },
+  { code: "9", img: "draft-09.jpg", plain: true, ar: "1005/809", name: "Home on the couch",
+    alt: "Lois and Harlow on the couch at home",
+    cap: "Lois and Harlow rest on the couch at home, between the two days of helping." },
+  { code: "10", img: "draft-10.jpg", plain: true, ar: "1100/731", name: "The Hope Shelter kitchen",
+    alt: "The Hope Shelter kitchen — Maria and Joe serving the feast with Lois",
+    cap: "Maria and Joe dish up the feast alongside Lois, name tags and all." },
+  { code: "11", img: "draft-11.jpg", plain: true, ar: "1100/709", name: "Grandpa in the common room",
+    alt: "Grandpa holding Harlow in the Hope Shelter common room",
+    cap: "Grandpa holds Harlow in the common room, with the other guests around them." },
+  { code: "12", img: "draft-12.jpg", plain: true, ar: "1100/743", name: "Nurse Mira",
+    alt: "Nurse Mira at the Hope Shelter door with Harlow",
+    cap: "Nurse Mira greets Harlow at the shelter door, Grandpa asleep inside." },
+  { code: "13", img: "draft-13.jpg", plain: true, ar: "1100/731", name: "Mia at the clothing exchange",
+    alt: "Mia at the clothing exchange, with Harlow in a blue knitted hat",
+    cap: "Mia helps among the clothing racks &mdash; with Harlow in the blue knitted hat." },
+  { code: "14", img: "draft-14.jpg", plain: true, ar: "1100/735", name: "Tony in the bunk room",
+    alt: "Tony in bed in the bunk room, Harlow curled beside him",
+    cap: "Tony in his brand-new fuzzy pajamas, Harlow curled up beside him until he sleeps." },
+  { code: "15", img: "draft-15.jpg", plain: true, ar: "1016/784", name: "Asleep at home",
+    alt: "Lois and Harlow asleep in bed at home",
+    cap: "Lois and Harlow asleep in bed at home &mdash; the story&rsquo;s last page." }
+];
+
 
 /* CAST — dashboard census order. Pair entries (Cocoa & Shadow, Yuki & Raja,
    Ginger & the Spice Girls) get one flip card per member, as on the showcase. */
@@ -601,14 +723,89 @@ CAST.forEach(function (c) {
   grid.appendChild(card);
 });
 
-/* ---------- Lightbox (flat plates: the places + the extras sheet) ---------- */
+/* ---------- Draft artwork deck ----------
+   The showcase's Places deck, ported: Lois's fifteen Draft 1 illustrations
+   as a sideways flip-through under the cast. Tapping the active slide opens
+   the lightbox on the draft walk; tapping a neighbor turns to it. */
+var draftStage = document.getElementById("draftStage");
+var draftCount = document.getElementById("draftCount");
+var draftSlides = [];
+DRAFT.forEach(function (p, i) {
+  var fig = document.createElement("figure");
+  fig.className = "pdeck-slide";
+  fig.innerHTML =
+    '<img src="' + IMG + p.img + '" alt="' + p.alt + '" draggable="false"' +
+    (i > 1 ? ' loading="lazy"' : "") +
+    ' style="aspect-ratio:' + p.ar + '">' +
+    "<figcaption>" +
+      '<span class="pname"><span class="pcode">' + p.code + "</span>" + p.name + "</span>" +
+      '<span class="pblurb">' + p.cap + "</span>" +
+    "</figcaption>";
+  draftStage.insertBefore(fig, document.getElementById("draftPrev"));
+  draftSlides.push(fig);
+});
+var dCur = 0;
+function draftFit() {
+  var c = draftSlides[dCur];
+  if (c) draftStage.style.height = (c.offsetHeight + 30) + "px";
+}
+function draftRender() {
+  var n = draftSlides.length;
+  draftSlides.forEach(function (s, i) {
+    var off = ((i - dCur) % n + n) % n;
+    if (off > n / 2) off -= n;
+    s.classList.toggle("is-center", off === 0);
+    s.classList.toggle("is-prev", off === -1);
+    s.classList.toggle("is-next", off === 1);
+    s.setAttribute("aria-hidden", off === 0 ? "false" : "true");
+  });
+  draftCount.textContent = (dCur + 1) + " / " + n;
+  requestAnimationFrame(draftFit);
+}
+function draftGo(d) { var n = draftSlides.length; dCur = ((dCur + d) % n + n) % n; draftRender(); }
+document.getElementById("draftNext").addEventListener("click", function () { draftGo(1); });
+document.getElementById("draftPrev").addEventListener("click", function () { draftGo(-1); });
+document.getElementById("draftDeck").addEventListener("keydown", function (e) {
+  if (e.key === "ArrowRight") { e.preventDefault(); draftGo(1); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); draftGo(-1); }
+});
+var dDrag = null;
+draftStage.addEventListener("pointerdown", function (e) {
+  if (e.target.closest(".deck-arrow")) { dDrag = null; return; }
+  dDrag = { x: e.clientX, y: e.clientY, t: Date.now() };
+});
+draftStage.addEventListener("pointerup", function (e) {
+  if (!dDrag) return;
+  var dx = e.clientX - dDrag.x, dy = e.clientY - dDrag.y, dt = Date.now() - dDrag.t;
+  dDrag = null;
+  if (dx <= -40) { draftGo(1); return; }
+  if (dx >= 40) { draftGo(-1); return; }
+  if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 500) {
+    var cr = draftSlides[dCur].getBoundingClientRect();
+    if (e.clientX >= cr.left && e.clientX <= cr.right) openDraftLb(dCur);
+    else if (e.clientX < cr.left) draftGo(-1);
+    else draftGo(1);
+  }
+});
+draftStage.addEventListener("pointercancel", function () { dDrag = null; });
+draftSlides.forEach(function (s) {
+  s.querySelector("img").addEventListener("load", draftFit);
+});
+window.addEventListener("resize", draftFit);
+draftRender();
+
+/* ---------- Lightbox (flat plates: the places + the extras sheet;
+   the draft deck walks the same box on its own list) ---------- */
 var lb = document.getElementById("lb"), lbCap = document.getElementById("lbCap"),
     lbCount = document.getElementById("lbCount"),
     lbPrev = document.getElementById("lbPrev"), lbNext = document.getElementById("lbNext"),
     seamBtn = document.getElementById("seamBtn"), luluBtn = document.getElementById("luluBtn"),
-    cur = 0;
+    cur = 0, lbList = FLAT, lbNoun = "Plate";
 
-function openLb(i) {
+function openLb(i) { openLbIn(FLAT, "Plate", i); }
+function openDraftLb(i) { openLbIn(DRAFT, "Illustration", i); }
+function openLbIn(list, noun, i) {
+  lbList = list; lbNoun = noun;
   cur = i;
   renderLb();
   lb.classList.add("open");
@@ -617,20 +814,20 @@ function openLb(i) {
   lb.scrollTop = 0;
 }
 function renderLb() {
-  var p = FLAT[cur];
+  var p = lbList[cur];
   var inner = lb.querySelector(".inner");
-  var fresh = buildPlate(p, true, true);
+  var fresh = buildPlate(p, !p.plain, !p.plain);
   fresh.id = "lbSpread";
   var old = document.getElementById("lbSpread");
   inner.replaceChild(fresh, old);
   lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "");
-  lbCount.textContent = "Plate " + (cur + 1) + " of " + FLAT.length;
+  lbCount.textContent = lbNoun + " " + (cur + 1) + " of " + lbList.length;
   lbPrev.disabled = cur === 0;
-  lbNext.disabled = cur === FLAT.length - 1;
+  lbNext.disabled = cur === lbList.length - 1;
 }
 function stepLb(d) {
   var n = cur + d;
-  if (n < 0 || n >= FLAT.length) return;
+  if (n < 0 || n >= lbList.length) return;
   cur = n; renderLb(); lb.scrollTop = 0;
 }
 function closeLb() { lb.classList.remove("open"); document.body.style.overflow = ""; document.documentElement.style.overflow = ""; }
