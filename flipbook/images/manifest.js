@@ -21,7 +21,8 @@ var BOOK = {
   "images/14-draft-12.jpg",
   "images/15-draft-13.jpg",
   "images/16-draft-14.jpg",
-  "images/17-draft-15.jpg"
+  "images/17-draft-15.jpg",
+  "images/18-back.jpg"
  ],
  "roles": [
   "front cover / title page",
@@ -40,6 +41,7 @@ var BOOK = {
   "Lois's draft illustration 12",
   "Lois's draft illustration 13",
   "Lois's draft illustration 14",
-  "Lois's draft illustration 15"
+  "Lois's draft illustration 15",
+  "back cover"
  ]
 };
