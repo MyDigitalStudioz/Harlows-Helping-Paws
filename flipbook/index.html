@@ -13655,10 +13655,11 @@
           "shelf/book2-spread/28-spread-14-R.jpg",
           "shelf/book2-spread/29-spread-15-L.jpg",
           "shelf/book2-spread/30-spread-15-R.jpg",
-          "shelf/book2-spread/31-back-cover.jpg"
+          "shelf/book2-spread/31-back-cover.jpg",
+          "shelf/book2-spread/32-back.jpg"
         ],
         text: [
-          null,
+          "Front cover \u2014 Harlow's Helping Paws. Harlow makes his rounds at The Snuggle Inn, past Howard on his bed and the kittens in their basket.",
           "Harlow's Helping Paws \u2014 SPREAD MOCKUP. An experiment: Lois's own Draft 1 illustrations presented as full two-page spreads, so the spread format can be judged before the finished art is painted. Placeholder draft art.",
           null,
           null,
@@ -13689,7 +13690,8 @@
           null,
           null,
           null,
-          "Back cover — The Community Hope Shelter from outside, in the golden light. Day Two's helping happens here."
+          "Back cover — The Community Hope Shelter from outside, in the golden light. Day Two's helping happens here.",
+          "Back cover \u2014 Come along on Harlow's rounds."
         ],
         info: { author: "Lois Farrell", format: "Spread (2:1)", status: "mockup \u2014 spread experiment", links: [],
           about: "An experiment \u2014 Lois Farrell's Draft 1 illustrations for Harlow's Helping Paws presented as full two-page spreads, so the spread format can be judged before the finished spreads are painted. Each page is one of Lois's own draft illustrations, shown whole and uncropped, its edges extended to fill the spread. Placeholder draft art only \u2014 the finished art will be painted as true spreads." } },
@@ -16110,11 +16112,15 @@
         // so the cover takes the cover slot and the artwork pairs
         // exactly, halves of one spread side by side; the book is
         // padded at runtime with the viewer's own blank page at the
-        // back only, as its endpaper. The book opens on its cover
+        // back only, as its endpaper — but only when the book's own
+        // page count is even, so the blank completes the final pair.
+        // A flatPairs book whose pages run odd already ends on a real
+        // back cover that completes the last pair by itself, and no
+        // blank follows it. The book opens on its cover
         // like any other — an earlier design padded the front with a
         // blank and stepped past it, which left a blank "cover" for
         // any reader who paged back to page 1.
-        if (entry.flatPairs) {
+        if (entry.flatPairs && PAGES.length % 2 === 0) {
           PAGES = PAGES.concat([BLANK]);
           pageIns = pageIns.concat([false]);
           pageNames = pageNames.concat([null]);
