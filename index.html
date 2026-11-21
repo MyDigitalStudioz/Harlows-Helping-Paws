@@ -132,7 +132,11 @@
     border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);
     color:var(--ivory);text-decoration:none;font-weight:600;font-size:16px}
   .dlink.current{background:var(--gold);color:#141414;border-color:rgba(227,179,65,.6);border-style:solid;font-weight:700}
-  .dnote{color:#a49a83;font-size:13px;line-height:1.5;margin-top:14px}
+  .dsec{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:22px 0 8px}
+  .dlink.dnav{padding:10px 14px;font-size:15px;font-weight:500;
+    background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.08);color:rgba(243,239,230,.88)}
+  section[id]{scroll-margin-top:84px}
   #toTop{position:fixed;right:16px;bottom:20px;z-index:40;width:50px;height:50px;border-radius:50%;
     cursor:pointer;background:var(--gold);color:#141414;border:1px solid rgba(227,179,65,.6);
     font-size:22px;font-weight:700;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.5);
@@ -304,7 +308,7 @@
     </div>
   </header>
 
-  <section>
+  <section id="story">
     <div class="mono sec-label">The Story</div>
     <h2>Two days of helping paws</h2>
     <p class="lede">After the adventure in book one, Lois has retired &mdash; and retirement doesn&rsquo;t suit her for long. With plenty of pep still in her step, she sets out to help her community. Animals, humans, or maybe both? Harlow tags along to find out.</p>
@@ -323,9 +327,9 @@
   </section>
 
 
-  <section>
+  <section id="portraits">
     <div class="mono sec-label">The Lead Cast</div>
-    <h2>Portraits, locked</h2>
+    <h2>Portraits</h2>
     <p class="lede">Every character in a Lois Farrell book starts as a locked recipe &mdash; an exact description of who they are and how they look &mdash; before a single page is drawn. These are the cast&rsquo;s reference portraits &mdash; same faces, same finish, on every page to come.</p>
     <div class="cast-grid">
       <div class="cast-card">
@@ -361,7 +365,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="boards">
     <div class="mono sec-label">Character Boards</div>
     <h2>The 3D character storyboards</h2>
     <p class="lede">Each lead gets a full character board &mdash; portraits, expressions, outfits, colors, and key traits on one sheet. These boards are the law of the land for the illustrators: if it isn&rsquo;t on the board, it doesn&rsquo;t go in the book.</p>
@@ -384,7 +388,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="supporting">
     <div class="mono sec-label">The Supporting Cast</div>
     <h2>More friends of the Inn</h2>
     <p class="lede">The supporting cast joins the same recipe-first way &mdash; a dialed-in recipe, a headshot, and a full body each. Howard is the first one home.</p>
@@ -481,7 +485,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="cast">
     <div class="mono sec-label">Cast Browser</div>
     <h2>Flip through the cast</h2>
     <p class="lede">The whole gang on one deck &mdash; tap the arrows, swipe, or use your arrow keys to flip through every friend of the Inn. The full cards are all still above; this is just the fun way to browse them.</p>
@@ -591,7 +595,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="roadmap">
     <div class="mono sec-label">Production Roadmap</div>
     <h2>How this book gets made</h2>
     <p class="lede">The same pipeline that produced <i>Harlow&rsquo;s Accidental Journey</i> &mdash; from Lois&rsquo;s manuscript to a printed book and a digital flipbook.</p>
@@ -605,7 +609,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="shelf">
     <div class="mono sec-label">The Bookshelf</div>
     <div class="book1">
       <div class="txt">
@@ -640,7 +644,18 @@
     <a class="dlink" href="spread-options-v2.html">Spread review &mdash; all spreads</a>
     <span class="dlink current">Project showcase &mdash; you&rsquo;re here</span>
   </nav>
-  <p class="dnote">Book Two is in production &mdash; the bookshelf and spread review grow as new pages are illustrated.</p>
+  <div class="dsec">On this page</div>
+  <nav>
+    <a class="dlink dnav" href="#story">The Story</a>
+    <a class="dlink dnav" href="#portraits">Portraits</a>
+    <a class="dlink dnav" href="#boards">3D Character Storyboards</a>
+    <a class="dlink dnav" href="#supporting">Supporting Cast</a>
+    <a class="dlink dnav" href="#cast">Flip through the cast</a>
+    <a class="dlink dnav" href="#places">The Places</a>
+    <a class="dlink dnav" href="#covers">The Covers</a>
+    <a class="dlink dnav" href="#roadmap">Production Roadmap</a>
+    <a class="dlink dnav" href="#shelf">The Bookshelf</a>
+  </nav>
 </aside>
 
 <script>
@@ -659,6 +674,16 @@
   scrim.addEventListener("click", closeDrawer);
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+  });
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  drawer.querySelectorAll(".dnav").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      var target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+      e.preventDefault();
+      closeDrawer();
+      target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    });
   });
   var toTop = document.getElementById("toTop");
   window.addEventListener("scroll", function () {
