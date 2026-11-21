@@ -305,6 +305,59 @@
     .covflip.flipped .covface-front{opacity:0}
     .covflip.flipped .covface-back{opacity:1}
   }
+
+  /* Cast lightbox walk — tap any cast portrait to walk the whole cast large
+     (Jon's ask, 2026-11-21). Overlay follows the standing rule: inset:0 +
+     height:auto; dvh appears only as a max-height cap on inner content.
+     Arrows reuse the decks' locked frosted style — fill never changes in
+     any state; focus only adds the gold ring. */
+  #portraits .cast-card>img.clb-open, #supporting .cast-card>img.clb-open{cursor:pointer}
+  #portraits .cast-card>img.clb-open:focus-visible, #supporting .cast-card>img.clb-open:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .clb{position:fixed;inset:0;height:auto;z-index:90;background:rgba(8,9,10,.94);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:12px;padding:60px 16px 20px}
+  .clb[hidden]{display:none}
+  .clb-stage{flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;touch-action:pan-y}
+  .clb-img{display:block;width:auto;height:auto;max-width:100%;max-height:56vh;max-height:56dvh;
+    border-radius:12px;border:1px solid var(--line);background:var(--panel);
+    -webkit-user-drag:none;user-select:none}
+  .clb-rail{flex:0 0 auto;width:100%;max-width:560px;text-align:center}
+  .clb-name{font-size:22px;font-weight:800;margin-bottom:4px}
+  .clb-cap{font-size:14.5px;color:var(--muted)}
+  .clb-cap .clb-blurb{color:rgba(243,239,230,.88)}
+  .clb-toggle{display:none;gap:8px;justify-content:center;margin-top:12px}
+  .clb-toggle.show{display:flex}
+  .clb-toggle button{min-height:44px;padding:9px 18px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(227,179,65,.6);background:rgba(227,179,65,.08);color:var(--gold);
+    font-family:inherit;font-weight:700;font-size:14px;-webkit-tap-highlight-color:transparent}
+  .clb-toggle button[aria-pressed="true"]{background:var(--gold);color:#141414}
+  .clb-toggle button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .clb-count{display:block;margin-top:12px;font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;letter-spacing:.14em;color:var(--muted)}
+  .clb-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:48px;height:48px;
+    border-radius:50%;border:1px solid rgba(227,179,65,.6);background:rgba(18,19,20,.6);
+    -webkit-backdrop-filter:blur(6px) saturate(1.2);backdrop-filter:blur(6px) saturate(1.2);
+    color:var(--gold);font-size:30px;line-height:1;cursor:pointer;font-family:inherit;opacity:1;
+    display:flex;align-items:center;justify-content:center;padding:0 0 5px;
+    -webkit-tap-highlight-color:transparent;transition:none}
+  .clb-arrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .clb-prev{left:10px}
+  .clb-next{right:10px}
+  .clb-close{position:absolute;top:12px;right:12px;z-index:6;width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(18,19,20,.6);color:var(--ivory);
+    font-size:22px;line-height:1;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;padding:0 0 3px;
+    -webkit-tap-highlight-color:transparent}
+  .clb-close:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  /* Landscape: image main, name/caption/toggle in a side rail — the standing
+     spread-lightbox family pattern. */
+  @media (orientation:landscape) and (max-height:540px), (min-width:860px){
+    .clb{flex-direction:row;gap:20px;padding:18px 70px}
+    .clb-stage{flex:1 1 auto;min-width:0;width:auto}
+    .clb-img{max-height:88vh;max-height:88dvh}
+    .clb-rail{flex:0 0 290px;width:290px;text-align:left;max-height:88vh;max-height:88dvh;overflow-y:auto}
+    .clb-toggle{justify-content:flex-start}
+  }
 </style>
 </head>
 <body>
@@ -999,6 +1052,128 @@
     new MutationObserver(syncTab).observe(slide, { attributes: true, attributeFilter: ["class"] });
     syncTab();
   });
+})();
+</script>
+
+<div class="clb" id="castLb" hidden role="dialog" aria-modal="true" aria-labelledby="clbName">
+  <div class="clb-stage"><img class="clb-img" id="clbImg" alt="" draggable="false"></div>
+  <div class="clb-rail">
+    <h3 class="clb-name" id="clbName"></h3>
+    <p class="clb-cap" id="clbCap"></p>
+    <div class="clb-toggle" id="clbToggle" role="group" aria-label="Portrait or full body">
+      <button type="button" id="clbBtnPortrait" aria-pressed="true">Portrait</button>
+      <button type="button" id="clbBtnFull" aria-pressed="false">Full body</button>
+    </div>
+    <span class="clb-count" id="clbCount" aria-live="polite"></span>
+  </div>
+  <button type="button" class="clb-arrow clb-prev" id="clbPrev" aria-label="Previous character">&lsaquo;</button>
+  <button type="button" class="clb-arrow clb-next" id="clbNext" aria-label="Next character">&rsaquo;</button>
+  <button type="button" class="clb-close" id="clbClose" aria-label="Close viewer">&times;</button>
+</div>
+<script>
+/* Cast lightbox walk — the walk list is read from the cast cards themselves,
+   in page order (Lead Cast, then Supporting Cast, Background Cast last), so
+   the viewer can never drift from the cards on the page. */
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll("#portraits .cast-card, #supporting .cast-card"));
+  var cast = cards.map(function (card) {
+    var img = card.querySelector(":scope > img");
+    var fb = card.querySelector(".fb-wrap img");
+    var cap = [];
+    card.querySelectorAll(".cap p").forEach(function (p) {
+      cap.push(p.classList.contains("blurb") ? '<span class="clb-blurb">' + p.innerHTML + "</span>" : p.innerHTML);
+    });
+    return {
+      name: card.querySelector("h3").textContent,
+      cap: cap.join("<br>"),
+      portrait: img.getAttribute("src"),
+      portraitAlt: img.getAttribute("alt") || "",
+      full: fb ? fb.getAttribute("src") : null,
+      fullAlt: fb ? (fb.getAttribute("alt") || "") : ""
+    };
+  });
+  var lb = document.getElementById("castLb"),
+      lbImg = document.getElementById("clbImg"),
+      lbName = document.getElementById("clbName"),
+      lbCap = document.getElementById("clbCap"),
+      lbCount = document.getElementById("clbCount"),
+      lbToggle = document.getElementById("clbToggle"),
+      btnP = document.getElementById("clbBtnPortrait"),
+      btnF = document.getElementById("clbBtnFull"),
+      prevBtn = document.getElementById("clbPrev"),
+      nextBtn = document.getElementById("clbNext"),
+      closeBtn = document.getElementById("clbClose");
+  var cur = 0, showingFull = false, savedY = 0;
+
+  function render() {
+    var c = cast[cur], useFull = showingFull && !!c.full;
+    lbImg.src = useFull ? c.full : c.portrait;
+    lbImg.alt = useFull ? c.fullAlt : c.portraitAlt;
+    lbName.textContent = c.name;
+    lbCap.innerHTML = c.cap;
+    lbCount.textContent = (cur + 1) + " of " + cast.length;
+    lbToggle.classList.toggle("show", !!c.full);
+    btnP.setAttribute("aria-pressed", useFull ? "false" : "true");
+    btnF.setAttribute("aria-pressed", useFull ? "true" : "false");
+  }
+  function go(d) {
+    cur = ((cur + d) % cast.length + cast.length) % cast.length;
+    showingFull = false;
+    render();
+  }
+  function openLb(i) {
+    cur = i; showingFull = false; render();
+    savedY = window.scrollY || window.pageYOffset || 0;
+    lb.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    closeBtn.focus({ preventScroll: true });
+  }
+  function closeLb() {
+    lb.hidden = true;
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    if (Math.abs((window.scrollY || 0) - savedY) > 2) window.scrollTo(0, savedY);
+    var t = cards[cur].querySelector(":scope > img");
+    if (t) t.focus({ preventScroll: true });
+  }
+
+  cards.forEach(function (card, i) {
+    var img = card.querySelector(":scope > img");
+    img.classList.add("clb-open");
+    img.setAttribute("tabindex", "0");
+    img.setAttribute("role", "button");
+    img.setAttribute("aria-label", "View " + cast[i].name + " large");
+    img.addEventListener("click", function () { openLb(i); });
+    img.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLb(i); }
+    });
+  });
+  prevBtn.addEventListener("click", function () { go(-1); });
+  nextBtn.addEventListener("click", function () { go(1); });
+  closeBtn.addEventListener("click", closeLb);
+  btnP.addEventListener("click", function () { if (showingFull) { showingFull = false; render(); } });
+  btnF.addEventListener("click", function () { if (!showingFull && cast[cur].full) { showingFull = true; render(); } });
+  document.addEventListener("keydown", function (e) {
+    if (lb.hidden) return;
+    if (e.key === "Escape") closeLb();
+    else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+  });
+  var drag = null;
+  lb.addEventListener("pointerdown", function (e) {
+    if (e.target.closest("button")) { drag = null; return; }
+    drag = { x: e.clientX, y: e.clientY };
+  });
+  lb.addEventListener("pointerup", function (e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x;
+    drag = null;
+    if (dx <= -40) go(1);
+    else if (dx >= 40) go(-1);
+  });
+  lb.addEventListener("pointercancel", function () { drag = null; });
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
 })();
 </script>
 </body>
