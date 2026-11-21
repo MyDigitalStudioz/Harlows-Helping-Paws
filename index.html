@@ -244,9 +244,9 @@
   .covseg{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
   .covseglabel{color:var(--muted);font-size:10.5px;text-align:left}
   .covthumbs{display:flex;gap:10px}
-  .cthumb{flex:0 0 auto;width:82px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
+  .cthumb{flex:none;width:82px;min-width:82px;max-width:82px;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
     scroll-snap-align:start;text-align:center;-webkit-tap-highlight-color:transparent}
-  .cthumb-img{position:relative;display:block;width:82px;height:82px;border-radius:10px;overflow:hidden;
+  .cthumb-img{position:relative;display:block;flex:none;width:82px;height:82px;min-width:82px;max-width:82px;min-height:82px;max-height:82px;aspect-ratio:1/1;border-radius:10px;overflow:hidden;
     border:1px solid var(--line);background:var(--panel)}
   .cthumb-img img{width:100%;height:100%;display:block;object-fit:cover;-webkit-user-drag:none;user-select:none}
   .cthumb:hover .cthumb-img{border-color:rgba(227,179,65,.55)}
@@ -570,16 +570,16 @@
           <div class="mono covseglabel">Story Book</div>
           <div class="covthumbs">
             <button type="button" class="cthumb is-sel" data-pair="0" aria-pressed="true" aria-label="F1 &mdash; Every Paw (on the shelf)">
-              <span class="cthumb-img"><img src="media/covers/every-paw-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F1</span><span class="cthumb-dot" aria-hidden="true"></span></span>
+              <span class="cthumb-img"><img width="82" height="82" src="media/covers/every-paw-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F1</span><span class="cthumb-dot" aria-hidden="true"></span></span>
               <span class="cthumb-name">Every Paw</span>
               <span class="cthumb-shelf">On the shelf</span>
             </button>
             <button type="button" class="cthumb" data-pair="1" aria-pressed="false" aria-label="F2 &mdash; Harlow&rsquo;s Rounds">
-              <span class="cthumb-img"><img src="media/covers/harlows-rounds-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F2</span></span>
+              <span class="cthumb-img"><img width="82" height="82" src="media/covers/harlows-rounds-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F2</span></span>
               <span class="cthumb-name">Harlow&rsquo;s Rounds</span>
             </button>
             <button type="button" class="cthumb" data-pair="2" aria-pressed="false" aria-label="F3 &mdash; Welcome to the Snuggle Inn">
-              <span class="cthumb-img"><img src="media/covers/snuggle-inn-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F3</span></span>
+              <span class="cthumb-img"><img width="82" height="82" src="media/covers/snuggle-inn-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F3</span></span>
               <span class="cthumb-name">Snuggle Inn</span>
             </button>
           </div>
@@ -588,12 +588,12 @@
           <div class="mono covseglabel">Meet the Cast</div>
           <div class="covthumbs">
             <button type="button" class="cthumb" data-pair="3" aria-pressed="false" aria-label="F4 &mdash; Garden Portrait (on the shelf)">
-              <span class="cthumb-img"><img src="media/covers/mtc-garden-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F4</span><span class="cthumb-dot" aria-hidden="true"></span></span>
+              <span class="cthumb-img"><img width="82" height="82" src="media/covers/mtc-garden-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F4</span><span class="cthumb-dot" aria-hidden="true"></span></span>
               <span class="cthumb-name">Garden Portrait</span>
               <span class="cthumb-shelf">On the shelf</span>
             </button>
             <button type="button" class="cthumb" data-pair="4" aria-pressed="false" aria-label="F5 &mdash; Portrait Gallery">
-              <span class="cthumb-img"><img src="media/covers/mtc-gallery-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F5</span></span>
+              <span class="cthumb-img"><img width="82" height="82" src="media/covers/mtc-gallery-front.jpg" alt="" draggable="false" loading="lazy"><span class="cthumb-code">F5</span></span>
               <span class="cthumb-name">Portrait Gallery</span>
             </button>
           </div>
