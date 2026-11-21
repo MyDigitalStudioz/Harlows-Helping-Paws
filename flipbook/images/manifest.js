@@ -6,6 +6,7 @@ var BOOK = {
  "notForPrint": "PREVIEW",
  "pages": [
   "images/01-front.jpg",
+  "images/flyleaf.jpg",
   "images/02-draft-01.jpg",
   "images/03-draft-02.jpg",
   "images/04-draft-03.jpg",
@@ -22,10 +23,12 @@ var BOOK = {
   "images/15-draft-13.jpg",
   "images/16-draft-14.jpg",
   "images/17-draft-15.jpg",
+  "images/flyleaf.jpg",
   "images/18-back.jpg"
  ],
  "roles": [
   "front cover / title page",
+  "flyleaf",
   "Lois's draft illustration 1",
   "Lois's draft illustration 2",
   "Lois's draft illustration 3",
@@ -42,6 +45,7 @@ var BOOK = {
   "Lois's draft illustration 13",
   "Lois's draft illustration 14",
   "Lois's draft illustration 15",
+  "flyleaf",
   "back cover"
  ]
 };

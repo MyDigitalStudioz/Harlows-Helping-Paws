@@ -253,6 +253,8 @@
   #book.single{overflow:hidden}
   .base{position:absolute;top:0;height:100%;z-index:1;background:#2b2b2b;box-shadow:0 24px 55px rgba(0,0,0,.5)}
   .base img{width:100%;height:100%;display:block;object-fit:contain;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
+  /* Page-fill treatment (2026-11-21): a filled page's image scales past its frame on purpose; every page surface clips to the page box. */
+  .base,#botLayer,#flipLayer,.scPage{overflow:hidden}
   /* v12.8 — no long-press hijack on book art: the iOS callout
      (Share / Save to Photos / Copy) is suppressed on the stage
      and every page image, so an accidental long-press while
@@ -1018,6 +1020,7 @@
   #zoomStage:active{cursor:grabbing}
   #zoomContent{display:flex;gap:0;will-change:transform;box-shadow:0 18px 44px rgba(0,0,0,.6)}
   #zoomContent img{display:block;object-fit:contain;background:#2b2b2b;user-select:none;-webkit-user-drag:none}
+  .zoomFillWrap{overflow:hidden;flex:0 0 auto}
   @media (max-width:560px){#banner{padding:calc(8px + env(safe-area-inset-top, 0px) * 1.15) 10px 8px;gap:8px;flex-wrap:nowrap}#leftTools{gap:8px}#tools{gap:8px}@media (max-width:380px){#tools{gap:2px}#banner{padding-left:6px;padding-right:6px}#mark{max-width:24vw}}#mark{font-size:16.5px}#counter{font-size:13.5px;padding:5px 9px}#textBtn{font-size:12.5px;padding:5px 10px;min-height:30px}#editionBadge{font-size:10.5px;letter-spacing:.05em;padding:4px 7px}#compareBtn,#listenBtn{font-size:12px;padding:5px 9px;min-height:30px}#listenBtn .pillTxt{display:none}.cmpLong{display:none}.cmpShort{display:inline}body.hdr-crowded #editionBadge{display:none}#stageTools{top:8px;left:8px}}
   @media (max-width:560px){body.hdr-pills #editionBadge{display:none}body.hdr-crowded #banner{gap:6px}body.hdr-crowded #leftTools{gap:6px}body.hdr-crowded #tools{gap:6px}body.hdr-crowded #textBtn>span{display:none}body.hdr-crowded #compareBtn .cmpShort{display:none}}
   @media (max-width:560px){#zoomReset{padding:6px 9px}#zoomPct{min-width:38px}#zoomBar{gap:8px;padding:10px 12px}}
@@ -3866,6 +3869,7 @@
     var PERSP = 2300;
     var winW = 0, winH = 0;                      // canvas window size in CSS px
     var leafFrontImg = null, leafBackImg = null; // images of the flying leaf
+    var leafFrontIdx = -1, leafBackIdx = -1; // their page indices (page-fill windows)
 
     function projLeaf(s, y, W, H, th, lag) {
       var x, z;
@@ -3908,9 +3912,19 @@
         var dw = Math.abs(t1[0] - t0[0]) + 1;
         var dy = t0[1] - 0.5, dh = (b0[1] - t0[1]) + 1;
         // The back face is the same sheet seen from behind: mirrored.
-        var sx = frontToward ? iw * s0 / W : iw * (1 - s1 / W);
-        var sw = iw * (s1 - s0) / W;
-        ctx2d.drawImage(im, sx, 0, sw, ih, dx, dy, dw, dh);
+        // Page-fill (2026-11-21): a filled page's visible window is a
+        // sub-rectangle of the source — slice from that window so the
+        // flying leaf shows the same filled art as the resting page.
+        var fSpec = pageFillFor(frontToward ? leafFrontIdx : leafBackIdx);
+        var wx0 = 0, wy0 = 0, ww = iw, wh = ih;
+        if (fSpec) {
+          ww = iw / fSpec[0]; wh = ih / fSpec[0];
+          wx0 = iw * (fSpec[1] / 100) * (1 - 1 / fSpec[0]);
+          wy0 = ih * (fSpec[2] / 100) * (1 - 1 / fSpec[0]);
+        }
+        var sx = frontToward ? wx0 + ww * s0 / W : wx0 + ww - ww * s1 / W;
+        var sw = ww * (s1 - s0) / W;
+        ctx2d.drawImage(im, sx, wy0, sw, wh, dx, dy, dw, dh);
       }
       // Original-engine shading (v13.61): the sheet itself stays flat,
       // so the curl is painted as light, not geometry — a uniform
@@ -4895,11 +4909,39 @@
       if (typeof syncScrollView === "function") syncScrollView();
     }
 
+    /* Page-fill treatment (2026-11-21, Jon): the two mockup books carry
+       placeholder art inside flat bands (story book) or blurred pillars
+       (Spread Mockup) baked into their square page files. A catalog entry
+       may carry a fill map {pageIndex: [scale, originX%, originY%]} —
+       measured from each page file's actual band/pillar extents — and
+       every reader surface zooms those pages so the art fills the page
+       frame. Books and pages without a fill entry render exactly as
+       before; the covers and the flyleaves carry no entry. Display
+       treatment only — the page files themselves are untouched. */
+    function pageFillFor(idx) {
+      try {
+        var e = findShelfEntry(currentEntryId);
+        if (e && e.fill && typeof idx === "number" && idx >= 0) return e.fill[idx] || null;
+      } catch (err) {}
+      return null;
+    }
+    function applyPageFill(img, idx) {
+      if (!img) return;
+      var f = pageFillFor(idx);
+      if (f) {
+        img.style.transform = "scale(" + f[0] + ")";
+        img.style.transformOrigin = f[1] + "% " + f[2] + "%";
+      } else if (img.style.transform) {
+        img.style.transform = "";
+        img.style.transformOrigin = "";
+      }
+    }
+
     function render() {
       var li = flipped === 0 ? null : 2 * flipped - 1;
       var ri = flipped === HALF ? null : 2 * flipped;
-      if (li === null) { baseL.style.display = "none"; } else { baseL.style.display = "block"; imgL.src = pageSrc(effSrc(li)); }
-      if (ri === null) { baseR.style.display = "none"; } else { baseR.style.display = "block"; imgR.src = pageSrc(effSrc(ri)); }
+      if (li === null) { baseL.style.display = "none"; } else { baseL.style.display = "block"; imgL.src = pageSrc(effSrc(li)); applyPageFill(imgL, li); }
+      if (ri === null) { baseR.style.display = "none"; } else { baseR.style.display = "block"; imgR.src = pageSrc(effSrc(ri)); applyPageFill(imgR, ri); }
       // While a leaf is flying, poseLeaf owns the glide (it interpolates to
       // exactly this value on the final frame). Setting it here mid-flight
       // would slam the book sideways at the swap, then step it back.
@@ -4974,6 +5016,8 @@
     function setLeafImages(frontIdx, backIdx) {
       leafFrontImg = effImg(frontIdx);
       leafBackImg = effImg(backIdx);
+      leafFrontIdx = frontIdx;
+      leafBackIdx = backIdx;
     }
 
     /* ================= corner-fold leaf (magazine / flipbook17) =================
@@ -5211,6 +5255,7 @@
         var fs = pageSrc(effSrc(2 * k)), bs = (2 * k + 1 < N) ? pageSrc(effSrc(2 * k + 1)) : "";
         if (sh._fim.getAttribute("src") !== fs) sh._fim.src = fs;
         if (bs && sh._bim.getAttribute("src") !== bs) sh._bim.src = bs;
+        applyPageFill(sh._fim, 2 * k); if (2 * k + 1 < N) applyPageFill(sh._bim, 2 * k + 1);
       }
     }
     function sheetPrepare(k) {
@@ -5220,6 +5265,7 @@
       var fs = pageSrc(effSrc(2 * k)), bs = (2 * k + 1 < N) ? pageSrc(effSrc(2 * k + 1)) : "";
       if (activeSheet._fim.getAttribute("src") !== fs) activeSheet._fim.src = fs;
       if (bs && activeSheet._bim.getAttribute("src") !== bs) activeSheet._bim.src = bs;
+      applyPageFill(activeSheet._fim, 2 * k); if (2 * k + 1 < N) applyPageFill(activeSheet._bim, 2 * k + 1);
       activeSheet.style.transition = "none";
       activeSheet.style.zIndex = 999;   // mid-turn the turning sheet rides above the stack
       activeSheet.style.transform = "rotateY(" + (k < flipped ? -180 : 0) + "deg)";
@@ -5322,28 +5368,28 @@
         var f = flipped;
         var nr = 2 * f + 2;
         if (isMag()) {
-          flipImg.src = pageSrc(effSrc(2 * f + 1));
+          flipImg.src = pageSrc(effSrc(2 * f + 1)); applyPageFill(flipImg, 2 * f + 1);
           botLayer.style.left = pageSize + "px";
-          if (nr < N) { botImg.src = pageSrc(effSrc(nr)); botLayer.style.visibility = "visible"; }
+          if (nr < N) { botImg.src = pageSrc(effSrc(nr)); applyPageFill(botImg, nr); botLayer.style.visibility = "visible"; }
           else botLayer.style.visibility = "hidden";
         } else {
           setLeafImages(2 * f, 2 * f + 1);
           sheetPrepare(f);
-          if (nr < N) { baseR.style.display = "block"; imgR.src = pageSrc(effSrc(nr)); } else baseR.style.display = "none";
+          if (nr < N) { baseR.style.display = "block"; imgR.src = pageSrc(effSrc(nr)); applyPageFill(imgR, nr); } else baseR.style.display = "none";
         }
       } else {
         if (flipped <= 0) return false;
         var g = flipped;
         var pl = 2 * g - 3;
         if (isMag()) {
-          flipImg.src = pageSrc(effSrc(2 * g - 2));
+          flipImg.src = pageSrc(effSrc(2 * g - 2)); applyPageFill(flipImg, 2 * g - 2);
           botLayer.style.left = "0px";
-          if (pl >= 0) { botImg.src = pageSrc(effSrc(pl)); botLayer.style.visibility = "visible"; }
+          if (pl >= 0) { botImg.src = pageSrc(effSrc(pl)); applyPageFill(botImg, pl); botLayer.style.visibility = "visible"; }
           else botLayer.style.visibility = "hidden";
         } else {
           setLeafImages(2 * g - 2, 2 * g - 1);
           sheetPrepare(g - 1);
-          if (pl >= 0) { baseL.style.display = "block"; imgL.src = pageSrc(effSrc(pl)); } else baseL.style.display = "none";
+          if (pl >= 0) { baseL.style.display = "block"; imgL.src = pageSrc(effSrc(pl)); applyPageFill(imgL, pl); } else baseL.style.display = "none";
         }
       }
       return true;
@@ -5776,7 +5822,7 @@
         var im = document.createElement("img");
         im.alt = "";
         im.loading = i < 3 ? "eager" : "lazy";
-        im.src = pageSrc(effSrc(i));
+        im.src = pageSrc(effSrc(i)); applyPageFill(im, i);
         d.appendChild(im);
         var gd = document.createElement("div");
         gd.className = "scGuide";
@@ -10544,6 +10590,8 @@
       pw = Math.max(40, pw);
       var ph = pw / bookAspect;
       for (var i = 0; i < imgs.length; i++) { imgs[i].style.width = pw + "px"; imgs[i].style.height = ph + "px"; }
+      var zws = zoomContent.querySelectorAll(".zoomFillWrap");
+      for (var zi = 0; zi < zws.length; zi++) { zws[zi].style.width = pw + "px"; zws[zi].style.height = ph + "px"; }
       zoomBaseW = pw * imgs.length;
       zoomBaseH = ph;
       clampZoomPan();
@@ -10558,8 +10606,15 @@
       visibleTextIdxs().forEach(function (i) {
         var im = document.createElement("img");
         im.alt = "";
-        im.src = pageSrc(effSrc(i));
-        zoomContent.appendChild(im);
+        im.src = pageSrc(effSrc(i)); applyPageFill(im, i);
+        if (pageFillFor(i)) {
+          var zw = document.createElement("div");
+          zw.className = "zoomFillWrap";
+          zw.appendChild(im);
+          zoomContent.appendChild(zw);
+        } else {
+          zoomContent.appendChild(im);
+        }
       });
       zoomTitle.textContent = label();
       zoomScale = 1; zoomTX = 0; zoomTY = 0;
@@ -13607,8 +13662,10 @@
     }
     var CATALOG = [
       { id: "builtin", title: BOOK.title, cover: BOOK.pages[0], source: "built-in", pages: null,
+        fill: { "2": [1.1544, 50, 50.06], "3": [1.2973, 50, 49.69], "4": [1.578, 50, 49.91], "5": [1.5542, 50, 49.94], "6": [1.4906, 50, 49.54], "9": [1.5311, 50, 49.46], "10": [1.5709, 50, 49.83], "11": [1.2774, 50, 49.89], "12": [1.5405, 50, 49.66], "13": [1.5709, 50, 50.0], "14": [1.506, 50, 49.71], "15": [1.5378, 50, 49.71], "16": [1.5178, 50, 49.91], "17": [1.3069, 50, 50.03] },
         text: [
           "Front cover \u2014 Harlow's Helping Paws. Harlow, Pixie and Spike welcome you to The Snuggle Inn.",
+          "Flyleaf",
           null,
           null,
           null,
@@ -13625,13 +13682,17 @@
           null,
           null,
           null,
+          "Flyleaf",
           "Back cover \u2014 Every paw deserves a home."
         ],
         info: { author: "Lois Farrell", format: "Square (1:1)", status: "mockup \u2014 placeholder draft art", links: [],
           about: "Harlow's Helping Paws (working title) \u2014 Lois Farrell's second picture book. After the adventure in book one, Lois has retired, and retirement doesn't suit her for long: with Harlow at her side she volunteers at The Snuggle Inn animal shelter and The Community Hope Shelter. Story draft 1 received November 19, 2026. This shelf copy is a MOCKUP: its pages are Lois's own draft illustrations, placed as placeholders so the story can be flipped through while the finished spreads are painted. The produced cast portraits live in the companion gallery, Meet the Cast." } },
       { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "shelf/book2-spread/00-cover.jpg", source: "built-in", aspect: 1, flatPairs: true,
+        fill: { "3": [1.7535, 100, 50], "4": [1.7535, 0, 50], "5": [1.5923, 100, 50], "6": [1.5923, 0, 50], "7": [1.319, 100, 50], "8": [1.319, 0, 50], "9": [1.3171, 100, 50], "10": [1.3171, 0, 50], "11": [1.4117, 100, 50], "12": [1.4117, 0, 50], "13": [1.1583, 100, 50], "14": [1.1583, 0, 50], "15": [1.368, 100, 50], "16": [1.368, 0, 50], "17": [1.3035, 100, 50], "18": [1.3035, 0, 50], "19": [1.6396, 100, 50], "20": [1.6396, 0, 50], "21": [1.3431, 100, 50], "22": [1.3431, 0, 50], "23": [1.3171, 100, 50], "24": [1.3171, 0, 50], "25": [1.3809, 100, 50], "26": [1.3809, 0, 50], "27": [1.3492, 100, 50], "28": [1.3492, 0, 50], "29": [1.405, 100, 50], "30": [1.405, 0, 50], "31": [1.556, 100, 50], "32": [1.556, 0, 50], "33": [1.5086, 50, 49.94] },
         pages: [
           "shelf/book2-spread/00-cover.jpg",
+          "shelf/book2-spread/flyleaf.jpg",
+          "shelf/book2-spread/flyleaf.jpg",
           "shelf/book2-spread/01-spread-01-L.jpg",
           "shelf/book2-spread/02-spread-01-R.jpg",
           "shelf/book2-spread/03-spread-02-L.jpg",
@@ -13663,10 +13724,14 @@
           "shelf/book2-spread/29-spread-15-L.jpg",
           "shelf/book2-spread/30-spread-15-R.jpg",
           "shelf/book2-spread/31-back-cover.jpg",
+          "shelf/book2-spread/flyleaf.jpg",
+          "shelf/book2-spread/flyleaf.jpg",
           "shelf/book2-spread/32-back.jpg"
         ],
         text: [
           "Front cover \u2014 Harlow's Helping Paws. Harlow makes his rounds at The Snuggle Inn, past Howard on his bed and the kittens in their basket.",
+          "Flyleaf",
+          "Flyleaf",
           "Harlow's Helping Paws \u2014 SPREAD MOCKUP. An experiment: Lois's own Draft 1 illustrations presented as full two-page spreads, so the spread format can be judged before the finished art is painted. Placeholder draft art.",
           null,
           null,
@@ -13697,7 +13762,9 @@
           null,
           null,
           null,
-          "Back cover — The Community Hope Shelter from outside, in the golden light. Day Two's helping happens here.",
+          "The Community Hope Shelter from outside, in the golden light. Day Two's helping happens here.",
+          "Flyleaf",
+          "Flyleaf",
           "Back cover \u2014 Come along on Harlow's rounds."
         ],
         info: { author: "Lois Farrell", format: "Spread (2:1)", status: "mockup \u2014 spread experiment", links: [],
@@ -13705,6 +13772,7 @@
       { id: "meet-the-cast", title: "Harlow's Helping Paws - Meet the Cast", cover: "shelf/book2-cast/01-front-cover.jpg", source: "built-in",
         pages: [
           "shelf/book2-cast/01-front-cover.jpg",
+          "shelf/book2-cast/flyleaf.jpg",
           "shelf/book2-cast/02-title.jpg",
           "shelf/book2-cast/03-harlow.jpg",
           "shelf/book2-cast/04-harlow-full.jpg",
@@ -13753,10 +13821,12 @@
           "shelf/book2-cast/47-tony.jpg",
           "shelf/book2-cast/48-tony-full.jpg",
           "shelf/book2-cast/49-background-cast.jpg",
+          "shelf/book2-cast/flyleaf.jpg",
           "shelf/book2-cast/50-back-cover.jpg"
         ],
         text: [
           "Front cover — Meet the Cast at The Snuggle Inn.",
+          "Flyleaf",
           "Meet the Cast — a mockup character gallery. Portraits and full-body studies of the adopted Harlow's Helping Paws cast.",
           "Harlow — our narrator. A seal-point Ragdoll with azure-cerulean eyes and a very long plume tail.",
           "Harlow in full — plume tail and all.",
@@ -13805,6 +13875,7 @@
           "Tony — a boy staying at The Community Hope Shelter, proud of his brand-new fuzzy pajamas; Harlow snuggled beside him on the book's last night.",
           "Tony in full.",
           "The Background Cast — the everyday faces of The Snuggle Inn and the Hope Shelter, the friends in the background of Harlow's days. Eight regulars and four animals, drawn once and for good.",
+          "Flyleaf",
           "Back cover — The Snuggle Inn Cast."
         ],
         info: { author: "Lois Farrell", format: "Square (1:1)", status: "mockup", links: [],
