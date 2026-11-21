@@ -7066,17 +7066,21 @@
     }
     /* The cover source as the book currently stands on this device:
        an import answers from its shelf entry (its pages and cover
-       mirror every replacement), the open book from its entry (kept
-       in step with PAGES by the art code), and a catalog book that
-       is not open through resolveCurrentPages — the same current-
-       pages resolution Download PDF uses — so a stored page-1
-       replacement shows on the shelf before the book is reopened. */
+       mirror every replacement); every other book — open or not —
+       answers through resolveCurrentPages, the same current-pages
+       resolution Download PDF uses, so a stored page-1 replacement
+       shows on the shelf before the book is reopened, and a book's
+       cover identity never depends on which book happens to be
+       open. (The open book once answered from its entry's cover
+       field instead; when that field disagreed with the book's own
+       first page — the Spread Mockup's pointed at the story book's
+       front page — opening the book swapped its shelf tile to the
+       other book's cover on the return to the shelf.) */
     function resolveEffectiveCoverSrc(entry, cb) {
       if (!entry) { cb(null); return; }
       var cvSrc = coverSelectedSrc(entry.id);
       if (cvSrc) { cb(cvSrc); return; }
       if (entry.source === "import") { cb(entry.cover || (entry.pages && entry.pages[0]) || null); return; }
-      if (entry.id === currentEntryId) { cb(entry.cover || PAGES[0] || null); return; }
       try {
         resolveCurrentPages(entry, function (pages) { cb((pages && pages[0]) || entry.cover || null); });
       } catch (err) { cb(entry.cover || null); }
@@ -13617,7 +13621,7 @@
         ],
         info: { author: "Lois Farrell", format: "Square (1:1)", status: "mockup \u2014 placeholder draft art", links: [],
           about: "Harlow's Helping Paws (working title) \u2014 Lois Farrell's second picture book. After the adventure in book one, Lois has retired, and retirement doesn't suit her for long: with Harlow at her side she volunteers at The Snuggle Inn animal shelter and The Community Hope Shelter. Story draft 1 received November 19, 2026. This shelf copy is a MOCKUP: its pages are Lois's own draft illustrations, placed as placeholders so the story can be flipped through while the finished spreads are painted. The produced cast portraits live in the companion gallery, Meet the Cast." } },
-      { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "images/01-front.jpg", source: "built-in", aspect: 1, flatPairs: true,
+      { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "shelf/book2-spread/00-cover.jpg", source: "built-in", aspect: 1, flatPairs: true,
         pages: [
           "shelf/book2-spread/00-cover.jpg",
           "shelf/book2-spread/01-spread-01-L.jpg",
