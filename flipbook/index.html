@@ -13826,26 +13826,56 @@
         ],
         info: { author: "Lois Farrell", format: "Square (1:1)", status: "mockup", links: [],
           about: "Meet the Cast is a MOCKUP gallery book for Harlow's Helping Paws, Lois Farrell's second picture book. It gathers the adopted cast art — a portrait and a full-body page for each character — so the whole gang can be flipped through in one place while the story spreads are being painted. It is a character gallery, not the story book." } },
-      { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "images/01-front.jpg", source: "built-in", aspect: 2,
+      { id: "helping-paws-spread-mockup", title: "Harlow's Helping Paws \u2014 Spread Mockup", cover: "images/01-front.jpg", source: "built-in", aspect: 1, flatPairs: true,
         pages: [
-          "shelf/book2-spread/01-spread-01.jpg",
-          "shelf/book2-spread/02-spread-02.jpg",
-          "shelf/book2-spread/03-spread-03.jpg",
-          "shelf/book2-spread/04-spread-04.jpg",
-          "shelf/book2-spread/05-spread-05.jpg",
-          "shelf/book2-spread/06-spread-06.jpg",
-          "shelf/book2-spread/07-spread-07.jpg",
-          "shelf/book2-spread/08-spread-08.jpg",
-          "shelf/book2-spread/09-spread-09.jpg",
-          "shelf/book2-spread/10-spread-10.jpg",
-          "shelf/book2-spread/11-spread-11.jpg",
-          "shelf/book2-spread/12-spread-12.jpg",
-          "shelf/book2-spread/13-spread-13.jpg",
-          "shelf/book2-spread/14-spread-14.jpg",
-          "shelf/book2-spread/15-spread-15.jpg"
+          "shelf/book2-spread/01-spread-01-L.jpg",
+          "shelf/book2-spread/02-spread-01-R.jpg",
+          "shelf/book2-spread/03-spread-02-L.jpg",
+          "shelf/book2-spread/04-spread-02-R.jpg",
+          "shelf/book2-spread/05-spread-03-L.jpg",
+          "shelf/book2-spread/06-spread-03-R.jpg",
+          "shelf/book2-spread/07-spread-04-L.jpg",
+          "shelf/book2-spread/08-spread-04-R.jpg",
+          "shelf/book2-spread/09-spread-05-L.jpg",
+          "shelf/book2-spread/10-spread-05-R.jpg",
+          "shelf/book2-spread/11-spread-06-L.jpg",
+          "shelf/book2-spread/12-spread-06-R.jpg",
+          "shelf/book2-spread/13-spread-07-L.jpg",
+          "shelf/book2-spread/14-spread-07-R.jpg",
+          "shelf/book2-spread/15-spread-08-L.jpg",
+          "shelf/book2-spread/16-spread-08-R.jpg",
+          "shelf/book2-spread/17-spread-09-L.jpg",
+          "shelf/book2-spread/18-spread-09-R.jpg",
+          "shelf/book2-spread/19-spread-10-L.jpg",
+          "shelf/book2-spread/20-spread-10-R.jpg",
+          "shelf/book2-spread/21-spread-11-L.jpg",
+          "shelf/book2-spread/22-spread-11-R.jpg",
+          "shelf/book2-spread/23-spread-12-L.jpg",
+          "shelf/book2-spread/24-spread-12-R.jpg",
+          "shelf/book2-spread/25-spread-13-L.jpg",
+          "shelf/book2-spread/26-spread-13-R.jpg",
+          "shelf/book2-spread/27-spread-14-L.jpg",
+          "shelf/book2-spread/28-spread-14-R.jpg",
+          "shelf/book2-spread/29-spread-15-L.jpg",
+          "shelf/book2-spread/30-spread-15-R.jpg"
         ],
         text: [
           "Harlow's Helping Paws \u2014 SPREAD MOCKUP. An experiment: Lois's own Draft 1 illustrations presented as full two-page spreads, so the spread format can be judged before the finished art is painted. Placeholder draft art.",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
           null,
           null,
           null,
@@ -16038,6 +16068,21 @@
         // already open.
         var ownText = entry.seedText || entry.text;
         pageTexts = ownText ? ownText.slice() : ((typeof BOOK !== "undefined" && BOOK.text) ? BOOK.text.slice() : PAGES.map(function () { return null; }));
+        // A flatPairs book (the Spread Mockup) carries its artwork as
+        // single pages that pair (1,2), (3,4) ... — it has no cover
+        // page of its own. The leaf engine pairs from a cover offset
+        // (page 1 alone, then (2,3), (4,5)), so the book is padded at
+        // runtime with the viewer's own blank page at both ends: the
+        // blanks take the cover / back-cover slots and the artwork
+        // pairs exactly, halves of one spread side by side. The open
+        // path below then steps past the front blank, so the reader
+        // lands on the first artwork pair, never on the blank.
+        if (entry.flatPairs) {
+          PAGES = [BLANK].concat(PAGES, [BLANK]);
+          pageIns = [false].concat(pageIns, [false]);
+          pageNames = [null].concat(pageNames, [null]);
+          pageTexts = [null].concat(pageTexts, [null]);
+        }
         pdfName = "";
         customTitle = entry.id === "builtin" ? "" : entry.title;
         bookAspect = entry.aspect || 1;
@@ -16106,6 +16151,10 @@
       placeHold = true;
       closeShelf();
       restorePlace();
+      // A flatPairs book opens past its runtime front blank (see the
+      // seeding branch above): its first resting place is the first
+      // artwork pair, in portrait focus as much as in landscape.
+      if (entry.flatPairs && flipped === 0) { flipped = 1; focus = 0; }
       fit();
       // Reveal the stage only once the incoming book's opening
       // spread is loaded AND decoded (see waitSpreadReady) — until
