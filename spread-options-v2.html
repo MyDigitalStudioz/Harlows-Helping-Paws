@@ -87,6 +87,21 @@
     margin-top:10px; text-transform:uppercase;
   }
 
+  /* ---------- Places groups ----------
+     The stages sit in two family panels — environments (E) first, then
+     rooms (R) — each on a whisper of its own warm tint: sage for the
+     outdoors, ember for indoors. */
+  .pgroup{
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 16px 0; margin:0 0 22px;
+  }
+  .pgroup-env{background:rgba(150,158,110,.07); border-color:rgba(150,158,110,.28);}
+  .pgroup-rooms{background:rgba(203,120,86,.07); border-color:rgba(203,120,86,.28);}
+  .pgroup-h{
+    font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); font-weight:700; margin:0 2px 14px;
+  }
+
   /* ---------- Cast flip cards ----------
      Same flip family as the showcase Covers card: portrait on the front
      face, full body on the back, tap to turn it over. The back face uses
@@ -109,6 +124,18 @@
     backface-visibility:hidden; -webkit-backface-visibility:hidden;
   }
   .face-back{transform:rotateY(180deg)}
+  /* Belt-and-braces face lock: some phone browsers ignore backface-visibility
+     and show the turned-away face mirrored (tag text reversed, a second badge
+     bleeding through). Visibility state follows the flip, swapping at the
+     edge-on midpoint, so the hidden face can never render. Reduced-motion
+     keeps its own opacity crossfade (no 3D turn, nothing to mirror). */
+  @media (prefers-reduced-motion: no-preference){
+    .face{transition:visibility 0s linear .225s}
+    .flipinner .face-front{visibility:visible}
+    .flipinner .face-back{visibility:hidden}
+    .flipinner.flipped .face-front{visibility:hidden}
+    .flipinner.flipped .face-back{visibility:visible}
+  }
   .face img.main{width:100%; height:100%; display:block; object-fit:cover; -webkit-user-drag:none; user-select:none;}
   .face-back img.fill{
     position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
@@ -117,11 +144,6 @@
   .face-back img.sharp{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
     -webkit-user-drag:none; user-select:none;
-  }
-  .facetag{
-    position:absolute; top:8px; left:8px; z-index:2;
-    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-    color:#16120e; background:rgba(232,179,75,.94); border-radius:6px; padding:3px 8px;
   }
   .flipbadge{
     position:absolute; right:8px; bottom:8px; z-index:2;
@@ -285,7 +307,7 @@
   <div class="sechead">
     <div class="kicker">The Places</div>
     <h2>The stages</h2>
-    <p class="sub">The twelve places the spreads will be built on, in story order &mdash; E for the outdoor environments, R for the rooms. Tap a plate to view it big, guides and all.</p>
+    <p class="sub">The twelve places the spreads will be built on, gathered by family &mdash; the outdoor environments (E) first, then the rooms (R). Tap a plate to view it big, guides and all.</p>
   </div>
   <main id="places"></main>
 
@@ -381,10 +403,6 @@ var IMG = "review-assets/v2/";
 var PLACES = [
   { code: "E01", kind: "Environment", img: "e01.jpg", name: "The Snuggle Inn",
     cap: "<b>The Snuggle Inn, from outside</b> — Day One&rsquo;s home base, the cage-free animal shelter where Lois volunteers." },
-  { code: "R01", kind: "Room", img: "r01.jpg", name: "Snuggle Inn — Fireside Lobby",
-    cap: "<b>Fireside Lobby</b> — the warm heart of the Inn: a crackling stone fireplace, a deep red sofa, a braided rug." },
-  { code: "R02", kind: "Room", img: "r02.jpg", name: "Snuggle Inn — Welcome Lobby",
-    cap: "<b>Welcome Lobby</b> — the first hello: sunny windows, cozy pens made up with soft beds and blankets." },
   { code: "E02", kind: "Environment", img: "e02.jpg", name: "Puppy Play Area",
     cap: "<b>Puppy Play Area</b> — the sunny yard where Pixie and Spike romp, and where the Newman family comes to play." },
   { code: "E03", kind: "Environment", img: "e03.jpg", name: "Tiger Habitat",
@@ -393,6 +411,10 @@ var PLACES = [
     cap: "<b>Pony Field + Barn</b> — the sunny field where Ginger, Penny and Freckles kick up their heels." },
   { code: "E05", kind: "Environment", img: "e05.jpg", name: "The Community Hope Shelter",
     cap: "<b>The Hope Shelter, from outside</b> — Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang." },
+  { code: "R01", kind: "Room", img: "r01.jpg", name: "Snuggle Inn — Fireside Lobby",
+    cap: "<b>Fireside Lobby</b> — the warm heart of the Inn: a crackling stone fireplace, a deep red sofa, a braided rug." },
+  { code: "R02", kind: "Room", img: "r02.jpg", name: "Snuggle Inn — Welcome Lobby",
+    cap: "<b>Welcome Lobby</b> — the first hello: sunny windows, cozy pens made up with soft beds and blankets." },
   { code: "R03", kind: "Room", img: "r03.jpg", name: "Hope Shelter — Common Room",
     cap: "<b>Common Room</b> — where Grandpa settles into his cozy chair and gives Harlow the best chin scratches ever." },
   { code: "R04", kind: "Room", img: "r04.jpg", name: "Clothing Exchange",
@@ -482,6 +504,17 @@ function buildPlate(p, withGuides, inLb) {
 var FLAT = PLACES.concat([BG]);
 var placesMain = document.getElementById("places");
 var bgWrap = document.getElementById("bgWrap");
+function placeGroup(cls, label) {
+  var g = document.createElement("div");
+  g.className = "pgroup " + cls;
+  var h = document.createElement("h3");
+  h.className = "pgroup-h"; h.textContent = label;
+  g.appendChild(h);
+  placesMain.appendChild(g);
+  return g;
+}
+var envGroup = placeGroup("pgroup-env", "Environments");
+var roomGroup = placeGroup("pgroup-rooms", "Rooms");
 FLAT.forEach(function (p, i) {
   var card = document.createElement("section");
   card.className = "card";
@@ -494,7 +527,7 @@ FLAT.forEach(function (p, i) {
   var tag = document.createElement("span");
   tag.className = "tag"; tag.textContent = p.code ? (p.kind + " plate — " + p.code) : p.kind;
   card.appendChild(h); card.appendChild(sp); card.appendChild(cap); card.appendChild(tag);
-  (i < PLACES.length ? placesMain : bgWrap).appendChild(card);
+  (i < PLACES.length ? (p.kind === "Room" ? roomGroup : envGroup) : bgWrap).appendChild(card);
 });
 
 /* ---------- Cast flip cards ---------- */
@@ -511,12 +544,12 @@ CAST.forEach(function (c) {
   inner.innerHTML =
     '<div class="face face-front">' +
       '<img class="main" src="' + IMG + c.slug + '-front.jpg" alt="' + plain + ' — portrait" draggable="false">' +
-      '<span class="facetag">Portrait</span>' + BADGE +
+      BADGE +
     "</div>" +
     '<div class="face face-back">' +
       '<img class="fill" src="' + IMG + c.slug + '-back.jpg" alt="" aria-hidden="true" draggable="false">' +
       '<img class="sharp" src="' + IMG + c.slug + '-back.jpg" alt="' + plain + ' — full body" draggable="false">' +
-      '<span class="facetag">Full body</span>' + BADGE +
+      BADGE +
     "</div>";
   var flipped = false;
   function toggle() {
