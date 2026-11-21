@@ -689,7 +689,7 @@
     toTop.classList.toggle("show", window.scrollY > 600);
   }, { passive: true });
   toTop.addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   });
   var boardsToggle = document.getElementById("boardsToggle"), boardsWrap = document.getElementById("boardsWrap");
   boardsToggle.addEventListener("click", function () {
