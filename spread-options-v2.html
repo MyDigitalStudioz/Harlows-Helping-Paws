@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harlow's Helping Paws — Spread Review V2</title>
+<meta name="description" content="Spread review pages for Harlow's Helping Paws — every place and the whole cast on one page, gathered for spread-making.">
+<style>
+  :root{
+    --bg:#16120e; --bg2:#1e1811; --card:#262019; --card2:#2e2619;
+    --ink:#f3ead9; --muted:#b9a888; --gold:#e8b34b; --gold-dim:#9a7a33;
+    --line:#3d3222; --radius:18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:linear-gradient(180deg,var(--bg2),var(--bg) 240px);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:0 16px 56px;
+  }
+  .wrap{max-width:860px; margin:0 auto;}
+  header{padding:26px 0 6px;}
+  .kicker{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-weight:700;}
+  h1{font-size:30px; line-height:1.15; margin:8px 0 4px; font-weight:800;}
+  .sub{color:var(--muted); font-size:16px; line-height:1.45;}
+  .topnav{
+    display:flex; align-items:center; gap:10px;
+    position:sticky; top:8px; z-index:40;
+    margin:14px 0 4px; padding:8px 10px;
+    background:rgba(38,32,25,.88);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line); border-radius:14px;
+    box-shadow:0 10px 28px rgba(0,0,0,.45);
+  }
+  .topnav .ttl{flex:1; font-weight:700; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .topnav .ttl span{color:var(--muted); font-weight:600;}
+  .iconbtn{
+    flex:none; width:42px; height:42px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .iconbtn svg{width:22px; height:22px; display:block;}
+  .iconbtn.menu{background:var(--card2); border:1px solid var(--gold-dim); color:var(--gold);}
+  #toTop{
+    position:fixed; right:16px; bottom:20px; z-index:40;
+    width:50px; height:50px; border-radius:50%; cursor:pointer;
+    background:var(--gold); color:#16120e; border:1px solid var(--gold-dim);
+    font-size:22px; font-weight:700; line-height:1;
+    box-shadow:0 6px 18px rgba(0,0,0,.5);
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  #toTop.show{opacity:1; pointer-events:auto;}
+  select{
+    appearance:none; -webkit-appearance:none;
+    flex:1 1 240px; min-width:0; max-width:100%;
+    background:var(--card2); color:var(--ink);
+    border:1px solid var(--gold-dim); border-radius:10px;
+    font-size:16px; font-weight:600; padding:10px 38px 10px 14px;
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23e8b34b' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center;
+  }
+  .hint{color:var(--muted); font-size:15px; margin:14px 2px 18px; line-height:1.5;}
+  .hint a{color:var(--gold);}
+  .sechead{margin:30px 0 14px;}
+  .sechead h2{font-size:24px; font-weight:800; margin:6px 0 4px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px; margin:0 0 18px;
+  }
+  .card h2{font-size:20px; font-weight:700; margin-bottom:12px;}
+  .card h2 .code{
+    color:var(--gold); font-weight:800; letter-spacing:.06em; margin-right:8px;
+  }
+  .spread{
+    position:relative; display:flex; border-radius:10px; overflow:hidden;
+    background:#0d0a07; border:1px solid #000;
+  }
+  .card .spread{cursor:zoom-in;}
+  .page{position:relative; flex:none;}
+  .page img{width:100%; height:auto; display:block;}
+  .spread.wide .page{width:100%;}
+  .cap{color:var(--muted); font-size:15px; line-height:1.5; margin-top:12px;}
+  .cap b{color:var(--ink);}
+  .tag{
+    display:inline-block; font-size:12px; font-weight:700; letter-spacing:.08em;
+    color:#16120e; background:var(--gold); border-radius:6px; padding:3px 9px;
+    margin-top:10px; text-transform:uppercase;
+  }
+
+  /* ---------- Cast flip cards ----------
+     Same flip family as the showcase Covers card: portrait on the front
+     face, full body on the back, tap to turn it over. The back face uses
+     the cast deck's treatment — ambient blurred fill behind the sharp
+     contained full body, flat warm ivory only as a loading fallback. */
+  .castgrid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
+    gap:16px; margin-bottom:6px;
+  }
+  .flipcard{perspective:900px;}
+  .flipinner{
+    position:relative; aspect-ratio:1/1; cursor:pointer; border-radius:14px;
+    transform-style:preserve-3d; transition:transform .45s ease;
+  }
+  .flipinner:focus-visible{box-shadow:0 0 0 2px var(--gold); outline:none;}
+  .flipinner.flipped{transform:rotateY(180deg)}
+  .face{
+    position:absolute; inset:0; border-radius:14px; overflow:hidden;
+    border:1px solid var(--line); background:#fce0b8;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  }
+  .face-back{transform:rotateY(180deg)}
+  .face img.main{width:100%; height:100%; display:block; object-fit:cover; -webkit-user-drag:none; user-select:none;}
+  .face-back img.fill{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:blur(24px) brightness(1.02); transform:scale(1.15);
+  }
+  .face-back img.sharp{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    -webkit-user-drag:none; user-select:none;
+  }
+  .facetag{
+    position:absolute; top:8px; left:8px; z-index:2;
+    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#16120e; background:rgba(232,179,75,.94); border-radius:6px; padding:3px 8px;
+  }
+  .flipbadge{
+    position:absolute; right:8px; bottom:8px; z-index:2;
+    width:30px; height:30px; border-radius:50%; background:var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.35);
+  }
+  .fname{font-weight:700; font-size:16.5px; margin-top:10px;}
+  .fcap{color:var(--muted); font-size:13.5px; line-height:1.45; margin-top:3px;}
+  body.hide-caps .flipcard .fcap{display:none;}
+  @media (prefers-reduced-motion: reduce){
+    .flipinner,.flipinner.flipped{transform:none; transition:none}
+    .face{backface-visibility:visible; -webkit-backface-visibility:visible; transition:opacity .25s ease}
+    .face-back{transform:none; opacity:0; pointer-events:none}
+    .flipinner.flipped .face-front{opacity:0}
+    .flipinner.flipped .face-back{opacity:1; pointer-events:auto}
+  }
+
+  footer{color:var(--muted); font-size:14px; text-align:center; margin-top:34px; line-height:1.6;}
+  footer a{color:var(--gold);}
+
+  /* ---------- Guides (lightbox) ----------
+     Lulu guide = the flipbook viewer's own print guides (PAGE_SPEC:
+     8.5in trim, 0.125in bleed, 0.5in safety, trim basis) — TRIM at the page
+     edge, SAFE dashed at 0.5/8.5 = 5.88% inset, viewer's colors and tags.
+     Seam guide = Book 1 Final Pass band: 44%–56% of the spread, amber wash,
+     dashed center line, SEAM pill. Independent toggles, either/both/neither. */
+  .lulu{position:absolute; inset:0; pointer-events:none; display:none;}
+  body.guides-lulu .lulu{display:block;}
+  .lulu .gTrim{position:absolute; inset:0; border:2px solid rgba(255,83,71,.95);}
+  .lulu .gSafe{position:absolute; inset:5.88%; border:2px dashed rgba(176,110,232,.95);}
+  .lulu .gtag{position:absolute; font-size:9px; font-weight:700; letter-spacing:.06em; padding:1px 4px; border-radius:3px; color:#fff; line-height:1.5;}
+  .lulu .gtagT{background:#ff5347; top:2px; left:2px;}
+  .lulu .gtagS{background:#a86ee0; top:calc(5.88% + 2px); left:calc(5.88% + 2px);}
+  .seam{position:absolute; inset:0; pointer-events:none; display:none;}
+  body.guides-seam .seam{display:block;}
+  body.hide-caps .card .cap, body.hide-caps .card .tag{display:none;}
+  .seam .band{position:absolute; top:0; bottom:0; left:44%; width:12%;
+    background:rgba(255,196,0,.13);
+    border-left:1px dashed rgba(122,79,33,.65); border-right:1px dashed rgba(122,79,33,.65);}
+  .seam .line{position:absolute; top:0; bottom:0; left:50%;
+    border-left:2px dashed rgba(255,255,255,.95); filter:drop-shadow(0 0 2px rgba(30,20,10,.85));}
+  .seam .slab{position:absolute; top:6px; left:50%; transform:translateX(-50%);
+    font-size:11px; font-style:italic; letter-spacing:.04em; white-space:nowrap;
+    color:#fff; background:rgba(43,33,24,.65); padding:1px 8px; border-radius:9px;}
+
+  /* ---------- Lightbox ---------- */
+  .lb{
+    position:fixed; inset:0; height:100dvh; background:rgba(8,6,4,.96); z-index:50;
+    display:none; overflow-y:auto; overscroll-behavior:contain; padding:16px;
+  }
+  .lb.open{display:flex;}
+  .lb .inner{margin:auto; width:100%; max-width:1000px;}
+  .lb .spread{cursor:default;}
+  .lb .close{
+    position:fixed; top:14px; right:14px; width:48px; height:48px; z-index:2;
+    border-radius:50%; border:1px solid var(--line); background:var(--card);
+    color:var(--ink); font-size:22px; cursor:pointer;
+  }
+  .lbnav{
+    display:flex; align-items:center; gap:12px; margin-top:16px;
+  }
+  .lbnav .cap{flex:1; text-align:center; color:var(--ink); font-size:17px; margin-top:0;}
+  .lbnav .count{display:block; color:var(--muted); font-size:14px; margin-top:2px;}
+  .navbtn{
+    flex:none; width:52px; height:52px; border-radius:50%; cursor:pointer;
+    border:1px solid var(--line); background:#f5e9d5; color:#2b2118;
+    font-size:26px; line-height:1; font-weight:700;
+  }
+  .navbtn[disabled]{opacity:.3; cursor:default;}
+  .guides{
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:16px;
+  }
+  .gbtn{
+    font-family:Georgia,'Times New Roman',serif; font-size:15px; cursor:pointer;
+    background:#f5e9d5; color:#2b2118; border:1px solid #7a4f21; border-radius:8px;
+    padding:9px 16px; min-height:42px;
+  }
+  .gbtn[aria-pressed="true"]{background:var(--gold); border-color:var(--gold-dim); font-weight:700;}
+
+  /* ---------- Side menu (drawer) + settings ---------- */
+  .scrim{
+    position:fixed; inset:0; height:100dvh; background:rgba(8,6,4,.55); z-index:55;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .scrim.show{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; left:0; z-index:60; width:min(330px,86vw); height:100dvh;
+    overflow-y:auto; overscroll-behavior:contain;
+    background:var(--bg2); border-right:1px solid var(--line);
+    padding:18px 18px 28px;
+    transform:translateX(-105%); transition:transform .28s ease;
+  }
+  .drawer.open{transform:none; box-shadow:20px 0 50px rgba(0,0,0,.5);}
+  .dhead{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .dhead b{flex:1; font-size:18px; line-height:1.25;}
+  .dhead .dx{
+    flex:none; width:42px; height:42px; border-radius:50%; cursor:pointer;
+    border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:20px;
+  }
+  .dlink{
+    display:block; padding:13px 14px; margin-bottom:9px;
+    border:1px solid var(--line); border-radius:10px; background:var(--card);
+    color:var(--ink); text-decoration:none; font-weight:600; font-size:16px;
+  }
+  .dlink.current{background:var(--gold); color:#16120e; border-color:var(--gold-dim); border-style:solid; font-weight:700;}
+  .dsec{
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:700; margin:22px 0 8px;
+  }
+  .drawer select{flex:none; width:100%;}
+  .dnote{color:var(--muted); font-size:13px; line-height:1.5; margin-top:14px;}
+  .setrow{
+    display:flex; align-items:center; gap:12px; padding:13px 0;
+    border-top:1px solid var(--line);
+  }
+  .setrow .lab{flex:1;}
+  .setrow .lab b{display:block; font-size:16px;}
+  .setrow .lab span{color:var(--muted); font-size:13px; line-height:1.4; display:block; margin-top:2px;}
+  .seg{display:flex; flex:none; border:1px solid var(--gold-dim); border-radius:10px; overflow:hidden;}
+  .seg button{
+    appearance:none; border:0; background:var(--card2); color:var(--muted);
+    font-size:15px; font-weight:600; padding:9px 16px; cursor:pointer; min-height:42px;
+  }
+  .seg button[aria-pressed="true"]{background:var(--gold); color:#16120e;}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav">
+    <button class="iconbtn menu" id="menuBtn" aria-label="Open menu" title="Menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><rect x="3" y="5.6" width="18" height="2.4" rx="1.2"/><rect x="3" y="10.8" width="18" height="2.4" rx="1.2"/><rect x="3" y="16" width="18" height="2.4" rx="1.2"/></g></svg>
+    </button>
+    <div class="ttl">Spread Review <span>&middot; V2</span></div>
+  </div>
+
+  <header>
+    <div class="kicker">Spread Review</div>
+    <h1>Harlow&rsquo;s Helping Paws</h1>
+    <p class="sub">Everything in one place for spread-making &mdash; all twelve places and the whole cast on one page. It&rsquo;s all mockup and it&rsquo;ll all change; that&rsquo;s what this page is for. Tap a place to see it big. Tap a cast card to turn it over.</p>
+  </header>
+
+  <p class="hint">Looking for the covers? They&rsquo;re not spread options &mdash; they live in <a href="index.html#covers">The Covers section</a> on the project page.</p>
+
+  <div class="sechead">
+    <div class="kicker">The Places</div>
+    <h2>The stages</h2>
+    <p class="sub">The twelve places the spreads will be built on, in story order &mdash; E for the outdoor environments, R for the rooms. Tap a plate to view it big, guides and all.</p>
+  </div>
+  <main id="places"></main>
+
+  <div class="sechead">
+    <div class="kicker">The Cast</div>
+    <h2>Flip a card, meet the cast</h2>
+    <p class="sub">Every cast member as a flip card &mdash; portrait on the front, full body on the back. Tap a card to turn it over.</p>
+  </div>
+  <div class="castgrid" id="castGrid"></div>
+
+  <div class="sechead">
+    <div class="kicker">Background Cast</div>
+    <h2>The extras</h2>
+    <p class="sub">One sheet of unnamed background figures for crowd scenes.</p>
+  </div>
+  <div id="bgWrap"></div>
+
+  <footer>
+    Harlow&rsquo;s Helping Paws &copy; Lois Farrell 2026 &middot; A work in progress<br>
+    <a href="index.html">Back to the project page</a>
+  </footer>
+</div>
+
+<button id="toTop" aria-label="Back to top" title="Back to top">&uarr;</button>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu and page settings">
+  <div class="dhead">
+    <b>Harlow&rsquo;s Helping Paws</b>
+    <button class="dx" id="drawerClose" aria-label="Close menu">&times;</button>
+  </div>
+  <nav>
+    <a class="dlink" href="flipbook/">Go to the bookshelf &rarr;</a>
+    <a class="dlink" href="index.html">Project showcase</a>
+    <span class="dlink current">Spread review &mdash; you&rsquo;re here</span>
+  </nav>
+  <div class="dsec">Version</div>
+  <select id="verSel" aria-label="Choose a spread review version"></select>
+  <div class="dsec">Page settings</div>
+  <div class="setrow">
+    <div class="lab"><b>Lulu guides</b><span>TRIM (red) and SAFE (purple dashed) frames on every plate &mdash; the flipbook&rsquo;s print guides.</span></div>
+    <div class="seg" role="group" aria-label="Lulu guides">
+      <button data-set="lulu" data-val="off" aria-pressed="true">Off</button>
+      <button data-set="lulu" data-val="on" aria-pressed="false">On</button>
+    </div>
+  </div>
+  <div class="setrow">
+    <div class="lab"><b>Seam guide</b><span>The amber band down the middle in the big view &mdash; the fold, where the pages of a spread would meet.</span></div>
+    <div class="seg" role="group" aria-label="Seam guide">
+      <button data-set="seam" data-val="off" aria-pressed="true">Off</button>
+      <button data-set="seam" data-val="on" aria-pressed="false">On</button>
+    </div>
+  </div>
+  <div class="setrow">
+    <div class="lab"><b>Captions</b><span>The description under each card.</span></div>
+    <div class="seg" role="group" aria-label="Captions">
+      <button data-set="caps" data-val="off" aria-pressed="false">Off</button>
+      <button data-set="caps" data-val="on" aria-pressed="true">On</button>
+    </div>
+  </div>
+  <p class="dnote">Settings apply to the plates on this page and in the big view &mdash; and they stick on this device.</p>
+</aside>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Plate, enlarged">
+  <button class="close" id="lbClose" aria-label="Close">&times;</button>
+  <div class="inner">
+    <div class="spread" id="lbSpread"></div>
+    <div class="lbnav">
+      <button class="navbtn" id="lbPrev" aria-label="Previous plate">&#8249;</button>
+      <p class="cap"><span id="lbCap"></span><span class="count" id="lbCount"></span></p>
+      <button class="navbtn" id="lbNext" aria-label="Next plate">&#8250;</button>
+    </div>
+    <div class="guides">
+      <button class="gbtn" id="seamBtn" aria-pressed="false">Show seam guide</button>
+      <button class="gbtn" id="luluBtn" aria-pressed="false">Show Lulu guide</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* VERSIONS — when a new version page ships, add its entry here AND to the
+   VERSIONS list on every earlier version page, so any link can reach any version. */
+var VERSIONS = [
+  { v: "V1", file: "spread-options-v1.html", label: "V1 — Preview cast · Nov 20, 2026", current: false },
+  { v: "V2", file: "spread-options-v2.html", label: "V2 — Full artwork · Nov 20, 2026", current: true }
+];
+
+/* V2 is a FROZEN snapshot too: this page reads its own snapshot copies in
+   review-assets/v2/, never the live showcase or flipbook images. */
+var IMG = "review-assets/v2/";
+
+/* PLACES — the twelve stage plates, story order, with their reference codes. */
+var PLACES = [
+  { code: "E01", kind: "Environment", img: "e01.jpg", name: "The Snuggle Inn",
+    cap: "<b>The Snuggle Inn, from outside</b> — Day One&rsquo;s home base, the cage-free animal shelter where Lois volunteers." },
+  { code: "R01", kind: "Room", img: "r01.jpg", name: "Snuggle Inn — Fireside Lobby",
+    cap: "<b>Fireside Lobby</b> — the warm heart of the Inn: a crackling stone fireplace, a deep red sofa, a braided rug." },
+  { code: "R02", kind: "Room", img: "r02.jpg", name: "Snuggle Inn — Welcome Lobby",
+    cap: "<b>Welcome Lobby</b> — the first hello: sunny windows, cozy pens made up with soft beds and blankets." },
+  { code: "E02", kind: "Environment", img: "e02.jpg", name: "Puppy Play Area",
+    cap: "<b>Puppy Play Area</b> — the sunny yard where Pixie and Spike romp, and where the Newman family comes to play." },
+  { code: "E03", kind: "Environment", img: "e03.jpg", name: "Tiger Habitat",
+    cap: "<b>Tiger Habitat</b> — a sanctuary garden, never a cage: pool and waterfall, sun-warmed rocks, shade trees." },
+  { code: "E04", kind: "Environment", img: "e04.jpg", name: "Pony Field + Barn",
+    cap: "<b>Pony Field + Barn</b> — the sunny field where Ginger, Penny and Freckles kick up their heels." },
+  { code: "E05", kind: "Environment", img: "e05.jpg", name: "The Community Hope Shelter",
+    cap: "<b>The Hope Shelter, from outside</b> — Day Two&rsquo;s destination, across town in the &rsquo;65 Mustang." },
+  { code: "R03", kind: "Room", img: "r03.jpg", name: "Hope Shelter — Common Room",
+    cap: "<b>Common Room</b> — where Grandpa settles into his cozy chair and gives Harlow the best chin scratches ever." },
+  { code: "R04", kind: "Room", img: "r04.jpg", name: "Clothing Exchange",
+    cap: "<b>Clothing Exchange</b> — racks of just-right clothes, free for the choosing; Mia helps here." },
+  { code: "R05", kind: "Room", img: "r05.jpg", name: "Hope Shelter — Kitchen &amp; Dining",
+    cap: "<b>Kitchen &amp; Dining</b> — where Lois, Maria and Joe dish up the yummy feast, served free to anyone who&rsquo;s hungry." },
+  { code: "R06", kind: "Room", img: "r06.jpg", name: "Bunk Room",
+    cap: "<b>Bunk Room</b> — where Tony shows off his brand-new fuzzy pajamas, and Harlow curls up beside him for the night." },
+  { code: "R07", kind: "Room", img: "r07.jpg", name: "Lois &amp; Harlow&rsquo;s Home",
+    cap: "<b>Lois &amp; Harlow&rsquo;s Home</b> — home again after two days of helping: the cozy couch, a warm lamp, Harlow&rsquo;s own cat bed." }
+];
+
+var BG = { code: "", kind: "Extras sheet", img: "background-cast.jpg", name: "Background Cast",
+  cap: "<b>The extras sheet</b> — unnamed background figures for crowd scenes, cited by ID in scene briefs: people <b>P1–P8</b>, animals <b>A1–A4</b>. Background only — never promoted to named cast." };
+
+/* CAST — dashboard census order. Pair entries (Cocoa & Shadow, Yuki & Raja,
+   Ginger & the Spice Girls) get one flip card per member, as on the showcase. */
+var CAST = [
+  { slug: "harlow", name: "Harlow", cap: "Lead — the helper at the heart of both shelter days." },
+  { slug: "lois", name: "Lois", cap: "Lead — newly retired, and volunteering with Harlow." },
+  { slug: "cocoa", name: "Cocoa", cap: "Bunny at The Snuggle Inn — Cocoa &amp; Shadow." },
+  { slug: "shadow", name: "Shadow", cap: "Bunny at The Snuggle Inn — Cocoa &amp; Shadow." },
+  { slug: "howard", name: "Howard", cap: "Retired rescue Saint Bernard at The Snuggle Inn." },
+  { slug: "yuki", name: "Yuki", cap: "White tiger — Yuki &amp; Raja." },
+  { slug: "raja", name: "Raja", cap: "Orange tiger — Yuki &amp; Raja." },
+  { slug: "mira", name: "Nurse Mira", cap: "Nurse at the Community Hope Shelter." },
+  { slug: "mustang", name: "The &rsquo;65 Mustang", cap: "Lois&rsquo;s pale silvery-blue convertible — back from Book 1." },
+  { slug: "maria", name: "Maria", cap: "Dishes up the Hope Shelter feast with Lois and Joe." },
+  { slug: "jon", name: "Jon", cap: "Joining the story in Lois&rsquo;s refinement." },
+  { slug: "ginger", name: "Ginger", cap: "Mama cat — Ginger &amp; the Spice Girls." },
+  { slug: "spice-girls", name: "The Spice Girls", cap: "Pepper, Saffron, Sugar, Hania &amp; Sesame." },
+  { slug: "pixie", name: "Pixie", cap: "Beagle puppy — adopted by the Newman family." },
+  { slug: "spike", name: "Spike", cap: "Beagle puppy — adopted by the Newman family." },
+  { slug: "freckles", name: "Freckles", cap: "Appaloosa pony — the Snuggle Inn trio." },
+  { slug: "ginger-pony", name: "Ginger the Pony", cap: "Chestnut pony — the Snuggle Inn trio." },
+  { slug: "penny", name: "Penny", cap: "Black pony — the Snuggle Inn trio." },
+  { slug: "mia", name: "Mia", cap: "Helps at the Hope Shelter clothing exchange." },
+  { slug: "newman-family", name: "The Newman Family", cap: "They come to play — and stay to choose Pixie &amp; Spike." },
+  { slug: "grandpa", name: "Grandpa", cap: "Hope Shelter guest — the best chin scratches ever." },
+  { slug: "joe", name: "Joe", cap: "Hope Shelter kitchen volunteer." },
+  { slug: "tony", name: "Tony", cap: "Shelter boy — the book&rsquo;s closing beat." }
+];
+
+var BADGE = '<span class="flipbadge" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#141414" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>';
+
+var sel = document.getElementById("verSel");
+VERSIONS.forEach(function (it) {
+  var o = document.createElement("option");
+  o.value = it.file; o.textContent = it.label + (it.current ? "  ·  current" : "");
+  if (it.current) o.selected = true;
+  sel.appendChild(o);
+});
+sel.addEventListener("change", function () {
+  if (sel.value && sel.value !== VERSIONS.filter(function (x) { return x.current; })[0].file) {
+    window.location.href = sel.value;
+  }
+});
+
+function luluOverlay() {
+  var lu = document.createElement("div");
+  lu.className = "lulu"; lu.setAttribute("aria-hidden", "true");
+  lu.innerHTML = '<i class="gTrim"></i><i class="gSafe"></i>' +
+    '<span class="gtag gtagT">TRIM</span><span class="gtag gtagS">SAFE</span>';
+  return lu;
+}
+function seamOverlay() {
+  var sm = document.createElement("div");
+  sm.className = "seam"; sm.setAttribute("aria-hidden", "true");
+  sm.innerHTML = '<i class="band"></i><i class="line"></i><span class="slab">SEAM</span>';
+  return sm;
+}
+function buildPlate(p, withGuides, inLb) {
+  var sp = document.createElement("div");
+  sp.className = "spread wide";
+  var pg = document.createElement("div");
+  pg.className = "page";
+  var im = document.createElement("img");
+  im.src = IMG + p.img; im.alt = (p.code ? p.code + " — " : "") + p.name.replace(/&amp;/g, "&").replace(/&rsquo;/g, "’");
+  pg.appendChild(im);
+  if (withGuides) pg.appendChild(luluOverlay());
+  sp.appendChild(pg);
+  if (withGuides && inLb) sp.appendChild(seamOverlay());
+  return sp;
+}
+
+/* ---------- Places + Background cards ---------- */
+var FLAT = PLACES.concat([BG]);
+var placesMain = document.getElementById("places");
+var bgWrap = document.getElementById("bgWrap");
+FLAT.forEach(function (p, i) {
+  var card = document.createElement("section");
+  card.className = "card";
+  var h = document.createElement("h2");
+  h.innerHTML = (p.code ? '<span class="code">' + p.code + "</span>" : "") + p.name;
+  var sp = buildPlate(p, true, false);
+  sp.addEventListener("click", function () { openLb(i); });
+  var cap = document.createElement("p");
+  cap.className = "cap"; cap.innerHTML = p.cap;
+  var tag = document.createElement("span");
+  tag.className = "tag"; tag.textContent = p.code ? (p.kind + " plate — " + p.code) : p.kind;
+  card.appendChild(h); card.appendChild(sp); card.appendChild(cap); card.appendChild(tag);
+  (i < PLACES.length ? placesMain : bgWrap).appendChild(card);
+});
+
+/* ---------- Cast flip cards ---------- */
+var grid = document.getElementById("castGrid");
+CAST.forEach(function (c) {
+  var card = document.createElement("div");
+  card.className = "flipcard";
+  var plain = c.name.replace(/&rsquo;/g, "’").replace(/&amp;/g, "&");
+  var inner = document.createElement("div");
+  inner.className = "flipinner";
+  inner.setAttribute("tabindex", "0");
+  inner.setAttribute("role", "button");
+  inner.setAttribute("aria-label", plain + " — showing the portrait. Tap to see the full body.");
+  inner.innerHTML =
+    '<div class="face face-front">' +
+      '<img class="main" src="' + IMG + c.slug + '-front.jpg" alt="' + plain + ' — portrait" draggable="false">' +
+      '<span class="facetag">Portrait</span>' + BADGE +
+    "</div>" +
+    '<div class="face face-back">' +
+      '<img class="fill" src="' + IMG + c.slug + '-back.jpg" alt="" aria-hidden="true" draggable="false">' +
+      '<img class="sharp" src="' + IMG + c.slug + '-back.jpg" alt="' + plain + ' — full body" draggable="false">' +
+      '<span class="facetag">Full body</span>' + BADGE +
+    "</div>";
+  var flipped = false;
+  function toggle() {
+    flipped = !flipped;
+    inner.classList.toggle("flipped", flipped);
+    inner.setAttribute("aria-label", plain + (flipped ?
+      " — showing the full body. Tap to see the portrait." :
+      " — showing the portrait. Tap to see the full body."));
+  }
+  inner.addEventListener("click", toggle);
+  inner.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+  });
+  var nm = document.createElement("div");
+  nm.className = "fname"; nm.innerHTML = c.name;
+  var cp = document.createElement("p");
+  cp.className = "fcap"; cp.innerHTML = c.cap;
+  card.appendChild(inner); card.appendChild(nm); card.appendChild(cp);
+  grid.appendChild(card);
+});
+
+/* ---------- Lightbox (flat plates: the places + the extras sheet) ---------- */
+var lb = document.getElementById("lb"), lbCap = document.getElementById("lbCap"),
+    lbCount = document.getElementById("lbCount"),
+    lbPrev = document.getElementById("lbPrev"), lbNext = document.getElementById("lbNext"),
+    seamBtn = document.getElementById("seamBtn"), luluBtn = document.getElementById("luluBtn"),
+    cur = 0;
+
+function openLb(i) {
+  cur = i;
+  renderLb();
+  lb.classList.add("open");
+  document.body.style.overflow = "hidden";
+  lb.scrollTop = 0;
+}
+function renderLb() {
+  var p = FLAT[cur];
+  var inner = lb.querySelector(".inner");
+  var fresh = buildPlate(p, true, true);
+  fresh.id = "lbSpread";
+  var old = document.getElementById("lbSpread");
+  inner.replaceChild(fresh, old);
+  lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "");
+  lbCount.textContent = "Plate " + (cur + 1) + " of " + FLAT.length;
+  lbPrev.disabled = cur === 0;
+  lbNext.disabled = cur === FLAT.length - 1;
+}
+function stepLb(d) {
+  var n = cur + d;
+  if (n < 0 || n >= FLAT.length) return;
+  cur = n; renderLb(); lb.scrollTop = 0;
+}
+function closeLb() { lb.classList.remove("open"); document.body.style.overflow = ""; }
+
+lbPrev.addEventListener("click", function () { stepLb(-1); });
+lbNext.addEventListener("click", function () { stepLb(1); });
+document.getElementById("lbClose").addEventListener("click", closeLb);
+lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+document.addEventListener("keydown", function (e) {
+  if (drawer.classList.contains("open")) {
+    if (e.key === "Escape") closeDrawer();
+    return;
+  }
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") stepLb(-1);
+  if (e.key === "ArrowRight") stepLb(1);
+});
+
+/* ---------- Settings — one state for the page, the sheet, and the lightbox.
+   Same storage key as V1, so Lois's settings carry across versions. ---------- */
+var SET_KEY = "hhp-spreads-v1-settings";
+var settings = { lulu: false, seam: false, caps: true };
+try {
+  var saved = JSON.parse(localStorage.getItem(SET_KEY) || "null");
+  if (saved) { settings.lulu = !!saved.lulu; settings.seam = !!saved.seam; settings.caps = saved.caps !== false; }
+} catch (e) { /* fresh visitor — defaults stand */ }
+
+var drawer = document.getElementById("drawer");
+var scrim = document.getElementById("scrim");
+function applySettings() {
+  document.body.classList.toggle("guides-lulu", settings.lulu);
+  document.body.classList.toggle("guides-seam", settings.seam);
+  document.body.classList.toggle("hide-caps", !settings.caps);
+  Array.prototype.forEach.call(drawer.querySelectorAll(".seg button"), function (b) {
+    var on = (b.getAttribute("data-val") === "on") === !!settings[b.getAttribute("data-set")];
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  luluBtn.setAttribute("aria-pressed", settings.lulu ? "true" : "false");
+  luluBtn.textContent = settings.lulu ? "Hide Lulu guide" : "Show Lulu guide";
+  seamBtn.setAttribute("aria-pressed", settings.seam ? "true" : "false");
+  seamBtn.textContent = settings.seam ? "Hide seam guide" : "Show seam guide";
+  try { localStorage.setItem(SET_KEY, JSON.stringify(settings)); } catch (e) {}
+}
+function setSetting(key, on) { settings[key] = !!on; applySettings(); }
+
+Array.prototype.forEach.call(drawer.querySelectorAll(".seg button"), function (b) {
+  b.addEventListener("click", function () {
+    setSetting(b.getAttribute("data-set"), b.getAttribute("data-val") === "on");
+  });
+});
+luluBtn.addEventListener("click", function () { setSetting("lulu", !settings.lulu); });
+seamBtn.addEventListener("click", function () { setSetting("seam", !settings.seam); });
+
+function openDrawer() {
+  drawer.classList.add("open"); scrim.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function closeDrawer() {
+  drawer.classList.remove("open"); scrim.classList.remove("show");
+  if (!lb.classList.contains("open")) document.body.style.overflow = "";
+}
+var toTop = document.getElementById("toTop");
+window.addEventListener("scroll", function () {
+  toTop.classList.toggle("show", window.scrollY > 600);
+}, { passive: true });
+toTop.addEventListener("click", function () {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("menuBtn").addEventListener("click", openDrawer);
+document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+scrim.addEventListener("click", closeDrawer);
+applySettings();
+</script>
+</body>
+</html>
