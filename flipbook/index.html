@@ -3627,6 +3627,25 @@ html{scrollbar-color:#4d4d4d #101010}
   <script src="vendor/pdfjs/pdf.worker.min.js"></script>
   <script>
   function startFlipbook() {
+    /* Safety guard (2026-11-21): the book data lives in
+       images/manifest.js (the global BOOK). If that one file fails to
+       load, the first line below dies with a ReferenceError and the
+       page sits blank. Show a plain retry message instead. This runs
+       only when BOOK is missing or unusable; every normal boot —
+       including the designed one where the optional pages-data.js is
+       absent — passes straight through. */
+    if (typeof BOOK === "undefined" || !BOOK || !BOOK.pages || !BOOK.pages.length) {
+      document.documentElement.classList.remove("boot-shelf", "boot-book");
+      document.body.dataset.flipReady = "1";
+      var bootGuard = document.createElement("div");
+      bootGuard.id = "bootGuard";
+      bootGuard.setAttribute("role", "alert");
+      bootGuard.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#191919;color:#f4f1ea;font:16px/1.5 system-ui,-apple-system,sans-serif;text-align:center;padding:24px";
+      bootGuard.innerHTML = "<div><p style=\"margin:0 0 16px\">The bookshelf couldn&rsquo;t load its book data.</p><button type=\"button\" id=\"bootGuardRetry\" style=\"background:#e8b34b;color:#16120e;border:0;border-radius:10px;padding:11px 24px;font:600 15px system-ui,-apple-system,sans-serif;cursor:pointer\">Tap to retry</button></div>";
+      document.body.appendChild(bootGuard);
+      document.getElementById("bootGuardRetry").addEventListener("click", function () { location.reload(); });
+      return;
+    }
     /* Round 2: PAGES is a COPY of the manifest array. Aliasing
        BOOK.pages let the first insert splice the manifest itself, so
        the stored inserts were applied a second time on switch-back
