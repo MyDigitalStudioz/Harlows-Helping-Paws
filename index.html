@@ -102,6 +102,8 @@
   .tail-card{border:1px dashed var(--line);border-radius:var(--radius);padding:16px 20px;background:rgba(255,255,255,.02)}
   .tail-card h3{font-size:15.5px;font-weight:800;margin-bottom:4px;color:rgba(243,239,230,.85)}
   .tail-card p{font-size:13.5px;color:var(--muted)}
+  .fb-btns{display:flex;gap:10px;margin-top:14px}
+  .fb-btns .btn{flex:1 1 0;margin-top:0;text-align:center;min-width:0}
   .fb-wrap{border-top:1px solid var(--line)}
   .fb-wrap img{aspect-ratio:auto}
   /* Character Boards — ONE horizontal scroll-snap strip instead of a vertical stack
@@ -458,7 +460,7 @@ html{scrollbar-color:#4d4d4d #101010}
       </div>
       <div class="cast-card">
         <img loading="lazy" src="media/cast/jon-portrait.jpg" alt="Jon, salt-and-pepper hair and white chin beard, in his black zip jacket">
-        <div class="cap"><h3>Jon</h3><p>Steady and warm &mdash; silver in his hair, white chin beard, always ready to help.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon">Show full body</button><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon-kitchen">Show kitchen look</button></div>
+        <div class="cap"><h3>Jon</h3><p>Steady and warm &mdash; silver in his hair, white chin beard, always ready to help.</p><span class="fb-btns"><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon">Show full body</button><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon-kitchen">Show kitchen look</button></span></div>
         <div class="fb-wrap" id="fb-jon" hidden><img loading="lazy" src="media/cast/jon-fullbody.jpg" alt="Jon, full body — black zip jacket, dark jeans and black shoes"></div>
         <div class="fb-wrap" id="fb-jon-kitchen" hidden><img loading="lazy" src="media/cast/jon-kitchen.jpg" alt="Jon, kitchen look — black tee under a long rust-red apron, his JJ outfit for dishing up the feast at the Hope Shelter"></div>
       </div>
@@ -810,6 +812,21 @@ html{scrollbar-color:#4d4d4d #101010}
     var wrap = document.getElementById(btn.getAttribute("aria-controls"));
     btn.addEventListener("click", function () {
       var open = wrap.hidden;
+      if (open) {
+        /* One extra view per card: opening a view closes the card's
+           other view (and resets its button), so two tall images
+           never stack and shove the page around. */
+        var card = btn.closest(".cast-card");
+        if (card) card.querySelectorAll(".fb-toggle").forEach(function (other) {
+          if (other === btn) return;
+          var otherWrap = document.getElementById(other.getAttribute("aria-controls"));
+          if (otherWrap && !otherWrap.hidden) {
+            otherWrap.hidden = true;
+            other.setAttribute("aria-expanded", "false");
+            other.textContent = other.textContent.replace(/^Hide/, "Show");
+          }
+        });
+      }
       wrap.hidden = !open;
       btn.setAttribute("aria-expanded", String(open));
       btn.textContent = open ? btn.textContent.replace(/^Show/, "Hide") : btn.textContent.replace(/^Hide/, "Show");
