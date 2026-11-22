@@ -120,6 +120,7 @@
     border:1px solid var(--line); border-radius:var(--radius);
     padding:16px 16px 0; margin:0 0 22px;
   }
+  .pgroup-spreads{background:rgba(227,179,65,.06); border-color:rgba(227,179,65,.30);}
   .pgroup-env{background:rgba(150,158,110,.07); border-color:rgba(150,158,110,.28);}
   .pgroup-rooms{background:rgba(203,120,86,.07); border-color:rgba(203,120,86,.28);}
   .pgroup-h{
@@ -406,7 +407,7 @@
   }
   .dlink.dnav{padding:10px 14px; font-size:15px; font-weight:500;
     background:rgba(255,255,255,.02); border-color:rgba(255,255,255,.08); color:rgba(243,239,230,.88);}
-  #placesHead, #pgroup-env, #pgroup-rooms, #castHead, #bgHead, #draftHead{scroll-margin-top:84px;}
+  #spreadsHead, #placesHead, #pgroup-env, #pgroup-rooms, #castHead, #bgHead, #draftHead{scroll-margin-top:84px;}
   .drawer select{flex:none; width:100%;}
   .dnote{color:var(--muted); font-size:13px; line-height:1.5; margin-top:14px;}
   .setrow{
@@ -447,10 +448,17 @@ html{scrollbar-color:#4d4d4d #101010}
   <header>
     <div class="kicker">Spread Review</div>
     <h1>Harlow&rsquo;s Helping Paws</h1>
-    <p class="sub">Everything in one place for spread-making &mdash; all twelve places and the whole cast on one page. It&rsquo;s all mockup and it&rsquo;ll all change; that&rsquo;s what this page is for. Tap a place to see it big. Tap a cast card to turn it over.</p>
+    <p class="sub">Everything in one place for spread-making &mdash; the finished spreads first, then all twelve places and the whole cast. It&rsquo;s all mockup and it&rsquo;ll all change; that&rsquo;s what this page is for. Tap a spread or a place to see it big. Tap a cast card to turn it over.</p>
   </header>
 
   <p class="hint">Looking for the covers? They&rsquo;re not spread options &mdash; they live in <a href="index.html#covers">The Covers section</a> on the project page.</p>
+
+  <div class="sechead" id="spreadsHead">
+    <div class="kicker">The Spreads</div>
+    <h2>The book, page by page</h2>
+    <p class="sub">Our finished spreads, in story order, as they come together. Each card steps through its versions &mdash; <b>Take 1 is the current one</b>, and the last take is Lois&rsquo;s draft, the reference the spread was remade from. Tap a spread to see it big &mdash; the seam guide in the big view marks the center fold.</p>
+  </div>
+  <main id="spreads"><div class="pgroup pgroup-spreads" id="pgroup-spreads"><h3 class="pgroup-h">Story spreads</h3></div></main>
 
   <div class="sechead" id="placesHead">
     <div class="kicker">The Places</div>
@@ -517,6 +525,7 @@ html{scrollbar-color:#4d4d4d #101010}
   </nav>
   <div class="dsec">On this page</div>
   <nav>
+    <a class="dlink dnav" href="#spreadsHead">The Spreads</a>
     <a class="dlink dnav" href="#placesHead">The Places</a>
     <a class="dlink dnav" href="#pgroup-env">Environments</a>
     <a class="dlink dnav" href="#pgroup-rooms">Rooms</a>
@@ -785,8 +794,17 @@ function takeSwitcher(p, imgEl) {
   return row;
 }
 
+/* SPREADS — our finished spreads in story order. Takes run newest-first:
+   Take 1 is the current version (the gold chip), earlier attempts follow,
+   and the last take is Lois's draft illustration, letterboxed whole —
+   the reference the spread was remade from. */
+var SPREADS = [
+  { code: "S01", kind: "Spread", tag: "Spread — S01 · Pages 1–2", takes: ["s01-t1.jpg", "s01-t2.jpg", "s01-t3.jpg"], name: "Lois &amp; Harlow at Home",
+    cap: "<b>Spread 1 · Pages 1–2</b> — Morning at home: Lois at her desk, thoughtful over the laptop, Harlow asleep beside it, and the right page left open as part of the room for the text. <b>Take 1</b> is our current version; Take 2 is the first attempt; Take 3 is Lois&rsquo;s draft." }
+];
+
 /* ---------- Places + Background cards ---------- */
-var FLAT = PLACES.concat([BG]);
+var FLAT = SPREADS.concat(PLACES, [BG]);
 var placesMain = document.getElementById("places");
 var bgWrap = document.getElementById("bgWrap");
 function placeGroup(cls, label) {
@@ -811,11 +829,13 @@ FLAT.forEach(function (p, i) {
   var cap = document.createElement("p");
   cap.className = "cap"; cap.innerHTML = p.cap;
   var tag = document.createElement("span");
-  tag.className = "tag"; tag.textContent = p.code ? (p.kind + " plate — " + p.code) : p.kind;
+  tag.className = "tag"; tag.textContent = p.tag || (p.code ? (p.kind + " plate — " + p.code) : p.kind);
   card.appendChild(h); card.appendChild(sp);
   if (p.takes && p.takes.length > 1) card.appendChild(takeSwitcher(p, sp.querySelector("img")));
   card.appendChild(cap); card.appendChild(tag);
-  (i < PLACES.length ? (p.kind === "Room" ? roomGroup : envGroup) : bgWrap).appendChild(card);
+  var host = p.kind === "Spread" ? document.getElementById("pgroup-spreads")
+    : (i < SPREADS.length + PLACES.length ? (p.kind === "Room" ? roomGroup : envGroup) : bgWrap);
+  host.appendChild(card);
 });
 
 /* ---------- Cast flip cards ---------- */
