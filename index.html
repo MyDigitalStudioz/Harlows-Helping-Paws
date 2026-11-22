@@ -458,8 +458,9 @@ html{scrollbar-color:#4d4d4d #101010}
       </div>
       <div class="cast-card">
         <img loading="lazy" src="media/cast/jon-portrait.jpg" alt="Jon, salt-and-pepper hair and white chin beard, in his black zip jacket">
-        <div class="cap"><h3>Jon</h3><p>Steady and warm &mdash; silver in his hair, white chin beard, always ready to help.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon">Show full body</button></div>
+        <div class="cap"><h3>Jon</h3><p>Steady and warm &mdash; silver in his hair, white chin beard, always ready to help.</p><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon">Show full body</button><button type="button" class="btn fb-toggle" aria-expanded="false" aria-controls="fb-jon-kitchen">Show kitchen look</button></div>
         <div class="fb-wrap" id="fb-jon" hidden><img loading="lazy" src="media/cast/jon-fullbody.jpg" alt="Jon, full body — black zip jacket, dark jeans and black shoes"></div>
+        <div class="fb-wrap" id="fb-jon-kitchen" hidden><img loading="lazy" src="media/cast/jon-kitchen.jpg" alt="Jon, kitchen look — black tee under a long rust-red apron, his JJ outfit for dishing up the feast at the Hope Shelter"></div>
       </div>
     </div>
   </section>
@@ -811,7 +812,7 @@ html{scrollbar-color:#4d4d4d #101010}
       var open = wrap.hidden;
       wrap.hidden = !open;
       btn.setAttribute("aria-expanded", String(open));
-      btn.textContent = open ? "Hide full body" : "Show full body";
+      btn.textContent = open ? btn.textContent.replace(/^Show/, "Hide") : btn.textContent.replace(/^Hide/, "Show");
     });
   });
 })();
