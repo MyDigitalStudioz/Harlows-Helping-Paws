@@ -389,6 +389,16 @@
   .seg button[aria-pressed="true"]{background:var(--gold); color:#16120e;}
 
 </style>
+<style>
+/* Dark charcoal scrollbars site-wide (Jon, 2026-11-21): no white browser-default bars */
+:root{color-scheme:dark}
+html{scrollbar-color:#4d4d4d #101010}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#101010}
+::-webkit-scrollbar-thumb{background:#4d4d4d;border-radius:6px;border:2px solid #101010}
+::-webkit-scrollbar-thumb:hover{background:#666666}
+::-webkit-scrollbar-corner{background:#101010}
+</style>
 </head>
 <body>
 <div class="wrap">

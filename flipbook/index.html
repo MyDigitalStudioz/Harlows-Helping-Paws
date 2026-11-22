@@ -3538,7 +3538,17 @@
   #quickMenu{max-height:calc(var(--app-h,100dvh) - 136px);scrollbar-width:thin;scrollbar-color:rgba(232,179,75,.55) transparent}
   #quickMenu::-webkit-scrollbar{width:5px}
   #quickMenu::-webkit-scrollbar-thumb{background:rgba(232,179,75,.55);border-radius:4px}
-</style></head>
+</style><style>
+/* Dark charcoal scrollbars site-wide (Jon, 2026-11-21): no white browser-default bars */
+:root{color-scheme:dark}
+html{scrollbar-color:#4d4d4d #101010}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#101010}
+::-webkit-scrollbar-thumb{background:#4d4d4d;border-radius:6px;border:2px solid #101010}
+::-webkit-scrollbar-thumb:hover{background:#666666}
+::-webkit-scrollbar-corner{background:#101010}
+</style>
+</head>
 <body>
   <div id="viewer">
     <div id="loadBar" hidden><div id="loadFill"></div></div>
