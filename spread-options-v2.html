@@ -296,13 +296,16 @@
     background:rgba(22,22,21,.92); border:1px solid rgba(216,190,140,.22);
     border-radius:16px; padding:12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
   }
-  .lb .cap{color:#e6e1d5; font-size:14px; line-height:1.55; margin-top:0;}
+  .lb .cap{color:#e6e1d5; font-size:14px; line-height:1.55; margin-top:10px;}
   .lb .cap b{color:#f4f1ea;}
   .takerow{
-    display:flex; align-items:center; gap:8px; margin-top:10px;
+    display:flex; align-items:center; gap:6px; margin-top:0;
     background:rgba(0,0,0,.45); border:1px solid rgba(216,190,140,.20);
-    border-radius:14px; padding:4px 8px;
+    border-radius:12px; padding:3px 6px;
   }
+  .takerow .navbtn{width:38px; height:38px; font-size:20px;}
+  .takerow .codechip{padding:4px 9px; font-size:12px;}
+  .takerow .count{font-size:12px;}
   .takerow[hidden]{display:none;}
   .takerow .count{flex:1; text-align:center; color:#b9b2a4; font-size:12.5px; font-variant-numeric:tabular-nums;}
   .lb .spread{cursor:default;}
@@ -556,17 +559,17 @@ html{scrollbar-color:#4d4d4d #101010}
   <div class="inner">
     <div class="spread" id="lbSpread"></div>
     <div class="lbrail">
-    <p class="cap"><span id="lbCap"></span></p>
-    <div class="lbnav">
-      <button class="navbtn" id="lbPrev" aria-label="Previous plate">&#8249;</button>
-      <span class="count" id="lbCount"></span>
-      <button class="navbtn" id="lbNext" aria-label="Next plate">&#8250;</button>
-    </div>
     <div class="takerow" id="lbTakeRow" hidden>
       <button class="navbtn" id="lbTakePrev" type="button" aria-label="Previous take">&#8249;</button>
       <span class="codechip" id="lbTakeChip"></span>
       <span class="count" id="lbTakeCount"></span>
       <button class="navbtn" id="lbTakeNext" type="button" aria-label="Next take">&#8250;</button>
+    </div>
+    <p class="cap"><span id="lbCap"></span></p>
+    <div class="lbnav">
+      <button class="navbtn" id="lbPrev" aria-label="Previous plate">&#8249;</button>
+      <span class="count" id="lbCount"></span>
+      <button class="navbtn" id="lbNext" aria-label="Next plate">&#8250;</button>
     </div>
     </div>
   </div>
@@ -956,8 +959,7 @@ function renderLb() {
   fresh.id = "lbSpread";
   var old = document.getElementById("lbSpread");
   inner.replaceChild(fresh, old);
-  lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "") +
-    (p.takes && p.takes.length > 1 ? " · Take " + ((p.take || 0) + 1) + " of " + p.takes.length : "");
+  lbCap.innerHTML = "<b>" + (p.code ? p.code + " · " : "") + p.name + "</b> — " + p.cap.replace(/<\/?b>/g, "");
   lbCount.textContent = lbNoun + " " + (cur + 1) + " of " + lbList.length;
   lbPrev.disabled = cur === 0;
   lbNext.disabled = cur === lbList.length - 1;
