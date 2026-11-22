@@ -2628,6 +2628,15 @@
      chip sits on one line; larger screens keep the 232px cap. */
   @media (max-width:560px){#quickMenu{width:88vw}}
   .qmVal{flex:0 0 auto;color:#e8b34b;font-weight:600;text-align:center;white-space:nowrap;background:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.4);border-radius:7px;padding:3px 9px;min-width:58px;box-sizing:border-box;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+  /* Quick-menu state rows are Settings-style selects (Jon,
+     2026-11-22): tapping one opens the full option list with the
+     current value checked, exactly like Settings — no more blind
+     cycling through values you cannot see. The select wears the
+     old value chip's dark inset + gold, so the menu's look is
+     unchanged; only the interaction grew up. */
+  .qmRow{cursor:default}
+  .qmRow:active{border-color:rgba(244,241,234,.45);background:rgba(255,255,255,.07)}
+  .qmPick{flex:0 1 auto;min-width:58px;max-width:62%;background:rgba(0,0,0,.45);color:#e8b34b;border:1px solid rgba(0,0,0,.4);border-radius:7px;padding:5px 8px;font:inherit;font-size:14px;font-weight:600;text-align:center;box-shadow:inset 0 1px 3px rgba(0,0,0,.5);box-sizing:border-box;cursor:pointer}
   /* ---- Expand view tab ----
      The quick-menu tab's twin at the reader's bottom-left: same
      matte near-black dock, thin #4a4a4a border, rounded top
@@ -3612,7 +3621,7 @@ html{scrollbar-color:#4d4d4d #101010}
     </div>
     <button id="pagesTab" type="button" aria-label="Pages" title="Pages" aria-expanded="false"><span class="tabPill" aria-hidden="true"></span><span class="tabRow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15.5l7-7 7 7"/></svg></span></button>
     <button id="quickBtn" type="button" aria-label="Quick menu" title="Quick menu" aria-haspopup="true" aria-expanded="false"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true" focusable="false"><path d="M2 2h16M2 7h16M2 12h16" stroke="#e8b34b" stroke-width="2.4" stroke-linecap="round"/></svg></button>
-    <div id="quickMenu" role="menu" aria-label="Quick actions" hidden><button id="qmFirst" class="qmItem" type="button" role="menuitem"><span class="qmLabel">First page</span></button><button id="qmLast" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Last page</span></button><button id="qmOverview" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Overview &#8212; All Spreads</span></button><button id="qmMarkedBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Marked only</span> <span class="qmVal" id="qmMarked">Off</span></button><button id="qmSlideBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Slideshow</span> <span class="qmVal" id="qmSlide">Off</span></button><button id="qmSoundBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Sound</span> <span class="qmVal" id="qmSound">Off</span></button><button id="qmModeBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Reading mode</span> <span class="qmVal" id="qmMode">Hardcover</span></button><button id="qmLayoutBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Page layout</span> <span class="qmVal" id="qmLayout">Auto</span></button><button id="qmLabelsBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Page labels</span> <span class="qmVal" id="qmLabels">Numbers</span></button><button id="qmGuidesBtn" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Safety guides</span> <span class="qmVal" id="qmGuides">Off</span></button><button id="qmInfo" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Book info</span></button><div id="qmFade" aria-hidden="true"></div></div>
+    <div id="quickMenu" role="menu" aria-label="Quick actions" hidden><button id="qmFirst" class="qmItem" type="button" role="menuitem"><span class="qmLabel">First page</span></button><button id="qmLast" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Last page</span></button><button id="qmOverview" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Overview &#8212; All Spreads</span></button><div class="qmItem qmRow"><span class="qmLabel">Marked only</span><select class="qmPick" id="qmMarked" aria-label="Marked only"><option value="off">Off</option><option value="on">On</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Slideshow</span><select class="qmPick" id="qmSlide" aria-label="Slideshow"><option value="0">Off</option><option value="3">3 seconds</option><option value="5">5 seconds</option><option value="8">8 seconds</option><option value="12">12 seconds</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Sound</span><select class="qmPick" id="qmSound" aria-label="Sound"><option value="off">Off</option><option value="on">On</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Reading mode</span><select class="qmPick" id="qmMode" aria-label="Reading mode"><option value="hardcover">Hardcover</option><option value="magazine">Magazine</option><option value="swipe">Swipe</option><option value="scroll">Scroll</option><option value="simple">Simple</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Page layout</span><select class="qmPick" id="qmLayout" aria-label="Page layout"><option value="auto">Auto</option><option value="single">Single</option><option value="double">Double</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Page labels</span><select class="qmPick" id="qmLabels" aria-label="Page labels"><option value="numbers">Numbers</option><option value="spreads">Spread names</option></select></div><div class="qmItem qmRow"><span class="qmLabel">Safety guides</span><select class="qmPick" id="qmGuides" aria-label="Safety guides"><option value="off">Off</option><option value="on">On</option></select></div><button id="qmInfo" class="qmItem" type="button" role="menuitem"><span class="qmLabel">Book info</span></button><div id="qmFade" aria-hidden="true"></div></div>
     <div id="textModePop" role="menu" aria-label="Text display" hidden><button class="tmRow" id="tmSheet" type="button" role="menuitemradio" aria-checked="true"><span>Sheet</span><span class="tmCheck" aria-hidden="true">&#10003;</span></button><button class="tmRow" id="tmOnArt" type="button" role="menuitemradio" aria-checked="false"><span>On art</span><span class="tmCheck" aria-hidden="true">&#10003;</span></button><div class="tmDiv" aria-hidden="true"></div><button class="tmRow" id="tmArrange" type="button" role="menuitem" aria-pressed="false"><span>Arrange text</span><span class="tmCheck" aria-hidden="true">&#10003;</span></button></div>
     <div id="artStylePop" hidden role="dialog" aria-label="Text on art style" data-tier="1"><div class="artPopRow artPopHead"><span id="artPopTitle">Style</span><button id="artTierToggle" type="button" aria-expanded="false" aria-controls="artTier2">More style</button></div><div class="artPopRow"><span class="artPopLbl">Text size</span><input id="artFs" type="range" min="0.028" max="0.085" step="0.002" aria-label="Text size"><span id="artFsVal" aria-hidden="true">29.4 pt</span></div><div id="artTier2" hidden><div class="artPopRow"><span class="artPopLbl">Font</span><span id="artFontList" role="group" aria-label="Text font"><button type="button" data-font="andika" style="font-family:'Andika',Georgia,'Times New Roman',serif" aria-pressed="true">Andika</button><button type="button" data-font="lora" style="font-family:'Lora',Georgia,serif" aria-pressed="false">Lora</button><button type="button" data-font="quicksand" style="font-family:'Quicksand',Verdana,sans-serif" aria-pressed="false">Quicksand</button><button type="button" data-font="gaegu" style="font-family:'Gaegu','Comic Sans MS',cursive" aria-pressed="false">Gaegu</button><button type="button" data-font="caveat" style="font-family:'Caveat',cursive" aria-pressed="false">Caveat</button></span></div><div class="artPopRow"><span class="artPopLbl">Color</span><span id="artSwatches"><button type="button" class="artSw" data-color="ivory" style="background:#f6efdd" aria-label="Ivory text" aria-pressed="false"></button><button type="button" class="artSw" data-color="ink" style="background:#221d16" aria-label="Ink text" aria-pressed="false"></button><button type="button" class="artSw" data-color="gold" style="background:#e8b34b" aria-label="Gold text" aria-pressed="false"></button><button type="button" class="artSw" data-color="white" style="background:#ffffff" aria-label="White text" aria-pressed="false"></button><button type="button" class="artSw" data-color="black" style="background:#000000" aria-label="Black text" aria-pressed="false"></button></span></div><div class="artPopRow"><span class="artPopLbl">Plate</span><span id="artPlateSeg" role="group" aria-label="Backing plate"><button type="button" data-plate="none" aria-pressed="false">None</button><button type="button" data-plate="solid" aria-pressed="false">Solid</button><button type="button" data-plate="feather" aria-pressed="false">Feathered</button></span></div><div class="artPopRow" id="artPColorRow"><span class="artPopLbl">Plate color</span><span id="artPlateSwatches"><button type="button" class="artSw" data-pcolor="ink" style="background:#100d0a" aria-label="Ink plate" aria-pressed="false"></button><button type="button" class="artSw" data-pcolor="ivory" style="background:#f6efdd" aria-label="Ivory plate" aria-pressed="false"></button><button type="button" class="artSw" data-pcolor="gold" style="background:#e8b34b" aria-label="Gold plate" aria-pressed="false"></button><button type="button" class="artSw" data-pcolor="white" style="background:#ffffff" aria-label="White plate" aria-pressed="false"></button><button type="button" class="artSw" data-pcolor="black" style="background:#000000" aria-label="Black plate" aria-pressed="false"></button></span></div><div class="artPopRow" id="artOpRow"><span class="artPopLbl">Plate opacity</span><input id="artOp" type="range" min="0.15" max="0.95" step="0.05" aria-label="Plate opacity"></div><div class="artPopRow"><span class="artPopLbl">Align</span><span id="artAlignSeg" role="group" aria-label="Text alignment"><button type="button" data-align="left" aria-pressed="true">Left</button><button type="button" data-align="center" aria-pressed="false">Center</button><button type="button" data-align="right" aria-pressed="false">Right</button></span></div><button id="artApplyAll" class="artApplyAllBtn" type="button">Apply style to all pages</button></div></div>
     <button id="expandBtn" type="button" aria-label="Expand view" title="Expand view" aria-pressed="false"><svg class="icoExpand" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg><svg class="icoCollapse" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v-5"/></svg></button>
@@ -5979,7 +5988,7 @@ html{scrollbar-color:#4d4d4d #101010}
       var tp = document.getElementById("turnPick");
       if (tp) tp.value = mode;
       var qm0 = document.getElementById("qmMode");
-      if (qm0) qm0.textContent = readingModeName(mode);
+      if (qm0) qm0.value = mode;
       if (mode === "scroll") {
         applyScrollVisibility();
         scrollCurIdx = Math.max(0, Math.min(N - 1, anchor));
@@ -10879,7 +10888,7 @@ html{scrollbar-color:#4d4d4d #101010}
       paintSeg("ovOptTextSeg", "data-ov-text", ovPrefText() ? "show" : "hide");
       paintSeg("ovOptGuidesSeg", "data-ov-guides", document.body.classList.contains("guides-on") ? "on" : "off");
       var qmMk = document.getElementById("qmMarked");
-      if (qmMk) qmMk.textContent = ovPrefMarked() ? "On" : "Off";
+      if (qmMk) qmMk.value = ovPrefMarked() ? "on" : "off";
     }
     function ovSetSize(v) { try { localStorage.setItem("hhp-ov-size", v === "compact" ? "compact" : "large"); } catch (err) {} paintOvPrefsUI(); }
     function ovSetMarked(on) { try { localStorage.setItem("hhp-ov-marked", on ? "on" : "off"); } catch (err) {} paintOvPrefsUI(); }
@@ -11661,7 +11670,7 @@ html{scrollbar-color:#4d4d4d #101010}
       document.body.classList.toggle("guides-on", on);
       guidesBtn.setAttribute("aria-pressed", on ? "true" : "false");
       var qg = document.getElementById("qmGuides");
-      if (qg) qg.textContent = (on ? "On" : "Off");
+      if (qg) qg.value = (on ? "on" : "off");
       try { localStorage.setItem("hhp-guides", on ? "1" : "0"); } catch (err) {}
       paintOvPrefsUI();
     }
@@ -12908,12 +12917,12 @@ html{scrollbar-color:#4d4d4d #101010}
       if (v !== "single" && v !== "double") v = "auto";
       if (layoutPick) layoutPick.value = v;
       var ql0 = document.getElementById("qmLayout");
-      if (v === layoutMode) { if (ql0) ql0.textContent = layoutDisplayName(layoutMode); return; }
+      if (v === layoutMode) { if (ql0) ql0.value = layoutMode; return; }
       var wasSingle = isSingle();
       var anchor = currentFirst();
       layoutMode = v;
       try { localStorage.setItem("hhp-page-layout", v); } catch (err) {}
-      if (ql0) ql0.textContent = layoutDisplayName(layoutMode);
+      if (ql0) ql0.value = layoutMode;
       if (turnMode === "scroll") return;
       fit();
       var target = anchor;
@@ -12943,7 +12952,7 @@ html{scrollbar-color:#4d4d4d #101010}
       if (labelPick) labelPick.value = labelMode;
       try { localStorage.setItem("hhp-page-labels", labelMode); } catch (err) {}
       var qlab = document.getElementById("qmLabels");
-      if (qlab) qlab.textContent = (labelMode === "spreads" ? "Spread names" : "Numbers");
+      if (qlab) qlab.value = labelMode;
       counter.textContent = label();
       if (sheet.classList.contains("open")) buildStrip();
       if (typeof updateTextPanel === "function") updateTextPanel();
@@ -13514,7 +13523,8 @@ html{scrollbar-color:#4d4d4d #101010}
        the master Sound toggle, Reading mode, Page layout, Page
        labels, Safety guides, and Book info. Slideshow, Sound,
        Reading mode, Page layout, Page labels and Safety guides
-       are state controls — they
+       are state controls — Settings-style selects since
+       2026-11-22 (Jon: pick from the full list, never blind-cycle) — they
        update in place and the menu stays open, driving the same
        shared stores as Settings (setSlideshow / the sound
        toggles / setReadingMode / setLayoutMode / setLabelMode),
@@ -13531,14 +13541,14 @@ html{scrollbar-color:#4d4d4d #101010}
     var quickOpen = false;
     function quickSoundOn() { return !!(sndFxOn || sndMusicOn); }
     function paintQuickMenu() {
-      if (qmSlideEl) qmSlideEl.textContent = (slideSec ? slideSec + "s" : "Off");
-      if (qmSoundEl) qmSoundEl.textContent = (quickSoundOn() ? "On" : "Off");
-      if (qmModeEl) qmModeEl.textContent = readingModeName(turnMode);
-      if (qmLayoutEl) qmLayoutEl.textContent = layoutDisplayName(layoutMode);
-      if (qmLabelsEl) qmLabelsEl.textContent = (labelMode === "spreads" ? "Spread names" : "Numbers");
-      if (qmGuidesEl) qmGuidesEl.textContent = (document.body.classList.contains("guides-on") ? "On" : "Off");
+      if (qmSlideEl) qmSlideEl.value = String(slideSec || 0);
+      if (qmSoundEl) qmSoundEl.value = (quickSoundOn() ? "on" : "off");
+      if (qmModeEl) qmModeEl.value = turnMode;
+      if (qmLayoutEl) qmLayoutEl.value = layoutMode;
+      if (qmLabelsEl) qmLabelsEl.value = labelMode;
+      if (qmGuidesEl) qmGuidesEl.value = (document.body.classList.contains("guides-on") ? "on" : "off");
       var qmMarkedEl = document.getElementById("qmMarked");
-      if (qmMarkedEl) qmMarkedEl.textContent = (ovPrefMarked() ? "On" : "Off");
+      if (qmMarkedEl) qmMarkedEl.value = (ovPrefMarked() ? "on" : "off");
       if (quickBtn) quickBtn.setAttribute("aria-expanded", quickOpen ? "true" : "false");
     }
     /* v13.15: scroll affordance state. .qm-more rides the menu
@@ -13581,14 +13591,12 @@ html{scrollbar-color:#4d4d4d #101010}
       window.addEventListener("resize", function () { if (quickOpen) qmUpdateFade(); });
       document.getElementById("qmFirst").addEventListener("click", function () { setQuickMenu(false); goTo(firstContentIdx()); closeQuickMenu(false); if (quickBtn) { try { quickBtn.focus({ preventScroll: true }); } catch (err) {} } });
       document.getElementById("qmLast").addEventListener("click", function () { setQuickMenu(false); goTo(lastContentIdx()); if (quickBtn) { try { quickBtn.focus({ preventScroll: true }); } catch (err) {} } });
-      document.getElementById("qmSlideBtn").addEventListener("click", function () {
-        var order = [0, 3, 5, 8, 12];
-        var next = order[(order.indexOf(slideSec) + 1) % order.length];
-        setSlideshow(next);
+      if (qmSlideEl) qmSlideEl.addEventListener("change", function () {
+        setSlideshow(parseInt(qmSlideEl.value, 10) || 0);
         paintQuickMenu();
       });
-      document.getElementById("qmSoundBtn").addEventListener("click", function () {
-        var on = !quickSoundOn();
+      if (qmSoundEl) qmSoundEl.addEventListener("change", function () {
+        var on = qmSoundEl.value === "on";
         sndFxOn = on;
         sndMusicOn = on;
         if (sndFxEl) sndFxEl.checked = on;
@@ -13597,35 +13605,25 @@ html{scrollbar-color:#4d4d4d #101010}
         if (on) { ensureAudio(); startMusic(); } else stopMusic();
         paintQuickMenu();
       });
-      var qmModeBtn = document.getElementById("qmModeBtn");
-      if (qmModeBtn) qmModeBtn.addEventListener("click", function () {
-        var order = ["hardcover", "magazine", "swipe", "scroll", "simple"];
-        var idx = order.indexOf(turnMode);
-        var next = order[(idx + 1) % order.length];
-        setReadingMode(next);
+      if (qmModeEl) qmModeEl.addEventListener("change", function () {
+        setReadingMode(qmModeEl.value);
         paintQuickMenu();
       });
-      var qmLayoutBtn = document.getElementById("qmLayoutBtn");
-      if (qmLayoutBtn) qmLayoutBtn.addEventListener("click", function () {
-        var order = ["auto", "single", "double"];
-        var idx = order.indexOf(layoutMode);
-        var next = order[(idx + 1) % order.length];
-        setLayoutMode(next);
+      if (qmLayoutEl) qmLayoutEl.addEventListener("change", function () {
+        setLayoutMode(qmLayoutEl.value);
         paintQuickMenu();
       });
-      var qmLabelsBtn = document.getElementById("qmLabelsBtn");
-      if (qmLabelsBtn) qmLabelsBtn.addEventListener("click", function () {
-        setLabelMode(labelMode === "spreads" ? "numbers" : "spreads");
+      if (qmLabelsEl) qmLabelsEl.addEventListener("change", function () {
+        setLabelMode(qmLabelsEl.value);
         paintQuickMenu();
       });
-      var qmGuidesBtn = document.getElementById("qmGuidesBtn");
-      if (qmGuidesBtn) qmGuidesBtn.addEventListener("click", function () {
-        setGuides(!document.body.classList.contains("guides-on"));
+      if (qmGuidesEl) qmGuidesEl.addEventListener("change", function () {
+        setGuides(qmGuidesEl.value === "on");
         paintQuickMenu();
       });
-      var qmMarkedBtn = document.getElementById("qmMarkedBtn");
-      if (qmMarkedBtn) qmMarkedBtn.addEventListener("click", function () {
-        ovSetMarked(!ovPrefMarked());
+      var qmMarkedPick = document.getElementById("qmMarked");
+      if (qmMarkedPick) qmMarkedPick.addEventListener("change", function () {
+        ovSetMarked(qmMarkedPick.value === "on");
         paintQuickMenu();
       });
       document.getElementById("qmInfo").addEventListener("click", function () {
